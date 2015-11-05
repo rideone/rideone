@@ -1,4 +1,4 @@
-package com.walmartlabs.classwork.carpoolfinder;
+package com.walmartlabs.classwork.rideone;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

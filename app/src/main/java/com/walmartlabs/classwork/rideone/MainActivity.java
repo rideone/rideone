@@ -1,4 +1,4 @@
-package com.walmartlabs.classwork.carpoolfinder;
+package com.walmartlabs.classwork.rideone;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
