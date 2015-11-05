@@ -1,6 +1,6 @@
 # Group Project - *RideOne*
 
-**RideOne** is an android app for carpooling.
+**RideOne** is an android app for carpooling among employees from the same organization.
 
 ## User Stories
 
