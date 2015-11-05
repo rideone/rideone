@@ -6,7 +6,7 @@
 
 * [ ] User (driver or rider) should be able to login/register
 * [ ] User can edit the profile
-* [ ] Driver can update her availability 
+* [ ] Driver can set her availability 
   * [ ] # of spots, destination, start point, time
   * [ ] mark available/unavailable
 * [ ] Driver should be able to manage the list of riders going with him
@@ -18,6 +18,7 @@
 * [ ] User can filter the list of rides by time, start point, destination, # of spots
 * [ ] User can reserve a ride
 * [ ] User should be notified when the ride reservation is confirmed
+* [ ] The system should auto update availability based on ride reservations
 
 ## Video Walkthrough 
 
