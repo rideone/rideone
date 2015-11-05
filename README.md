@@ -5,8 +5,8 @@
 ## User Stories
 
 * [ ] User (driver or rider) should be able to login/register
-* [ ] User can edit his profile
-* [ ] Driver can update his availability 
+* [ ] User can edit the profile
+* [ ] Driver can update her availability 
   * [ ] # of spots, destination, start point, time
   * [ ] mark available/unavailable
 * [ ] Driver should be able to manage the list of riders going with him
