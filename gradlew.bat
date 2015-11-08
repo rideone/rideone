@@ -30,6 +30,7 @@ echo Please set the JAVA_HOME variable in your environment to match the
 echo location of your Java installation.
 
 goto fail
+@rem goto fail
 
 :findJavaFromJavaHome
 set JAVA_HOME=%JAVA_HOME:"=%
