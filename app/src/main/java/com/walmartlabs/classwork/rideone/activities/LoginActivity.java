@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginSuccess() {
         clearErrors();
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
     }
 
@@ -204,20 +204,19 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            final boolean[] noerror = {true};
+            final boolean[] success = {true};
             ParseUser.logInInBackground(userName, password, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (user != null) {
                         // Hooray! The user is logged in.
-                        loginSuccess();
                     } else {
                         // Signup failed. Look at the ParseException to see what happened.
                         e.printStackTrace();
-                        noerror[0] = false;
+                        success[0] = false;
                     }
                 }
             });
-            return noerror[0];
+            return success[0];
         }
 
         @Override
@@ -227,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success && ParseUser.getCurrentUser() != null) {
                 Toast.makeText(LoginActivity.this, "Login succesful : " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+                loginSuccess();
             } else {
                 edUserName.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
