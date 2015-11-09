@@ -8,6 +8,10 @@ import com.parse.ParseObject;
  */
 @ParseClassName("User")
 public class User extends ParseObject {
+    public enum Status {
+        PASSENGER, DRIVER, WAIT_LIST, NO_RIDE
+    }
+
     public String getUserId() {
         return getString("userId");
     }
@@ -42,5 +46,21 @@ public class User extends ParseObject {
 
     public void setTotalSeats(int totalSeats) {
         put("totalSeats", totalSeats);
+    }
+
+    public void setPhone(String phone) {
+        put("phone", phone);
+    }
+
+    public String getPhone() {
+        return getString("phone");
+    }
+
+    public void setStatus(Status status) {
+        put("status", status.name());
+    }
+
+    public Status getStatus() {
+        return Status.valueOf(getString("status"));
     }
 }

@@ -1,6 +1,8 @@
 package com.walmartlabs.classwork.rideone.util;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.format.DateUtils;
@@ -9,9 +11,19 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
 
 public class Utils {
+
+    public static final String DEFAULT_TIMEZONE = "America/Los_Angeles";
 
     //Check for internet connection
     public static Boolean isNetworkAvailable(Context context) {
@@ -26,6 +38,11 @@ public class Utils {
         Toast toast = Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
+    }
+
+    public static boolean checkCallPermission(Context context) {
+        int result = context.checkCallingOrSelfPermission(Manifest.permission.CALL_PHONE);
+        return result == PERMISSION_GRANTED;
     }
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
@@ -45,4 +62,48 @@ public class Utils {
 
         return relativeDate;
     }
+
+    public static Date getNextHour() {
+        Calendar c = Calendar.getInstance();
+        c.set(MINUTE, 0);
+        c.add(HOUR_OF_DAY, 1);
+        return c.getTime();
+    }
+
+    public static TimeZone getCurrentTimeZone() {
+        return TimeZone.getTimeZone(DEFAULT_TIMEZONE);
+    }
+
+    public static int[] getLocalHourAndMinute(Date time) {
+        Calendar c = Calendar.getInstance(Utils.getCurrentTimeZone());
+        c.setTime(time);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int min = c.get(Calendar.MINUTE);
+        return new int[] {hour, min};
+    }
+
+    /**
+     *
+     * @param timeString string formatted as "hour:minutes"
+     * @return
+     */
+    public static Date parseHourAndMinute(String timeString) {
+        if(isNullOrEmpty(timeString)) {
+            return null;
+        }
+
+        String[] timeArray = timeString.split(":");
+        int hour = Integer.parseInt(timeArray[0]);
+        int minute = Integer.parseInt(timeArray[1]);
+
+        Calendar c = Calendar.getInstance(Utils.getCurrentTimeZone());
+        c.set(Calendar.HOUR_OF_DAY, hour);
+        c.set(Calendar.MINUTE, minute);
+        return c.getTime();
+    }
+
+    public static String formatDuration(int hour, int minute) {
+        return String.format("%02d:%02d", hour, minute);
+    }
+
 }
