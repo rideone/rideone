@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 
 import java.text.ParseException;
@@ -28,6 +29,7 @@ public class RidesAdapter extends ArrayAdapter<User> {
         public ImageView ivProfile;
         public TextView tvName;
         public TextView tvRelativeTimeStamp;
+        public TextView tvSpotsAvailable;
     }
 
     public RidesAdapter(Context context, List<User> objects) {
@@ -48,6 +50,7 @@ public class RidesAdapter extends ArrayAdapter<User> {
             convertView = inflater.inflate(R.layout.item_ride, parent, false);
             viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
             viewHolder.tvName = (TextView)convertView.findViewById(R.id.tvName);
+            viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
             viewHolder.tvRelativeTimeStamp = (TextView)convertView.findViewById(R.id.tvRelativeTimeStamp);
 
             convertView.setTag(viewHolder);
@@ -57,6 +60,8 @@ public class RidesAdapter extends ArrayAdapter<User> {
 
         // Populate data into the template view using the data object
         viewHolder.tvName.setText(Html.fromHtml(user.getFirstName()));
+        Ride ride = (Ride) user.getParseObject("ride");
+        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getTotalSpots())));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

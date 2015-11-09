@@ -117,12 +117,12 @@ public class RideListFragment  extends Fragment {
 
     protected void fetchAndPopulateTimeline() {
         ParseQuery<User> query = ParseQuery.getQuery("User");
+        query.include("ride");
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> list, ParseException e) {
                 if (e == null) {
                     users.addAll(list);
                     aRides.notifyDataSetChanged();
-                    Log.d("score", "Retrieved " + users.toString());
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
