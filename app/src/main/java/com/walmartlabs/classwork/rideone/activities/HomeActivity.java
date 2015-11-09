@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.fragments.RideListFragment;
+import com.walmartlabs.classwork.rideone.fragments.DriverListFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -16,9 +16,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        RideListFragment rideListFragment = RideListFragment.newInstance();
+        DriverListFragment driverListFragment = DriverListFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.flContainer, rideListFragment);
+        ft.replace(R.id.flContainer, driverListFragment);
         ft.commit();
     }
 
@@ -42,5 +42,8 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onProfileView(MenuItem item) {
     }
 }

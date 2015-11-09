@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">CarpoolFinder</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">RideOne</string>
+    <string name="menu_status_label">Status</string>
+    <string name="menu_filter_label">Filter</string>
+    <string name="menu_profile_label">Profile</string>
 </resources>

@@ -19,7 +19,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.adapters.RidesAdapter;
+import com.walmartlabs.classwork.rideone.adapters.DriverListAdapter;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
 
@@ -29,17 +29,17 @@ import java.util.List;
 /**
  * Created by abalak5 on 11/8/15.
  */
-public class RideListFragment  extends Fragment {
+public class DriverListFragment extends Fragment {
 
-    private RidesAdapter aRides;
-    private List<User> users;
-    private ListView lvRides;
+    private DriverListAdapter aDrivers;
+    private List<User> drivers;
+    private ListView lvDrivers;
     ProgressBar progressBarFooter;
 
     private SwipeRefreshLayout swipeContainer;
 
-    public static RideListFragment newInstance() {
-        RideListFragment fragment = new RideListFragment();
+    public static DriverListFragment newInstance() {
+        DriverListFragment fragment = new DriverListFragment();
        // fragment.setArguments(args);
         return fragment;
     }
@@ -47,22 +47,22 @@ public class RideListFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        users = new ArrayList<User>();
-        aRides = new RidesAdapter(getActivity(), users);
+        drivers = new ArrayList<User>();
+        aDrivers = new DriverListAdapter(getActivity(), drivers);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_rides_list, container, false);
-        lvRides = (ListView) view.findViewById(R.id.lvRides);
-        lvRides.setOnScrollListener(new EndlessScrollListener() {
+        View view = inflater.inflate(R.layout.fragment_driver_list, container, false);
+        lvDrivers = (ListView) view.findViewById(R.id.lvDrivers);
+        lvDrivers.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int totalItemCount) {
 
             }
         });
 
-        lvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvDrivers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //    Intent i = new Intent(getActivity(), DetailedViewActivity.class);
@@ -90,7 +90,7 @@ public class RideListFragment  extends Fragment {
                 footer.findViewById(R.id.pbFooterLoading);
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
-        lvRides.setAdapter(aRides);
+        lvDrivers.setAdapter(aDrivers);
         fetchAndPopulateTimeline();
         return view;
     }
@@ -103,8 +103,8 @@ public class RideListFragment  extends Fragment {
     }
 
     public void clear() {
-        aRides.clear();
-        aRides.notifyDataSetChanged();
+        aDrivers.clear();
+        aDrivers.notifyDataSetChanged();
     }
 
     protected void fetchAndPopulateTimeline() {
@@ -113,8 +113,8 @@ public class RideListFragment  extends Fragment {
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> list, ParseException e) {
                 if (e == null) {
-                    users.addAll(list);
-                    aRides.notifyDataSetChanged();
+                    drivers.addAll(list);
+                    aDrivers.notifyDataSetChanged();
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
