@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.models.User;
 
 import static com.walmartlabs.classwork.rideone.util.Utils.isPasswordValid;
 
@@ -18,6 +18,8 @@ public class RegisterUserActivity extends AppCompatActivity {
     private EditText edPassword;
     private EditText edPasswordConfirm;
     private EditText edEmail;
+    private EditText edFirstName;
+    private EditText edLastName;
 
 
     @Override
@@ -28,6 +30,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         edPassword = (EditText) findViewById(R.id.edPassword);
         edPasswordConfirm = (EditText) findViewById(R.id.edPasswordConfirm);
         edEmail = (EditText) findViewById(R.id.edEmail);
+        edFirstName = (EditText) findViewById(R.id.edFirstName);
+        edLastName = (EditText) findViewById(R.id.edLastName);
     }
 
     public void registerUser(View view) {
@@ -35,6 +39,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         String password = edPassword.getText().toString();
         String confirmPwd = edPasswordConfirm.getText().toString();
         String email = edEmail.getText().toString();
+        String firstName = edFirstName.getText().toString();
+        String lastName = edLastName.getText().toString();
 
         edUserName.setError(null);
         edPassword.setError(null);
@@ -64,11 +70,13 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         if (!cancel) {
             // Create the ParseUser
-            ParseUser user = new ParseUser();
+            User user = new User();
             // Set core properties
             user.setUsername(userName);
             user.setPassword(password);
             user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
             // Invoke signUpInBackground
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {

@@ -4,18 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * Created by mkrish4 on 11/7/15.
  */
-@ParseClassName("User")
-public class User extends ParseObject {
+@ParseClassName("_User")
+public class User extends ParseUser {
     public User() {}
-
-    public String getUserEmail() {
-        return getString("userEmail");
-    }
 
     public String getFirstName() {
         return getString("firstName");
@@ -27,14 +23,6 @@ public class User extends ParseObject {
 
     public int getTotalSeats() {
         return getInt("totalSeats");
-    }
-
-    public void setUserId(String userId) {
-        put("userId", userId);
-    }
-
-    public void setBody(String body) {
-        put("body", body);
     }
 
     public void setFirstName(String firstName) {
