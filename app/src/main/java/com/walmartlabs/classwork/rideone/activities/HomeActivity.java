@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.fragments.DriverListFragment;
 
@@ -39,6 +40,9 @@ public class HomeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_logout) {
+            ParseUser.logOut();
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

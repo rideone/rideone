@@ -1,5 +1,6 @@
 .gradle
 /local.properties
+/.idea
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
@@ -69,3 +70,4 @@ local.properties
 .idea
 build
 import-summary.txt
+*.iml
