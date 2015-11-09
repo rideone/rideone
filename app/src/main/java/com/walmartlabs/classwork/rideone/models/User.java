@@ -10,12 +10,11 @@ import com.parse.ParseObject;
  * Created by mkrish4 on 11/7/15.
  */
 @ParseClassName("User")
-public class User extends ParseObject implements Parcelable {
-
+public class User extends ParseObject {
     public User() {}
 
-    public String getUserId() {
-        return getString("userId");
+    public String getUserEmail() {
+        return getString("userEmail");
     }
 
     public String getFirstName() {
@@ -24,6 +23,10 @@ public class User extends ParseObject implements Parcelable {
 
     public String getLastName() {
         return getString("lastName");
+    }
+
+    public int getTotalSeats() {
+        return getInt("totalSeats");
     }
 
     public void setUserId(String userId) {
@@ -50,19 +53,17 @@ public class User extends ParseObject implements Parcelable {
         return (Ride) get("ride");
     }
 
-    @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
     }
 
     protected User(Parcel in) {
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
             return new User(in);
