@@ -34,8 +34,6 @@ public class RideListFragment  extends Fragment {
     private RidesAdapter aRides;
     private List<User> users;
     private ListView lvRides;
-    protected long maxId;
-    protected long sinceId = 1;
     ProgressBar progressBarFooter;
 
     private SwipeRefreshLayout swipeContainer;
@@ -49,8 +47,6 @@ public class RideListFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sinceId = 1;
-        maxId = 0;
         users = new ArrayList<User>();
         aRides = new RidesAdapter(getActivity(), users);
     }
@@ -104,10 +100,6 @@ public class RideListFragment  extends Fragment {
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public void addAll(List<User> tweets) {
-        aRides.addAll(tweets);
     }
 
     public void clear() {

@@ -25,7 +25,7 @@ public class RideOneApplication extends Application {
         // Register your parse models here
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Ride.class);
-        Parse.initialize(this, "925H5Y5W7c3MF4qGZAW1jQSdOB4PxsFUn8bjiDvk", "CHlz5l7WQbIVw8tzSOFklabYwIhjuFBWQzXvKuXV");
+        Parse.initialize(this, YOUR_APPLICATION_ID, YOUR_CLIENT_KEY);
         ParseUser.enableRevocableSessionInBackground();
     }
 }
