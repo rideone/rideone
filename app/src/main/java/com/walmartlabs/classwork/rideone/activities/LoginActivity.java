@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
@@ -204,19 +203,14 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            final boolean[] success = {true};
-            ParseUser.logInInBackground(userName, password, new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user != null) {
-                        // Hooray! The user is logged in.
-                    } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                        e.printStackTrace();
-                        success[0] = false;
-                    }
-                }
-            });
-            return success[0];
+            ParseUser user = null;
+            try {
+                user = ParseUser.logIn(userName, password);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                user = null;
+            }
+            return user != null;
         }
 
         @Override
@@ -224,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
 
-            if (success && ParseUser.getCurrentUser() != null) {
+            if (success) {
                 Toast.makeText(LoginActivity.this, "Login succesful : " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
                 loginSuccess();
             } else {
