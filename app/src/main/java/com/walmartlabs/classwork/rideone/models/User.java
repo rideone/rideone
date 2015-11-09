@@ -8,8 +8,8 @@ import com.parse.ParseObject;
  */
 @ParseClassName("User")
 public class User extends ParseObject {
-    public String getUserId() {
-        return getString("userId");
+    public String getUserEmail() {
+        return getString("userEmail");
     }
 
     public String getFirstName() {
@@ -24,12 +24,8 @@ public class User extends ParseObject {
         return getInt("totalSeats");
     }
 
-    public void setUserId(String userId) {
-        put("userId", userId);
-    }
-
-    public void setBody(String body) {
-        put("body", body);
+    public void setUserEmail(String userEmail) {
+        put("userEmail", userEmail);
     }
 
     public void setFirstName(String firstName) {
