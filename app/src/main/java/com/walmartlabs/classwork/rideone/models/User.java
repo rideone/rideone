@@ -1,5 +1,8 @@
 package com.walmartlabs.classwork.rideone.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -7,7 +10,10 @@ import com.parse.ParseObject;
  * Created by mkrish4 on 11/7/15.
  */
 @ParseClassName("User")
-public class User extends ParseObject {
+public class User extends ParseObject implements Parcelable {
+
+    public User() {}
+
     public String getUserId() {
         return getString("userId");
     }
@@ -18,10 +24,6 @@ public class User extends ParseObject {
 
     public String getLastName() {
         return getString("lastName");
-    }
-
-    public int getTotalSeats() {
-        return getInt("totalSeats");
     }
 
     public void setUserId(String userId) {
@@ -40,7 +42,35 @@ public class User extends ParseObject {
         put("lastName", lastName);
     }
 
-    public void setTotalSeats(int totalSeats) {
-        put("totalSeats", totalSeats);
+    public void setRide(Ride ride) {
+        put("ride", ride);
     }
+
+    public Ride getRide() {
+        return (Ride) get("ride");
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
+
+    protected User(Parcel in) {
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
