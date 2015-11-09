@@ -29,7 +29,7 @@
             android:layout_height="20dp"
             android:id="@+id/rightTop">
             <TextView
-                android:id="@+id/tvName"
+                android:id="@+id/tvFirstName"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -46,15 +46,6 @@
                 android:textStyle="normal"
                 android:text="1h"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\@test"
-                android:id="@+id/tvScreenName"
-                android:textSize="12dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/tvName"
-                android:layout_toEndOf="@+id/tvName" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

@@ -2,8 +2,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.walmartlabs.classwork.rideone.activities.HomeActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/miStatus"
+        android:title="@string/menu_status_label"
+        android:icon="@drawable/ic_status"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/miFilter"
+        android:title="@string/menu_filter_label"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/miProfile"
+        android:title="@string/menu_profile_label"
+        android:icon="@mipmap/ic_profile"
+        app:showAsAction="ifRoom"
+        android:onClick="onProfileView">
+    </item>
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="Loading..."
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/footer_progress" />
+
     <item android:id="@+id/action_logout"
         android:title="@string/logout"
         android:orderInCategory="10" app:showAsAction="always"

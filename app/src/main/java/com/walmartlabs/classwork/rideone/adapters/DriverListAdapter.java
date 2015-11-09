@@ -23,16 +23,16 @@ import java.util.TimeZone;
 /**
  * Created by abalak5 on 10/21/15.
  */
-public class RidesAdapter extends ArrayAdapter<User> {
+public class DriverListAdapter extends ArrayAdapter<User> {
     // View lookup cache
     private static class ViewHolder {
         public ImageView ivProfile;
-        public TextView tvName;
+        public TextView tvFirstName;
         public TextView tvRelativeTimeStamp;
         public TextView tvSpotsAvailable;
     }
 
-    public RidesAdapter(Context context, List<User> objects) {
+    public DriverListAdapter(Context context, List<User> objects) {
         super(context, 0, objects);
     }
 
@@ -47,9 +47,9 @@ public class RidesAdapter extends ArrayAdapter<User> {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_ride, parent, false);
+            convertView = inflater.inflate(R.layout.item_driver, parent, false);
             viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
-            viewHolder.tvName = (TextView)convertView.findViewById(R.id.tvName);
+            viewHolder.tvFirstName = (TextView)convertView.findViewById(R.id.tvFirstName);
             viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
             viewHolder.tvRelativeTimeStamp = (TextView)convertView.findViewById(R.id.tvRelativeTimeStamp);
 
@@ -59,9 +59,9 @@ public class RidesAdapter extends ArrayAdapter<User> {
         }
 
         // Populate data into the template view using the data object
-        viewHolder.tvName.setText(Html.fromHtml(user.getFirstName()));
+        viewHolder.tvFirstName.setText(Html.fromHtml(user.getFirstName()));
         Ride ride = (Ride) user.getParseObject("ride");
-        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getTotalSpots())));
+        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getTotalSpots())));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
