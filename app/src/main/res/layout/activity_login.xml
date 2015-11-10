@@ -27,7 +27,8 @@
                     android:id="@+id/edUserName"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:hint="User Name" />
+                    android:hint="User Name"
+                    android:textSize="30sp" />
             </android.support.design.widget.TextInputLayout>
 
 
@@ -39,14 +40,16 @@
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
-                    android:maxLines="1" android:singleLine="true" />
+                    android:maxLines="1" android:singleLine="true"
+                    android:textSize="30sp" />
 
             </android.support.design.widget.TextInputLayout>
 
             <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textSize="30sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,7 +60,8 @@
                 android:onClick="registerUser"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#0a29dd"
-                android:textColorLink="#091973" />
+                android:textColorLink="#091973"
+                android:textSize="25sp" />
 
         </LinearLayout>
     </ScrollView>
