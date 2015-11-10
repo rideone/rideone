@@ -28,7 +28,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:hint="User Name"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/fieldSize" />
             </android.support.design.widget.TextInputLayout>
 
 
@@ -41,7 +41,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/fieldSize" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -49,7 +49,7 @@
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
                 android:textStyle="bold"
-                android:textSize="30sp" />
+                android:textSize="@dimen/fieldSize" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="#0a29dd"
                 android:textColorLink="#091973"
-                android:textSize="25sp" />
+                android:textSize="@dimen/linkTextSize" />
 
         </LinearLayout>
     </ScrollView>

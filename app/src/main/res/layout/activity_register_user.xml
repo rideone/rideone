@@ -19,7 +19,7 @@
             android:hint="@string/hintUserName"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -60,7 +60,7 @@
             android:hint="@string/firstName"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -73,7 +73,7 @@
             android:hint="@string/lastName"
             android:maxLines="1"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -89,7 +89,7 @@
             android:singleLine="true"
             android:hint="@string/email"
             android:layout_gravity="center_horizontal"
-            android:textSize="30sp" />
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <Button android:id="@+id/btnRegister" style="?android:textAppearanceSmall"
@@ -97,7 +97,7 @@
         android:layout_marginTop="16dp" android:text="@string/register"
         android:textStyle="bold"
         android:onClick="registerUser"
-        android:textSize="30sp" />
+        android:textSize="@dimen/fieldSize" />
 
 
 </LinearLayout>
