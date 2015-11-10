@@ -49,7 +49,7 @@
     <string name="hintUserName">User Name</string>
     <string name="hintPassword">Password</string>
     <string name="confirmPassword">Confirm Password</string>
-    <string name="email">Enter email</string>
+    <string name="email">Email</string>
     <string name="register">Register</string>
     <string name="signup_register">Sign up/Register</string>
     <string name="logout">Logout</string>
