@@ -1,5 +1,6 @@
 package com.walmartlabs.classwork.rideone.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -49,5 +50,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onProfileView(MenuItem item) {
+        Intent intent = new Intent(this, RegisterUserActivity.class);
+        intent.putExtra("update", true);
+        startActivity(intent);
     }
 }
