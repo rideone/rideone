@@ -16,6 +16,7 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:onClick="onProfileView"
+            android:src="@mipmap/ic_launcher"
             android:clickable="true"/>
     </RelativeLayout>
 
