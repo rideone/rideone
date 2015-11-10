@@ -32,8 +32,8 @@ public class DriverListAdapter extends ArrayAdapter<User> {
         public TextView tvSpotsAvailable;
     }
 
-    public DriverListAdapter(Context context, List<User> objects) {
-        super(context, 0, objects);
+    public DriverListAdapter(Context context, List<User> drivers) {
+        super(context, 0, drivers);
     }
 
     // Translates a particular `Image` given a position

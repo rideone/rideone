@@ -108,8 +108,8 @@ public class DriverListFragment extends Fragment {
     }
 
     protected void fetchAndPopulateTimeline() {
-        ParseQuery<User> query = ParseQuery.getQuery("User");
-        query.include("ride");
+        ParseQuery<User> query = ParseQuery.getQuery("_User");
+        //query.include("ride");
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> list, ParseException e) {
                 if (e == null) {
