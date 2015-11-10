@@ -53,5 +53,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onProfileView(MenuItem item) {
+        Intent intent = new Intent(this, RegisterUserActivity.class);
+        intent.putExtra("update", true);
+        startActivity(intent);
     }
 }
