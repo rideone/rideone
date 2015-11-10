@@ -33,6 +33,7 @@ proguard/
 
 # Intellij project files
 *.iml
+app/app.iml
 *.ipr
 *.iws
 .idea/
