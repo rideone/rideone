@@ -1,72 +1,78 @@
 package com.walmartlabs.classwork.rideone.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import java.util.Date;
+import java.util.List;
+
 /**
- * Created by abalak5 on 11/8/15.
+ * Created by dmaskev on 11/8/15.
  */
 @ParseClassName("Ride")
-public class Ride extends ParseObject implements Parcelable {
+public class Ride extends ParseObject {
+    public static final String COLUMN_AVAILABLE = "available";
+    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_START_LOCATION = "start_loc";
+    public static final String COLUMN_DESTINATION = "destination";
+    public static final String COLUMN_SPOTS = "spots";
+    public static final String COLUMN_DRIVER = "driver";
+    public static final String COLUMN_RIDERS = "riders";
 
-    public Ride(){}
-
-    public int getTotalSpots() {
-        return getInt("totalSpots");
+    public int getSpots() {
+        return getInt(COLUMN_SPOTS);
     }
 
-    public void setTotalSpots(int totalSpots) {
-        put("totalSpots", totalSpots);
+    public void setSpots(int spots) {
+        put(COLUMN_SPOTS, spots);
     }
 
-    public String getMake() {
-        return getString("make");
+    public boolean isAvailable() {
+        return getBoolean(COLUMN_AVAILABLE);
     }
 
-    public void setMake(String make) {
-        put("make", make);
+    public void setAvailable(boolean available) {
+        put(COLUMN_AVAILABLE, available);
     }
 
-    public String getModel() {
-        return getString("model");
+    public Date getDate() {
+        return getDate(COLUMN_DATE);
     }
 
-    public void setModel(String model) {
-        put("model", model);
+    public void setDate(Date date) {
+        put(COLUMN_DATE, date);
     }
 
-    public String getLicense() {
-        return getString("license");
+    public String getStartLocation() {
+        return getString(COLUMN_START_LOCATION);
     }
 
-    public void setLicense(String license) {
-        put("license", license);
+    public void setStartLocation(String startLocation) {
+        put(COLUMN_START_LOCATION, startLocation);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getDestination() {
+        return getString(COLUMN_DESTINATION);
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void setDestination(String destination) {
+        put(COLUMN_DESTINATION, destination);
     }
 
-    protected Ride(Parcel in) {
+    public void setRiders(List<User> riders) {
+        put(COLUMN_RIDERS, riders);
+    }
+    public List<User> getRiders() {
+        return getList(COLUMN_RIDERS);
     }
 
-    public static final Creator<Ride> CREATOR = new Creator<Ride>() {
-        @Override
-        public Ride createFromParcel(Parcel in) {
-            return new Ride(in);
-        }
+    public void setDriver(User driver) {
+        put(COLUMN_DRIVER, driver);
+    }
 
-        @Override
-        public Ride[] newArray(int size) {
-            return new Ride[size];
-        }
-    };
+    public User getDriver() {
+        return (User) get(COLUMN_DRIVER);
+
+    }
+
 }

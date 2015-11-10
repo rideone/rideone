@@ -44,6 +44,9 @@ public class HomeActivity extends AppCompatActivity {
         } else if (id == R.id.action_logout) {
             ParseUser.logOut();
             finish();
+        } else if (id == R.id.miStatus) {
+            Intent intent = new Intent(this, DriverStatusActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
