@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +21,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.PassengerListAdapter;
@@ -31,13 +37,19 @@ import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_AVAILABLE;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DATE;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DESTINATION;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_START_LOCATION;
 import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
 import static com.walmartlabs.classwork.rideone.models.User.Status.WAIT_LIST;
+import static com.walmartlabs.classwork.rideone.util.Utils.getLocalHourAndMinute;
 import static com.walmartlabs.classwork.rideone.util.Utils.parseHourAndMinute;
 
 /**
@@ -56,7 +68,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
     private EditText etStartTime;
     private Ride ride;
-    private User driver;
+//    private User driver;
+//    private ParseProxyObject proxyRide;
     private Switch swAvailable;
     private Spinner spDestination;
     private Spinner spStartLoc;
@@ -70,26 +83,37 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_status);
         //TODO: navigate back button
-
-
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
         //If Ride doesn't exist, create one with time set to next hour
         //TODO: receive ride and driver from main activity
-        driver = createDefaultUser("Driver", "One", "6506483029", DRIVER);
-        ride = createDefaultRide(driver);
-        riders = new ArrayList<User>(ride.getRiders());
+
+        ride = ((Ride) getIntent().getSerializableExtra("ride")).rebuild();
+//        proxyRide = (ParseProxyObject) getIntent().getSerializableExtra("ride");
+//        List<ParseProxyObject> proxyRiders = (List<ParseProxyObject>) getIntent().getSerializableExtra("riders");
+        riders = (List<User>) getIntent().getSerializableExtra("riders");
+        if(riders == null) {
+            riders = Collections.emptyList();
+        }
+        for(User rider : riders) {
+            rider.rebuild();
+        }
 
 
-        int[] hourAndMinute = Utils.getLocalHourAndMinute(ride.getDate());
+
+//        driver = createDefaultUser("Driver", "One", "6506483029", DRIVER);
+//        riders = new ArrayList<User>(createDummyRiders());
+
+
+        final int[] hourAndMinute = getLocalHourAndMinute(ride.getDate());
         etStartTime = (EditText) findViewById(R.id.etStartTime);
         etStartTime.setText(Utils.formatDuration(hourAndMinute[0], hourAndMinute[1]));
         etStartTime.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                    TimePickerFragment.createInstance(ride.getDate()).show(getSupportFragmentManager(), "timePicker");
+                    TimePickerFragment.createInstance(hourAndMinute[0], hourAndMinute[1]).show(getSupportFragmentManager(), "timePicker");
                 }
 
                 return true;
@@ -148,14 +172,19 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setAvailable(true);
 
         //TODO: remove these dummy passengers
-        ride.setRiders(Arrays.asList(createDefaultUser("Pass", "One", "6506483030", PASSENGER),
-                createDefaultUser("Pass", "Two", "6506483031", PASSENGER),
-                createDefaultUser("Wait", "One", "6506483033", WAIT_LIST),
-                createDefaultUser("Wait", "Two", "6506483034", WAIT_LIST)));
+        ride.setRiders(createDummyRiders());
 
         ride.setSpots(2);
         ride.setDriver(driver);
         return ride;
+    }
+
+    @NonNull
+    private List<User> createDummyRiders() {
+        return Arrays.asList(createDefaultUser("Pass", "One", "6506483030", PASSENGER),
+                createDefaultUser("Pass", "Two", "6506483031", PASSENGER),
+                createDefaultUser("Wait", "One", "6506483033", WAIT_LIST),
+                createDefaultUser("Wait", "Two", "6506483034", WAIT_LIST));
     }
 
     private User createDefaultUser(String name, String lastName, String phone, User.Status status) {
@@ -203,8 +232,45 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     }
 
     public void onSave() {
-        //TODO: save all changes to ride
 
+        //TODO: fetch real db riders based on List<User> riders
+
+        if(!isNullOrEmpty(ride.getObjectId())) {
+            //TODO: fetch existing ride for update
+            ride = Ride.createWithoutData(Ride.class, ride.getObjectId());
+            ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+            query.getInBackground(ride.getObjectId(), new GetCallback<Ride>() {
+                public void done(Ride ride, ParseException e) {
+                    if (e == null) {
+                        populateRideInfo(ride, riders);
+                    }
+                }
+            });
+        } else {
+            ride = Ride.create(Ride.class);
+            populateRideInfo(ride, riders);
+
+        }
+        //TODO: return Ride to main activity
+
+        finish();
+    }
+
+    @NonNull
+    private SaveCallback createSaveCallback() {
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                Log.d(DriverStatusActivity.class.getSimpleName(), "Saved ride");
+                if (e != null) {
+                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to save ride", e);
+                    Toast.makeText(DriverStatusActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    private void populateRideInfo(final Ride ride, final List<User> riders) {
         ride.setAvailable(swAvailable.isChecked());
         ride.setDestination(spDestination.getSelectedItem().toString());
         ride.setDate(parseHourAndMinute(etStartTime.getText().toString()));
@@ -214,17 +280,15 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                Log.d(DriverStatusActivity.class.getSimpleName(), "Saved ride");
-                if (e != null) {
-                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to save ride", e);
-                    Toast.makeText(DriverStatusActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
+                if(e == null) {
+                    for(User rider : riders) {
+                        rider.setRide(ride);
+                        rider.saveInBackground();
+                    }
                 }
             }
         });
 
-        //TODO: return Ride to main activity
-
-        finish();
     }
 
 }

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.walmartlabs.classwork.carpoolfinder"
+        applicationId "com.walmartlabs.classwork.rideone"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1

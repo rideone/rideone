@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
 /**
@@ -82,14 +83,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkLogin() {
-        if (ParseUser.getCurrentUser() != null) { // start with existing user
-            loginSuccess();
+        User user = (User)ParseUser.getCurrentUser();
+        if (user != null) { // start with existing user
+            loginSuccess(user);
         }
     }
 
-    private void loginSuccess() {
+    private void loginSuccess(User user) {
         clearErrors();
         Intent i = new Intent(this, HomeActivity.class);
+        user.flush();
+        i.putExtra("user", user);
         startActivity(i);
     }
 
@@ -191,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, User> {
 
         private final String userName;
         private final String password;
@@ -202,25 +206,25 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            ParseUser user = null;
+        protected User doInBackground(Void... params) {
+            User user = null;
             try {
-                user = ParseUser.logIn(userName, password);
+                user = (User)ParseUser.logIn(userName, password);
             } catch (ParseException e) {
                 e.printStackTrace();
                 user = null;
             }
-            return user != null;
+            return user;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final User successUser) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (successUser != null) {
                 Toast.makeText(LoginActivity.this, "Login succesful : " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
-                loginSuccess();
+                loginSuccess(successUser);
             } else {
                 edUserName.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

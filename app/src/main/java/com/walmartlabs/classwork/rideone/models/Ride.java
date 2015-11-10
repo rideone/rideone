@@ -3,14 +3,18 @@ package com.walmartlabs.classwork.rideone.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dmaskev on 11/8/15.
  */
 @ParseClassName("Ride")
-public class Ride extends ParseObject {
+public class Ride extends ParseObject implements Serializable {
     public static final String COLUMN_AVAILABLE = "available";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_START_LOCATION = "start_loc";
@@ -18,6 +22,38 @@ public class Ride extends ParseObject {
     public static final String COLUMN_SPOTS = "spots";
     public static final String COLUMN_DRIVER = "driver";
     public static final String COLUMN_RIDERS = "riders";
+
+    private Map<String, Object> fields = new HashMap<>();
+
+
+    public Ride putAll(Map<String, Object> fields) {
+        for(Map.Entry<String, Object> entry : fields.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
+
+        return this;
+    }
+
+    public Ride flush() {
+        for(String key : keySet()) {
+            fields.put(key, get(key));
+        }
+        return this;
+    }
+
+    public static ArrayList<Ride> flushArray(List<Ride> rides) {
+        ArrayList<Ride> res = new ArrayList<>(rides.size());
+        for(Ride ride : rides) {
+            res.add(ride.flush());
+        }
+
+        return res;
+    }
+
+    public Ride rebuild() {
+        return putAll(this.fields);
+    }
+
 
     public int getSpots() {
         return getInt(COLUMN_SPOTS);

@@ -17,14 +17,16 @@ import java.util.Date;
  */
 public class TimePickerFragment extends DialogFragment {
 
-    public static final String ARG_TIME = "time";
+    public static final String ARG_TIME_HOUR = "time_hour";
+    public static final String ARG_TIME_MIN = "time_min";
 
     private TimePickerDialog.OnTimeSetListener onTimeListener;
 
-    public static TimePickerFragment createInstance(Date defaultTime) {
+    public static TimePickerFragment createInstance(Integer hour, Integer minute) {
         TimePickerFragment fragment = new TimePickerFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TIME, defaultTime);
+        args.putSerializable(ARG_TIME_HOUR, hour);
+        args.putSerializable(ARG_TIME_MIN, minute);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,10 +44,10 @@ public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Date defaultTime = (Date) getArguments().getSerializable(ARG_TIME);
+        Integer hour = (Integer) getArguments().getSerializable(ARG_TIME_HOUR);
+        Integer min = (Integer) getArguments().getSerializable(ARG_TIME_MIN);
 
-        int[] hourAndMinute = Utils.getLocalHourAndMinute(defaultTime);
-        return new TimePickerDialog(getActivity(), this.onTimeListener, hourAndMinute[0], hourAndMinute[1],
+        return new TimePickerDialog(getActivity(), this.onTimeListener, hour, min,
                 DateFormat.is24HourFormat(getActivity()));
     }
 
