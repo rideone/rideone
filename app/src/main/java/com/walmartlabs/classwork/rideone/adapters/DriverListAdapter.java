@@ -61,7 +61,7 @@ public class DriverListAdapter extends ArrayAdapter<User> {
         // Populate data into the template view using the data object
         viewHolder.tvFirstName.setText(Html.fromHtml(user.getFirstName()));
         Ride ride = (Ride) user.getParseObject("ride");
-        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getTotalSpots())));
+        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots())));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

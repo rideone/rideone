@@ -5,16 +5,66 @@ import android.os.Parcelable;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkrish4 on 11/7/15.
  */
-@ParseClassName("User")
-public class User extends ParseObject {
-    public User() {}
+@ParseClassName("_User")
+public class User extends ParseUser implements Serializable {
 
-    public String getUserEmail() {
-        return getString("userEmail");
+
+
+    public static final String COLUMN_RIDE = "ride";
+    public static final String COLUMN_STATUS = "status";
+
+    public enum Status {
+        PASSENGER, DRIVER, WAIT_LIST, NO_RIDE
+    }
+
+    private Map<String, Object> fields = new HashMap<>();
+
+
+    public User putAll(Map<String, Object> fields) {
+        for(Map.Entry<String, Object> entry : fields.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
+
+        return this;
+    }
+
+    public User flush() {
+        for(String key : keySet()) {
+            if(!key.equals("sessionToken")) {
+                fields.put(key, get(key));
+            }
+
+        }
+        return this;
+    }
+
+    public static ArrayList<User> flushArray(List<User> users) {
+        ArrayList<User> res = new ArrayList<>(users.size());
+        for(User user : users) {
+            res.add(user.flush());
+        }
+
+        return res;
+    }
+
+
+    public User rebuild() {
+        return putAll(this.fields);
+    }
+
+    public String getUserId() {
+        return getString("userId");
     }
 
     public String getFirstName() {
@@ -29,14 +79,6 @@ public class User extends ParseObject {
         return getInt("totalSeats");
     }
 
-    public void setUserId(String userId) {
-        put("userId", userId);
-    }
-
-    public void setBody(String body) {
-        put("body", body);
-    }
-
     public void setFirstName(String firstName) {
         put("firstName", firstName);
     }
@@ -45,33 +87,36 @@ public class User extends ParseObject {
         put("lastName", lastName);
     }
 
+    public void setTotalSeats(int totalSeats) {
+        put("totalSeats", totalSeats);
+    }
+
+    public void setPhone(String phone) {
+        put("phone", phone);
+    }
+
+    public String getPhone() {
+        return getString("phone");
+    }
+
+    public void setStatus(Status status) {
+        put(COLUMN_STATUS, status.name());
+    }
+
+    public Status getStatus() {
+        return Status.valueOf(getString(COLUMN_STATUS));
+    }
+    
     public void setRide(Ride ride) {
-        put("ride", ride);
+        put(COLUMN_RIDE, ride);
     }
 
     public Ride getRide() {
-        return (Ride) get("ride");
+        return (Ride) get(COLUMN_RIDE);
     }
 
-    public int describeContents() {
-        return 0;
+    public boolean isDriver() {
+        return getStatus() == Status.DRIVER;
     }
 
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    protected User(Parcel in) {
-    }
-
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 }

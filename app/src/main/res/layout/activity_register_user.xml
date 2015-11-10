@@ -12,61 +12,92 @@
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edUserName"
-        android:hint="@string/hintUserName"
-        android:maxLines="1"
-        android:singleLine="true"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edUserName"
+            android:hint="@string/hintUserName"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/fieldSize" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edPassword"
+            android:hint="@string/hintPassword"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edPassword"
-        android:hint="@string/hintPassword"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edPasswordConfirm"
+            android:hint="@string/confirmPassword"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edPasswordConfirm"
-        android:hint="@string/confirmPassword"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edFirstName"
+            android:hint="@string/firstName"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/edEmail"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:hint="@string/email"
-        android:layout_gravity="center_horizontal" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edLastName"
+            android:hint="@string/lastName"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/fieldSize" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/edEmail"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:hint="@string/email"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/fieldSize" />
     </android.support.design.widget.TextInputLayout>
 
     <Button android:id="@+id/btnRegister" style="?android:textAppearanceSmall"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="16dp" android:text="@string/register"
         android:textStyle="bold"
-        android:onClick="registerUser"/>
+        android:onClick="registerUser"
+        android:textSize="@dimen/fieldSize" />
 
 
 </LinearLayout>

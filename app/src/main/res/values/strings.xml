@@ -1,5 +1,32 @@
 <resources>
     <string name="action_settings">Settings</string>
+    <string name="action_driver_status">Status</string>
+    <string name="menu_item_save">Save</string>
+    <string name="title_activity_driver_status">Driver Status</string>
+
+    <string-array name="locations">
+        <item>Berkley</item>
+        <item>Burlingame</item>
+        <item>Campbell</item>
+        <item>Cupertino</item>
+        <item>Daly City</item>
+        <item>Dublin</item>
+        <item>Fremont</item>
+        <item>Menlo Park</item>
+        <item>Millbrae</item>
+        <item>Mountain View</item>
+        <item>Oakland</item>
+        <item>Palo Alto</item>
+        <item>Redwood City</item>
+        <item>San Carlos</item>
+        <item>San Francisco</item>
+        <item>San Jose</item>
+        <item>San Mateo</item>
+        <item>Santa Clara</item>
+        <item>Sunnyvale</item>
+        <item>Walnut Creek</item>
+    </string-array>
+
     <string name="title_activity_home">RideOne</string>
     <string name="menu_status_label">Status</string>
     <string name="menu_filter_label">Filter</string>
@@ -22,8 +49,10 @@
     <string name="hintUserName">User Name</string>
     <string name="hintPassword">Password</string>
     <string name="confirmPassword">Confirm Password</string>
-    <string name="email">Enter email</string>
+    <string name="email">Email</string>
     <string name="register">Register</string>
     <string name="signup_register">Sign up/Register</string>
     <string name="logout">Logout</string>
+    <string name="firstName">First name</string>
+    <string name="lastName">Last name</string>
 </resources>
