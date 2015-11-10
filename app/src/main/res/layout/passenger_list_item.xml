@@ -31,6 +31,20 @@
         />
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept?"
+        android:id="@+id/tvAccept"
+        android:layout_alignBaseline="@+id/ivAccept"
+        android:layout_toLeftOf="@+id/ivAccept"
+        android:layout_toStartOf="@+id/ivAccept"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="18dp"
+        android:paddingRight="10dp"
+
+        />
+
 
     <ImageView
         android:layout_width="40dp"

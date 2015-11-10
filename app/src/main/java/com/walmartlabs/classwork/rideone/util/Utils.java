@@ -106,4 +106,9 @@ public class Utils {
         return String.format("%02d:%02d", hour, minute);
     }
 
+
+    public static boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 6;
+    }
 }

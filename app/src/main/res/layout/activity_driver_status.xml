@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.walmartlabs.classwork.rideone.activities.DriverStatusActivity">
+    tools:context="com.walmartlabs.classwork.rideone.activities.DriverStatusActivity"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
 
     <Switch
         android:layout_width="wrap_content"
@@ -149,17 +152,27 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/etSpots"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         >
 
-
-        <ListView
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/lvPassengers"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvPassengers"
+            android:text="Passengers"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
 
+
+            />
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/lvPassengers"
+            android:layout_below="@+id/tvPassengers"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             />
 
 

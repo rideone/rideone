@@ -40,6 +40,7 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
         public ImageView ivRemove;
         public ImageView ivPhone;
         public TextView tvUsername;
+        public TextView tvAccept;
     }
 
     private PassengerListListener listener;
@@ -61,6 +62,7 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
             vh.ivRemove = (ImageView) convertView.findViewById(R.id.ivRemove);
             vh.ivPhone = (ImageView) convertView.findViewById(R.id.ivPhone);
             vh.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+            vh.tvAccept = (TextView) convertView.findViewById(R.id.tvAccept);
             convertView.setTag(vh);
         }
 
@@ -71,15 +73,6 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
             @Override
             public void onClick(View v) {
                 listener.onPhoneCall(user, vh);
-//                Intent callIntent = new Intent(Intent.ACTION_CALL);
-//                callIntent.setData(Uri.parse("tel:" + user.getPhone()));
-//                Context context = PassengerListAdapter.this.getContext();
-//                if (Utils.checkCallPermission(context)) {
-//                    context.startActivity(callIntent);
-//                } else {
-//                    Toast.makeText(context, "Phone call is not permitted", Toast.LENGTH_LONG).show();
-//                }
-
             }
         });
 
@@ -87,15 +80,6 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
             @Override
             public void onClick(View v) {
                 listener.onRemove(user, vh);
-//                //TODO: alert with confirmation
-//                PassengerListAdapter.this.remove(user);
-//
-//                //Inefficient removal
-//                List<User> passengers = ride.getPassengers();
-//                boolean isRemoved = passengers.remove(user);
-//                if(!isRemoved) {
-//                    List<User> waitlist = ride.getWaitList();
-//                    waitlist.remove(user);
             }
         });
 
@@ -103,20 +87,13 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
             @Override
             public void onClick(View v) {
                 listener.onAccept(user, vh);
-//                ivAccept.setVisibility(View.INVISIBLE);
-//
-//                //Inefficient removal
-//                List<User> waitlist = ride.getWaitList();
-//                waitlist.remove(user);
-//                List<User> passengers = ride.getPassengers();
-//                passengers.add(user);
-
             }
 
         });
 
         int acceptVisibility = (user.getStatus() == PASSENGER ? INVISIBLE : VISIBLE);
         vh.ivAccept.setVisibility(acceptVisibility);
+        vh.tvAccept.setVisibility(acceptVisibility);
 
 
         return convertView;

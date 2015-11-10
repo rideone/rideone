@@ -106,6 +106,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             @Override
             public void onAccept(User user, PassengerListAdapter.ViewHolder vh) {
                 vh.ivAccept.setVisibility(View.INVISIBLE);
+                vh.tvAccept.setVisibility(View.INVISIBLE);
                 user.setStatus(PASSENGER);
             }
 

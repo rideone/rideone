@@ -16,8 +16,8 @@ public class RideOneApplication extends Application {
 //    private static final String YOUR_APPLICATION_ID = "O66Xp5K5jnjoLwffwK0h62tH2yz6niLHZHEZBE2S";
 //    private static final String YOUR_CLIENT_KEY = "mPzWVrde3weHblcGgYzzAw5Tar33tyXwm4pOA37v";
 
-    public static final String YOUR_APPLICATION_ID = "YdbpBjG3E8iXNESLZwJSqfeed1jLJekJqEnoZE9j";
-    public static final String YOUR_CLIENT_KEY = "HetcGiLMeQCotj5BIJWtPTMoZNHzzQmIyMRjZLLF";
+    public static final String YOUR_APPLICATION_ID = "dCEUtYeFs0Hd5XMgmUlqsjmHp8wwlEXkcdBnXJ3Y";
+    public static final String YOUR_CLIENT_KEY = "kp8cyn1fr90UK2kVYX6etugkL0nncthHAg0l57lY";
 
     @Override
     public void onCreate() {
