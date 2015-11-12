@@ -1,10 +1,6 @@
 package com.walmartlabs.classwork.rideone.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.parse.ParseClassName;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
@@ -46,7 +42,14 @@ public class User extends ParseUser implements Serializable {
             }
 
         }
+
+        fields.put("objectId", getObjectId());
         return this;
+    }
+
+    public User rebuild() {
+        User user = User.createWithoutData(User.class, fields.get("objectId").toString());
+        return user.putAll(this.fields);
     }
 
     public static ArrayList<User> flushArray(List<User> users) {
@@ -56,11 +59,6 @@ public class User extends ParseUser implements Serializable {
         }
 
         return res;
-    }
-
-
-    public User rebuild() {
-        return putAll(this.fields);
     }
 
     public String getUserId() {

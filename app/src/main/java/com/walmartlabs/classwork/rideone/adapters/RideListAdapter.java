@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Ride;
-import com.walmartlabs.classwork.rideone.models.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,7 +22,7 @@ import java.util.TimeZone;
 /**
  * Created by abalak5 on 10/21/15.
  */
-public class DriverListAdapter extends ArrayAdapter<User> {
+public class RideListAdapter extends ArrayAdapter<Ride> {
     // View lookup cache
     private static class ViewHolder {
         public ImageView ivProfile;
@@ -32,8 +31,8 @@ public class DriverListAdapter extends ArrayAdapter<User> {
         public TextView tvSpotsAvailable;
     }
 
-    public DriverListAdapter(Context context, List<User> drivers) {
-        super(context, 0, drivers);
+    public RideListAdapter(Context context, List<Ride> rides) {
+        super(context, 0, rides);
     }
 
     // Translates a particular `Image` given a position
@@ -41,7 +40,7 @@ public class DriverListAdapter extends ArrayAdapter<User> {
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
         // Get the data item for this position
-        final User user = getItem(position);
+        final Ride ride = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -59,8 +58,7 @@ public class DriverListAdapter extends ArrayAdapter<User> {
         }
 
         // Populate data into the template view using the data object
-        viewHolder.tvFirstName.setText(Html.fromHtml(user.getFirstName()));
-        Ride ride = (Ride) user.getParseObject("ride");
+        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
         if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots())));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override

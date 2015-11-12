@@ -38,6 +38,8 @@ public class Ride extends ParseObject implements Serializable {
         for(String key : keySet()) {
             fields.put(key, get(key));
         }
+
+        fields.put("objectId", getObjectId());
         return this;
     }
 
@@ -51,7 +53,8 @@ public class Ride extends ParseObject implements Serializable {
     }
 
     public Ride rebuild() {
-        return putAll(this.fields);
+        Ride ride = Ride.createWithoutData(Ride.class, fields.get("objectId").toString());
+        return ride.putAll(this.fields);
     }
 
 

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.fragments.DriverListFragment;
+import com.walmartlabs.classwork.rideone.fragments.RideListFragment;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.Utils;
@@ -39,19 +39,23 @@ public class HomeActivity extends AppCompatActivity {
 
         user = ((User) getIntent().getSerializableExtra("user")).rebuild();
         //TODO: fetch ride from db based on user id
-        ride = createDummyRide();
+        ride = user.getRide();
 //        proxyRide = new ParseProxyObject(ride);
 
+        if(ride == null) {
+            ride = new Ride();
+            ride.setAvailable(true);
+            ride.setDate(new Date());
+            ride.setRiders(new ArrayList<User>());
+            ride.setSpots(2);
+            //TODO: preset ride values from driver's profile
+        }
         //TODO: fetch riders associated with this ride from db
-        List<User> riders = ride.getRiders();
+       // List<User> riders = ride.getRiders();
 
-        //TODO: need real user for creating/canceling ride requests
-        user = null;
-
-
-        DriverListFragment driverListFragment = DriverListFragment.newInstance();
+        RideListFragment rideListFragment = RideListFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.flContainer, driverListFragment);
+        ft.replace(R.id.flContainer, rideListFragment);
         ft.commit();
     }
 
@@ -79,17 +83,9 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DriverStatusActivity.class);
 //            intent.putExtra("driver", proxyUser);
 
-            if(ride == null) {
-                Ride ride = new Ride();
-                ride.setAvailable(true);
-                ride.setDate(new Date());
-                ride.setRiders(new ArrayList<User>());
-                //TODO: preset ride values from driver's profile
-            }
-
             ride.flush();
             intent.putExtra("ride", ride);
-            intent.putExtra("riders", User.flushArray(ride.getRiders()));
+//            intent.putExtra("riders", User.flushArray(ride.getRiders()));
 
             startActivity(intent);
 
@@ -109,7 +105,9 @@ public class HomeActivity extends AppCompatActivity {
         Ride ride = new Ride();
         ride.setDate(Utils.getNextHour());
         ride.setAvailable(true);
-
+        User driver = new User();
+        driver.setFirstName("Driver1");
+        ride.setDriver(driver);
         ride.setRiders(createDummyRiders());
 
         ride.setSpots(2);
