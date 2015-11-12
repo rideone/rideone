@@ -19,9 +19,11 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.adapters.DriverListAdapter;
+import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
+import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
+import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +31,17 @@ import java.util.List;
 /**
  * Created by abalak5 on 11/8/15.
  */
-public class DriverListFragment extends Fragment {
+public class RideListFragment extends Fragment {
 
-    private DriverListAdapter aDrivers;
-    private List<User> drivers;
-    private ListView lvDrivers;
+    private RideListAdapter aRides;
+    private List<Ride> rides;
+    private ListView lvRides;
     ProgressBar progressBarFooter;
 
     private SwipeRefreshLayout swipeContainer;
 
-    public static DriverListFragment newInstance() {
-        DriverListFragment fragment = new DriverListFragment();
+    public static RideListFragment newInstance() {
+        RideListFragment fragment = new RideListFragment();
        // fragment.setArguments(args);
         return fragment;
     }
@@ -47,26 +49,26 @@ public class DriverListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        drivers = new ArrayList<User>();
-        aDrivers = new DriverListAdapter(getActivity(), drivers);
+        rides = new ArrayList<Ride>();
+        aRides = new RideListAdapter(getActivity(), rides);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_list, container, false);
-        lvDrivers = (ListView) view.findViewById(R.id.lvDrivers);
-        lvDrivers.setOnScrollListener(new EndlessScrollListener() {
+        lvRides = (ListView) view.findViewById(R.id.lvDrivers);
+        lvRides.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int totalItemCount) {
 
             }
         });
 
-        lvDrivers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //    Intent i = new Intent(getActivity(), DetailedViewActivity.class);
-            //    startActivity(i);
+                //    Intent i = new Intent(getActivity(), DetailedViewActivity.class);
+                //    startActivity(i);
             }
         });
 
@@ -90,8 +92,8 @@ public class DriverListFragment extends Fragment {
                 footer.findViewById(R.id.pbFooterLoading);
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
-        lvDrivers.setAdapter(aDrivers);
-        fetchAndPopulateTimeline();
+        lvRides.setAdapter(aRides);
+        getDummyTimeline();
         return view;
     }
 
@@ -103,18 +105,31 @@ public class DriverListFragment extends Fragment {
     }
 
     public void clear() {
-        aDrivers.clear();
-        aDrivers.notifyDataSetChanged();
+        aRides.clear();
+        aRides.notifyDataSetChanged();
+    }
+
+    public void getDummyTimeline() {
+        Ride ride = new Ride();
+        ride.setDate(Utils.getNextHour());
+        ride.setAvailable(true);
+        User driver = new User();
+        driver.setFirstName("Driver1");
+        ride.setDriver(driver);
+
+        ride.setSpots(2);
+        aRides.add(ride);
     }
 
     protected void fetchAndPopulateTimeline() {
-        ParseQuery<User> query = ParseQuery.getQuery("_User");
+        ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+        query.whereEqualTo("available", "true");
         //query.include("ride");
-        query.findInBackground(new FindCallback<User>() {
-            public void done(List<User> list, ParseException e) {
+        query.findInBackground(new FindCallback<Ride>() {
+            public void done(List<Ride> list, ParseException e) {
                 if (e == null) {
-                    drivers.addAll(list);
-                    aDrivers.notifyDataSetChanged();
+                    rides.addAll(list);
+                    aRides.notifyDataSetChanged();
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
