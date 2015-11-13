@@ -1,21 +1,24 @@
 package com.walmartlabs.classwork.rideone.models;
 
+import com.google.common.base.Strings;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * Created by mkrish4 on 11/7/15.
  */
 @ParseClassName("_User")
-public class User extends ParseUser implements Serializable {
-
-
+public class User extends ParseUser implements CustomSerializable<User> {
 
     public static final String COLUMN_RIDE = "ride";
     public static final String COLUMN_STATUS = "status";
@@ -26,15 +29,12 @@ public class User extends ParseUser implements Serializable {
 
     private Map<String, Object> fields = new HashMap<>();
 
-
-    public User putAll(Map<String, Object> fields) {
-        for(Map.Entry<String, Object> entry : fields.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
-
-        return this;
+    @Override
+    public Map<String, Object> getFields() {
+        return this.fields;
     }
 
+    @Override
     public User flush() {
         for(String key : keySet()) {
             if(!key.equals("sessionToken")) {
@@ -47,9 +47,17 @@ public class User extends ParseUser implements Serializable {
         return this;
     }
 
+    @Override
     public User rebuild() {
-        User user = User.createWithoutData(User.class, fields.get("objectId").toString());
-        return user.putAll(this.fields);
+        String objectId = fields.get("objectId").toString();
+        User model = User.createWithoutData(User.class, objectId);
+
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            Object value = entry.getValue();
+            model.put(entry.getKey(), value);
+        }
+
+        return model;
     }
 
     public static ArrayList<User> flushArray(List<User> users) {
@@ -60,6 +68,9 @@ public class User extends ParseUser implements Serializable {
 
         return res;
     }
+
+
+
 
     public String getUserId() {
         return getString("userId");
@@ -102,15 +113,12 @@ public class User extends ParseUser implements Serializable {
     }
 
     public Status getStatus() {
-        return Status.valueOf(getString(COLUMN_STATUS));
+        String statusStr = getString(COLUMN_STATUS);
+        return (isNullOrEmpty(statusStr) ? Status.NO_RIDE : Status.valueOf(statusStr));
     }
     
     public void setRide(Ride ride) {
         put(COLUMN_RIDE, ride);
-    }
-
-    public Ride getRide() {
-        return (Ride) get(COLUMN_RIDE);
     }
 
     public boolean isDriver() {
