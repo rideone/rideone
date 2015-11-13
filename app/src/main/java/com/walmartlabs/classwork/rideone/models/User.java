@@ -1,16 +1,12 @@
 package com.walmartlabs.classwork.rideone.models;
 
-import com.google.common.base.Strings;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
