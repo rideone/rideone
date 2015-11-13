@@ -1,9 +1,9 @@
 package com.walmartlabs.classwork.rideone.app;
 
 import android.app.Application;
-import android.os.Message;
 
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.models.Ride;
@@ -28,5 +28,6 @@ public class RideOneApplication extends Application {
         ParseObject.registerSubclass(Ride.class);
         Parse.initialize(this, YOUR_APPLICATION_ID, YOUR_CLIENT_KEY);
         ParseUser.enableRevocableSessionInBackground();
+        ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 }
