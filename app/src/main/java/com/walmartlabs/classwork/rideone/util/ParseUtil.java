@@ -19,6 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by dmaskev on 11/12/15.
  */
 public class ParseUtil {
+    public static final int ERR_RECORD_NOT_FOUND = 101;
+
     public static void saveInBatch(List<? extends ParseObject> models, final SaveCallback callback) {
         final AtomicInteger count = new AtomicInteger(models.size());
         final List<ParseException> exceptions = Collections.synchronizedList(new ArrayList<ParseException>());

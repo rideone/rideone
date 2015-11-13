@@ -18,6 +18,8 @@ public class User extends ParseUser implements CustomSerializable<User> {
 
     public static final String COLUMN_RIDE = "ride";
     public static final String COLUMN_STATUS = "status";
+    public static final String COLUMN_ID = "objectId";
+
 
     public enum Status {
         PASSENGER, DRIVER, WAIT_LIST, NO_RIDE

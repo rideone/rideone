@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,11 +61,15 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         }
 
         // Populate data into the template view using the data object
-//        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
+        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
+        viewHolder.tvDestination.setText("to: " + ride.getDestination());
+
+
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         viewHolder.tvSpotsAvailable.setText((String.valueOf(ride.getSpots()) + " spots"));
         viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
         viewHolder.tvDestination.setText(ride.getDestination());
+        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots()) + " spots"));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

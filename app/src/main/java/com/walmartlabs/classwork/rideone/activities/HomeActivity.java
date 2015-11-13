@@ -101,12 +101,19 @@ public class HomeActivity extends AppCompatActivity {
 
                 RideListFragment rideListFragment = (RideListFragment) getSupportFragmentManager().findFragmentById(R.id.flContainer);
 
-                Ride topRide = rideListFragment.aRides.getItem(0);
-                if(!ride.getObjectId().equals(topRide.getObjectId())) {
-                    rideListFragment.aRides.insert(ride, 0);
-                } else {
-                    rideListFragment.rides.set(0, ride);
+                //TODO: Fix inefficient way of finding the existing ride
+                int existingRidePos = -1;
+                for(int i = 0; i < rideListFragment.rides.size(); i++) {
+                    if(rideListFragment.rides.get(i).getObjectId().equals(ride.getObjectId())) {
+                        existingRidePos = i;
+                    }
+                }
+
+                if(existingRidePos != -1) {
+                    rideListFragment.rides.set(existingRidePos, ride);
                     rideListFragment.aRides.notifyDataSetChanged();
+                } else {
+                    rideListFragment.aRides.insert(ride, 0);
                 }
             }
         }
@@ -122,35 +129,35 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private Ride createDummyRide() {
-        Ride ride = new Ride();
-        ride.setDate(Utils.getNextHour());
-        ride.setAvailable(true);
-        User driver = new User();
-        driver.setFirstName("Driver1");
-        ride.setDriver(driver);
-        ride.setRiders(createDummyRiders());
-
-        ride.setSpots(2);
-        return ride;
-    }
-
-    @NonNull
-    private List<User> createDummyRiders() {
-        return Arrays.asList(createUser("Pass", "One", "6506483030", PASSENGER),
-                createUser("Pass", "Two", "6506483031", PASSENGER),
-                createUser("Wait", "One", "6506483033", WAIT_LIST),
-                createUser("Wait", "Two", "6506483034", WAIT_LIST));
-    }
-
-    private User createUser(String name, String lastName, String phone, User.Status status) {
-        User u = new User();
-        u.setFirstName(name);
-        u.setLastName(lastName);
-        u.setPhone(phone);
-        u.setStatus(status);
-        return u;
-    }
+//    private Ride createDummyRide() {
+//        Ride ride = new Ride();
+//        ride.setDate(Utils.getNextHour());
+//        ride.setAvailable(true);
+//        User driver = new User();
+//        driver.setFirstName("Driver1");
+//        ride.setDriver(driver);
+//        ride.setRiders(createDummyRiders());
+//
+//        ride.setSpots(2);
+//        return ride;
+//    }
+//
+//    @NonNull
+//    private List<User> createDummyRiders() {
+//        return Arrays.asList(createUser("Pass", "One", "6506483030", PASSENGER),
+//                createUser("Pass", "Two", "6506483031", PASSENGER),
+//                createUser("Wait", "One", "6506483033", WAIT_LIST),
+//                createUser("Wait", "Two", "6506483034", WAIT_LIST));
+//    }
+//
+//    private User createUser(String name, String lastName, String phone, User.Status status) {
+//        User u = new User();
+//        u.setFirstName(name);
+//        u.setLastName(lastName);
+//        u.setPhone(phone);
+//        u.setStatus(status);
+//        return u;
+//    }
 
 
 }
