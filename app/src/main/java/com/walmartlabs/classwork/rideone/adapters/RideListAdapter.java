@@ -66,7 +66,6 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
-        viewHolder.tvSpotsAvailable.setText((String.valueOf(ride.getSpots()) + " spots"));
         viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
         viewHolder.tvDestination.setText(ride.getDestination());
         viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots()) + " spots"));
