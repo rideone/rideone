@@ -28,6 +28,23 @@
         <item>Walnut Creek</item>
     </string-array>
 
+    <string-array name="spots">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array >
+
+    <string-array name="timerange">
+        <item>3:00 to 4:00</item>
+        <item>4:00 to 5:00</item>
+        <item>5:00 to 6:00</item>
+        <item>6:00 to 7:00</item>
+    </string-array >
+
+
     <string name="title_activity_home">RideOne</string>
     <string name="menu_status_label">Status</string>
     <string name="menu_filter_label">Filter</string>
@@ -56,4 +73,7 @@
     <string name="logout">Logout</string>
     <string name="firstName">First name</string>
     <string name="lastName">Last name</string>
+    <string name="title_activity_filter">FilterActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

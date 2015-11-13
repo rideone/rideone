@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,14 +21,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.PassengerListAdapter;
@@ -41,21 +36,13 @@ import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_AVAILABLE;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DATE;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DESTINATION;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_START_LOCATION;
-import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
-import static com.walmartlabs.classwork.rideone.models.User.Status.WAIT_LIST;
 import static com.walmartlabs.classwork.rideone.util.Utils.getLocalHourAndMinute;
 import static com.walmartlabs.classwork.rideone.util.Utils.parseHourAndMinute;
 
@@ -354,6 +341,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
             //Combine riders, removePassengers and ride into one list
             List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride));
+
+
             ParseUtil.saveInBatch(models, callback);
         }
         //If ride doesn't exist: create ride first, and then update the passengers
@@ -372,7 +361,6 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                     ParseUtil.saveInBatch(passengers, callback);
                 }
             });
-
 
 
         }
