@@ -13,7 +13,6 @@ import com.walmartlabs.classwork.rideone.models.Ride;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -26,8 +25,9 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
     private static class ViewHolder {
         public ImageView ivProfile;
         public TextView tvFirstName;
-        public TextView tvRelativeTimeStamp;
+        public TextView tvTime;
         public TextView tvSpotsAvailable;
+        public TextView tvStartLoc;
         public TextView tvDestination;
     }
 
@@ -50,8 +50,9 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
             viewHolder.tvFirstName = (TextView)convertView.findViewById(R.id.tvFirstName);
             viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
-            viewHolder.tvRelativeTimeStamp = (TextView)convertView.findViewById(R.id.tvRelativeTimeStamp);
+            viewHolder.tvTime = (TextView)convertView.findViewById(R.id.tvTime);
             viewHolder.tvDestination = (TextView)convertView.findViewById(R.id.tvDestination);
+            viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
 
             convertView.setTag(viewHolder);
         } else {
@@ -62,6 +63,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 //        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         viewHolder.tvSpotsAvailable.setText((String.valueOf(ride.getSpots()) + " spots"));
+        viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
         viewHolder.tvDestination.setText(ride.getDestination());
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +71,9 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             }
         });
 
-        try {
-            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-            String currDateStr = df.format(Calendar.getInstance().getTime());
-            Date currDate = df.parse(currDateStr);
-
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String startTime = df.format(ride.getDate());
+        viewHolder.tvTime.setText(startTime);
 /*            Date tweetDate = getTimeStamp(user.getCreatedAt());
             String timeStamp = getRelativeTimeStamp(currDate, tweetDate);
             viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
@@ -89,9 +89,6 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
                 *//*.placeholder(R.drawable.ic_nocover)*//*
                     .transform(transformation)
                     .into(viewHolder.ivProfile);*/
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         // Return the completed view to render on screen
         return convertView;
