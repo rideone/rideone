@@ -1,7 +1,6 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         public TextView tvFirstName;
         public TextView tvRelativeTimeStamp;
         public TextView tvSpotsAvailable;
+        public TextView tvDestination;
     }
 
     public RideListAdapter(Context context, List<Ride> rides) {
@@ -51,6 +51,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.tvFirstName = (TextView)convertView.findViewById(R.id.tvFirstName);
             viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
             viewHolder.tvRelativeTimeStamp = (TextView)convertView.findViewById(R.id.tvRelativeTimeStamp);
+            viewHolder.tvDestination = (TextView)convertView.findViewById(R.id.tvDestination);
 
             convertView.setTag(viewHolder);
         } else {
@@ -58,9 +59,10 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         }
 
         // Populate data into the template view using the data object
-        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
+//        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
-        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots()) + " spots"));
+        viewHolder.tvSpotsAvailable.setText((String.valueOf(ride.getSpots()) + " spots"));
+        viewHolder.tvDestination.setText(ride.getDestination());
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

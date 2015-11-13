@@ -81,6 +81,9 @@ public class HomeActivity extends AppCompatActivity {
 
             startActivityForResult(intent, INTENT_REQUEST_DRIVER_STATUS);
 
+        } else if (id == R.id.miFilter) {
+            Intent intent = new Intent(this, FilterActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

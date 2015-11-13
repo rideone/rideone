@@ -21,9 +21,7 @@ import com.parse.ParseQuery;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
 import com.walmartlabs.classwork.rideone.models.Ride;
-import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
-import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +91,7 @@ public class RideListFragment extends Fragment {
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
         lvRides.setAdapter(aRides);
-        getDummyTimeline();
+        fetchAndPopulateTimeline();
         return view;
     }
 
@@ -109,21 +107,21 @@ public class RideListFragment extends Fragment {
         aRides.notifyDataSetChanged();
     }
 
-    public void getDummyTimeline() {
-        Ride ride = new Ride();
-        ride.setDate(Utils.getNextHour());
-        ride.setAvailable(true);
-        User driver = new User();
-        driver.setFirstName("Driver1");
-        ride.setDriver(driver);
-
-        ride.setSpots(2);
-        aRides.add(ride);
-    }
+//    public void getDummyTimeline() {
+//        Ride ride = new Ride();
+//        ride.setDate(Utils.getNextHour());
+//        ride.setAvailable(true);
+//        User driver = new User();
+//        driver.setFirstName("Driver1");
+//        ride.setDriver(driver);
+//
+//        ride.setSpots(2);
+//        aRides.add(ride);
+//    }
 
     protected void fetchAndPopulateTimeline() {
-        ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
-        query.whereEqualTo("available", "true");
+        ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);;
+        query.whereEqualTo("available", true);
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
             public void done(List<Ride> list, ParseException e) {
