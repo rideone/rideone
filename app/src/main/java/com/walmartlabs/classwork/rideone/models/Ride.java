@@ -117,6 +117,9 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public void setDriverId(String driverId) {
         put(COLUMN_DRIVER, driverId);
     }
+    public String getDriverId() {
+        return getString(COLUMN_DRIVER);
+    }
 
     public void setDriver(User driver) {
         this.driver = driver;

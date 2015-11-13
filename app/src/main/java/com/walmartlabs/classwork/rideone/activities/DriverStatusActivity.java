@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,14 +21,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.PassengerListAdapter;
@@ -41,21 +37,14 @@ import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_AVAILABLE;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DATE;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DESTINATION;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_START_LOCATION;
-import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
-import static com.walmartlabs.classwork.rideone.models.User.Status.WAIT_LIST;
+import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FOUND;
 import static com.walmartlabs.classwork.rideone.util.Utils.getLocalHourAndMinute;
 import static com.walmartlabs.classwork.rideone.util.Utils.parseHourAndMinute;
 
@@ -134,31 +123,26 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         Ride rideArg = ((Ride) getIntent().getSerializableExtra("ride"));
         if(rideArg != null) {
             ride = rideArg.rebuild();
-        }
-
-        if (ride != null) {
             setupRideInfo();
-        }
-        else {
+        } else {
             ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
             query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
-            query.findInBackground(new FindCallback<Ride>() {
-                public void done(List<Ride> rideList, ParseException e) {
-
-                      if (e != null) {
+            query.getFirstInBackground(new GetCallback<Ride>() {
+                public void done(Ride rideDb, ParseException e) {
+                    if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                         Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching rides for driver " + driver.getObjectId());
                         alert(R.string.alert_network_error);
                         return;
-                    } else {
-                        Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + rideList.size() + " rides");
-                        if (rideList != null && !rideList.isEmpty()) {
-                            ride = rideList.get(0);
-                        } else {
-                            ride = createDefaultRide(driver);
-                        }
-
-                        setupRideInfo();
                     }
+
+                    if(rideDb == null) {
+                        ride = createDefaultRide(driver);
+                    } else {
+                        ride = rideDb;
+                    }
+
+                    setupRideInfo();
+
                 }
             });
         }
@@ -219,18 +203,18 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         query.whereEqualTo(User.COLUMN_RIDE, ride);
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> list, ParseException e) {
-                if (e != null) {
+                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                     Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching riders for ride " + ride.getObjectId());
                     alert(R.string.alert_network_error);
                     return;
-                } else {
-                    Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + list.size() + " riders");
-                    if (list != null && !list.isEmpty()) {
-//                            riders.addAll(list);
-                        aPassengers.addAll(list);
-//                            aPassengers.notifyDataSetChanged();
-                    }
                 }
+
+
+                if (list != null && !list.isEmpty()) {
+                    Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + list.size() + " riders");
+                    aPassengers.addAll(list);
+                }
+
             }
         });
     }

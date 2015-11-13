@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -23,10 +26,14 @@ import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
-import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_AVAILABLE;
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
+import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FOUND;
 
 /**
  * Created by abalak5 on 11/8/15.
@@ -93,7 +100,8 @@ public class RideListFragment extends Fragment {
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
         lvRides.setAdapter(aRides);
-        getDummyTimeline();
+        fetchAndPopulateRideList();
+//        getDummyTimeline();
         return view;
     }
 
@@ -106,33 +114,75 @@ public class RideListFragment extends Fragment {
 
     public void clear() {
         aRides.clear();
-        aRides.notifyDataSetChanged();
     }
 
-    public void getDummyTimeline() {
-        Ride ride = new Ride();
-        ride.setDate(Utils.getNextHour());
-        ride.setAvailable(true);
-        User driver = new User();
-        driver.setFirstName("Driver1");
-        ride.setDriver(driver);
+//    public void getDummyTimeline() {
+//        Ride ride = new Ride();
+//        ride.setDate(Utils.getNextHour());
+//        ride.setAvailable(true);
+//        User driver = new User();
+//        driver.setFirstName("Driver1");
+//        ride.setDriver(driver);
+//
+//        ride.setSpots(2);
+//        aRides.add(ride);
+//    }
 
-        ride.setSpots(2);
-        aRides.add(ride);
-    }
-
-    protected void fetchAndPopulateTimeline() {
+    private void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
-        query.whereEqualTo("available", "true");
+        query.whereEqualTo(COLUMN_AVAILABLE, true);
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
-            public void done(List<Ride> list, ParseException e) {
-                if (e == null) {
-                    rides.addAll(list);
-                    aRides.notifyDataSetChanged();
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
+            public void done(final List<Ride> rideList, ParseException e) {
+                if(e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
+                    Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve rideList ", e);
+                    //TODO: show Toast alert for network error
                 }
+
+                if(rideList == null || rideList.isEmpty()) {
+                    return;
+                }
+
+                Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
+                    @Override
+                    public String apply(Ride input) {
+                        return input.getDriverId();
+                    }
+                };
+                final List<String> driverIds = Lists.transform(rideList, driverIdFromRide);
+                final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(rideList, driverIdFromRide);
+
+                ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, driverIds).findInBackground(new FindCallback<User>() {
+                    @Override
+                    public void done(List<User> driverList, ParseException e) {
+                        if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
+                            Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve driverList ", e);
+                            //TODO: show Toast alert for network error
+                            return;
+                        }
+
+                        if (driverList == null || driverList.isEmpty()) {
+                            String msg = "No drivers found for " + driverIds;
+                            Log.e(RideListFragment.class.getSimpleName(), msg, new IllegalStateException(msg));
+                            return;
+                        }
+
+                        for (User driver : driverList) {
+                            Ride ride = driverIdToRideMap.get(driver.getObjectId());
+                            if (ride == null) {
+                                String msg = "Ride is null for given driver " + driver.getObjectId();
+                                Log.e(RideListFragment.class.getSimpleName(), msg, new IllegalStateException(msg));
+                                continue;
+                            }
+
+                            ride.setDriver(driver);
+                        }
+
+                        aRides.addAll(rideList);
+
+                    }
+                });
+
             }
         });
     }
