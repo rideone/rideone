@@ -1,5 +1,6 @@
 package com.walmartlabs.classwork.rideone.activities;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -33,17 +36,21 @@ import com.walmartlabs.classwork.rideone.adapters.PassengerListAdapter;
 import com.walmartlabs.classwork.rideone.fragments.TimePickerFragment;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_AVAILABLE;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DATE;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DESTINATION;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_START_LOCATION;
 import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
@@ -61,21 +68,54 @@ import static com.walmartlabs.classwork.rideone.util.Utils.parseHourAndMinute;
  * * set number of spots available
  * * list passengers pending/confirmed
  * * confirm/remove a passenger
- *
+ * <p/>
  * Created by dmaskev on 11/8/15.
  */
 public class DriverStatusActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
+    public static final int DEFAULT_SPOTS = 2;
+
     private EditText etStartTime;
     private Ride ride;
-//    private User driver;
-//    private ParseProxyObject proxyRide;
+    private User driver;
+    //    private ParseProxyObject proxyRide;
     private Switch swAvailable;
     private Spinner spDestination;
     private Spinner spStartLoc;
     private ArrayAdapter<User> aPassengers;
     private EditText etSpots;
-    private List<User> riders;
+    private List<User> riders = new ArrayList<>();
+    private List<User> removePassengers = new ArrayList<>();
+
+    PassengerListAdapter.PassengerListListener passengerListListener = new PassengerListAdapter.PassengerListListener() {
+        @Override
+        public void onAccept(User user, PassengerListAdapter.ViewHolder vh) {
+            vh.ivAccept.setVisibility(View.INVISIBLE);
+            vh.tvAccept.setVisibility(View.INVISIBLE);
+            user.setStatus(PASSENGER);
+        }
+
+        @Override
+        public void onRemove(User user, PassengerListAdapter.ViewHolder vh) {
+//                //TODO: alert with confirmation
+            aPassengers.remove(user);
+            user.setStatus(NO_RIDE);
+            removePassengers.add(user);
+        }
+
+        @Override
+        public void onPhoneCall(User user, PassengerListAdapter.ViewHolder vh) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + user.getPhone()));
+            Context context = DriverStatusActivity.this;
+            if (Utils.checkCallPermission(context)) {
+                context.startActivity(callIntent);
+            } else {
+                Toast.makeText(context, "Phone call is not permitted", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    };
 
 
     @Override
@@ -89,23 +129,127 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         //If Ride doesn't exist, create one with time set to next hour
         //TODO: receive ride and driver from main activity
 
-        ride = ((Ride) getIntent().getSerializableExtra("ride")).rebuild();
+
+        driver = ((User) getIntent().getSerializableExtra("user")).rebuild();
+        Ride rideArg = ((Ride) getIntent().getSerializableExtra("ride"));
+        if(rideArg != null) {
+            ride = rideArg.rebuild();
+        }
+
+        if (ride != null) {
+            setupRideInfo();
+        }
+        else {
+            ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+            query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
+            query.findInBackground(new FindCallback<Ride>() {
+                public void done(List<Ride> rideList, ParseException e) {
+
+                      if (e != null) {
+                        Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching rides for driver " + driver.getObjectId());
+                        alert(R.string.alert_network_error);
+                        return;
+                    } else {
+                        Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + rideList.size() + " rides");
+                        if (rideList != null && !rideList.isEmpty()) {
+                            ride = rideList.get(0);
+                        } else {
+                            ride = createDefaultRide(driver);
+                        }
+
+                        setupRideInfo();
+                    }
+                }
+            });
+        }
+//        fetchedComment.getParseObject("post")
+//                .fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+//                    public void done(ParseObject post, ParseException e) {
+//                        String title = post.getString("title");
+//                        // Do something with your new title variable
+//                    }
+//                });
+
+//        ride = ((Ride) getIntent().getSerializableExtra("ride")).rebuild();
 //        proxyRide = (ParseProxyObject) getIntent().getSerializableExtra("ride");
 //        List<ParseProxyObject> proxyRiders = (List<ParseProxyObject>) getIntent().getSerializableExtra("riders");
-        riders = (List<User>) getIntent().getSerializableExtra("riders");
-        if(riders == null) {
-            riders = Collections.emptyList();
+
+
+    }
+
+    private Ride createDefaultRide(User driver) {
+        Ride ride = new Ride();
+        ride.setAvailable(true);
+        ride.setDate(new Date());
+        ride.setRiders(new ArrayList<User>());
+        ride.setSpots(DEFAULT_SPOTS);
+        ride.setDriverId(driver.getObjectId());
+        return ride;
+    }
+
+    private void setupRideInfo() {
+        setupPassengerList();
+        setupStartTimeWidget();
+        setupSwitchWidget();
+        setupSpinners();
+
+        etSpots = (EditText) findViewById(R.id.etSpots);
+        etSpots.setText(String.valueOf(ride.getSpots()));
+    }
+
+    private void setupPassengerList() {
+        riders.clear();
+        removePassengers.clear();
+
+        boolean isDbCallNeeded = true;
+        if (ride.getRiders() != null) {
+            riders.addAll(ride.getRiders());
+            isDbCallNeeded = false;
         }
-        for(User rider : riders) {
-            rider.rebuild();
+
+        ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
+        aPassengers = new PassengerListAdapter(this, riders, passengerListListener);
+        lvPassengers.setAdapter(aPassengers);
+
+        if (!isDbCallNeeded) {
+            return;
         }
 
+        ParseQuery<User> query = ParseQuery.getQuery(User.class);
+        query.whereEqualTo(User.COLUMN_RIDE, ride);
+        query.findInBackground(new FindCallback<User>() {
+            public void done(List<User> list, ParseException e) {
+                if (e != null) {
+                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching riders for ride " + ride.getObjectId());
+                    alert(R.string.alert_network_error);
+                    return;
+                } else {
+                    Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + list.size() + " riders");
+                    if (list != null && !list.isEmpty()) {
+//                            riders.addAll(list);
+                        aPassengers.addAll(list);
+//                            aPassengers.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+    }
 
+    private void setupSpinners() {
+        spDestination = (Spinner) findViewById(R.id.spDestination);
+        populateSpinner(ride.getDestination(), spDestination);
+        spStartLoc = (Spinner) findViewById(R.id.spStartLoc);
+        populateSpinner(ride.getStartLocation(), spStartLoc);
+    }
 
-//        driver = createDefaultUser("Driver", "One", "6506483029", DRIVER);
-//        riders = new ArrayList<User>(createDummyRiders());
+    private void setupSwitchWidget() {
+        TextView tvStartTime = (TextView) findViewById(R.id.tvStartTime);
+        swAvailable = (Switch) findViewById(R.id.swAvailable);
+        swAvailable.setChecked(ride.isAvailable());
+        swAvailable.setTextColor(tvStartTime.getTextColors());
+    }
 
-
+    private void setupStartTimeWidget() {
         final int[] hourAndMinute = getLocalHourAndMinute(ride.getDate());
         etStartTime = (EditText) findViewById(R.id.etStartTime);
         etStartTime.setText(Utils.formatDuration(hourAndMinute[0], hourAndMinute[1]));
@@ -119,82 +263,38 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                 return true;
             }
         });
-
-        TextView tvStartTime = (TextView) findViewById(R.id.tvStartTime);
-        swAvailable = (Switch) findViewById(R.id.swAvailable);
-        swAvailable.setChecked(ride.isAvailable());
-        swAvailable.setTextColor(tvStartTime.getTextColors());
-
-        ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
-        aPassengers = new PassengerListAdapter(this, riders, new PassengerListAdapter.PassengerListListener() {
-            @Override
-            public void onAccept(User user, PassengerListAdapter.ViewHolder vh) {
-                vh.ivAccept.setVisibility(View.INVISIBLE);
-                vh.tvAccept.setVisibility(View.INVISIBLE);
-                user.setStatus(PASSENGER);
-            }
-
-            @Override
-            public void onRemove(User user, PassengerListAdapter.ViewHolder vh) {
-//                //TODO: alert with confirmation
-                aPassengers.remove(user);
-                user.setStatus(NO_RIDE);
-            }
-
-            @Override
-            public void onPhoneCall(User user, PassengerListAdapter.ViewHolder vh) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + user.getPhone()));
-                Context context = DriverStatusActivity.this;
-                if (Utils.checkCallPermission(context)) {
-                    context.startActivity(callIntent);
-                } else {
-                    Toast.makeText(context, "Phone call is not permitted", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-        lvPassengers.setAdapter(aPassengers);
-
-        spDestination = (Spinner) findViewById(R.id.spDestination);
-        populateSpinner(ride.getDestination(), spDestination);
-        spStartLoc = (Spinner) findViewById(R.id.spStartLoc);
-        populateSpinner(ride.getStartLocation(), spStartLoc);
-
-        etSpots = (EditText) findViewById(R.id.etSpots);
-
     }
 
 
-    private Ride createDefaultRide(User driver) {
-        Ride ride = new Ride();
-        ride.setDate(Utils.getNextHour());
-        ride.setAvailable(true);
+//    private Ride createDefaultRide(User driver) {
+//        Ride ride = new Ride();
+//        ride.setDate(Utils.getNextHour());
+//        ride.setAvailable(true);
+//
+//        //TODO: remove these dummy passengers
+//        ride.setRiders(createDummyRiders());
+//
+//        ride.setSpots(2);
+//        ride.setDriver(driver);
+//        return ride;
+//    }
 
-        //TODO: remove these dummy passengers
-        ride.setRiders(createDummyRiders());
+//    @NonNull
+//    private List<User> createDummyRiders() {
+//        return Arrays.asList(createDefaultUser("Pass", "One", "6506483030", PASSENGER),
+//                createDefaultUser("Pass", "Two", "6506483031", PASSENGER),
+//                createDefaultUser("Wait", "One", "6506483033", WAIT_LIST),
+//                createDefaultUser("Wait", "Two", "6506483034", WAIT_LIST));
+//    }
 
-        ride.setSpots(2);
-        ride.setDriver(driver);
-        return ride;
-    }
-
-    @NonNull
-    private List<User> createDummyRiders() {
-        return Arrays.asList(createDefaultUser("Pass", "One", "6506483030", PASSENGER),
-                createDefaultUser("Pass", "Two", "6506483031", PASSENGER),
-                createDefaultUser("Wait", "One", "6506483033", WAIT_LIST),
-                createDefaultUser("Wait", "Two", "6506483034", WAIT_LIST));
-    }
-
-    private User createDefaultUser(String name, String lastName, String phone, User.Status status) {
-        User u = new User();
-        u.setFirstName(name);
-        u.setLastName(lastName);
-        u.setPhone(phone);
-        u.setStatus(status);
-        return u;
-    }
+//    private User createDefaultUser(String name, String lastName, String phone, User.Status status) {
+//        User u = new User();
+//        u.setFirstName(name);
+//        u.setLastName(lastName);
+//        u.setPhone(phone);
+//        u.setStatus(status);
+//        return u;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,7 +312,20 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.mi_driver_status_save) {
-            onSave();
+            onSave(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e != null) {
+                        Log.e(ParseUtil.class.getSimpleName(), "Failed to save ride info ", e);
+                        alert(R.string.alert_network_error);
+                    }
+                    Intent data = new Intent();
+                    ride.flush();
+                    data.putExtra("ride", ride);
+                    setResult(Activity.RESULT_OK, data);
+                    finish();
+                }
+            });
             return true;
         }
 
@@ -225,70 +338,109 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     }
 
     private void populateSpinner(String value, Spinner spinner) {
-        if(!isNullOrEmpty(value)) {
-            int colorPos = ((ArrayAdapter<String>)spinner.getAdapter()).getPosition(value);
+        if (!isNullOrEmpty(value)) {
+            int colorPos = ((ArrayAdapter<String>) spinner.getAdapter()).getPosition(value);
             spinner.setSelection(colorPos);
         }
     }
 
-    public void onSave() {
+    public void onSave(final SaveCallback callback) {
+        ride = populateRideInfo(ride);
 
-        //TODO: fetch real db riders based on List<User> riders
+        //If ride already exists: update ride in parallel with updating passengers
+        if (!isNullOrEmpty(ride.getObjectId())) {
 
-        if(!isNullOrEmpty(ride.getObjectId())) {
-            //TODO: fetch existing ride for update
-            ride = Ride.createWithoutData(Ride.class, ride.getObjectId());
-            ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
-            query.getInBackground(ride.getObjectId(), new GetCallback<Ride>() {
-                public void done(Ride ride, ParseException e) {
-                    if (e == null) {
-                        populateRideInfo(ride, riders);
+            assignPassengers(riders, removePassengers, ride);
+
+            //Combine riders, removePassengers and ride into one list
+            List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride));
+            ParseUtil.saveInBatch(models, callback);
+        }
+        //If ride doesn't exist: create ride first, and then update the passengers
+        else {
+            ride.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e != null) {
+                        Log.e(ParseUtil.class.getSimpleName(), "Failed to create ride ", e);
+                        alert(R.string.alert_network_error);
+                        return;
                     }
+
+                    assignPassengers(riders, removePassengers, ride);
+                    List<User> passengers = Utils.joinLists(riders, removePassengers);
+                    ParseUtil.saveInBatch(passengers, callback);
                 }
             });
-        } else {
-            ride = Ride.create(Ride.class);
-            populateRideInfo(ride, riders);
+
+
 
         }
-        //TODO: return Ride to main activity
-
-        finish();
     }
 
-    @NonNull
-    private SaveCallback createSaveCallback() {
-        return new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                Log.d(DriverStatusActivity.class.getSimpleName(), "Saved ride");
-                if (e != null) {
-                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to save ride", e);
-                    Toast.makeText(DriverStatusActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-    }
+//    @NonNull
+//    private SaveCallback createSaveCallback() {
+//        return new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                Log.d(DriverStatusActivity.class.getSimpleName(), "Saved ride");
+//                if (e != null) {
+//                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to save ride", e);
+//                    Toast.makeText(DriverStatusActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        };
+//    }
 
-    private void populateRideInfo(final Ride ride, final List<User> riders) {
+    private Ride populateRideInfo(Ride ride) {
         ride.setAvailable(swAvailable.isChecked());
         ride.setDestination(spDestination.getSelectedItem().toString());
         ride.setDate(parseHourAndMinute(etStartTime.getText().toString()));
         ride.setSpots(Integer.parseInt(etSpots.getText().toString()));
         ride.setStartLocation(spStartLoc.getSelectedItem().toString());
 
-        ride.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e == null) {
-                    for(User rider : riders) {
-                        rider.setRide(ride);
-                        rider.saveInBackground();
-                    }
-                }
-            }
-        });
+        return ride;
+
+//        //If ride already exists then save passengers in parallel
+//        if(!isNullOrEmpty(ride.getObjectId())) {
+//            ride.saveInBackground();
+//            savePassengers(riders, ride);
+//        }
+//        //If ride doesn't exist yet, first save ride, and then its passengers
+//        else {
+//            ride.saveInBackground(new SaveCallback() {
+//                @Override
+//                public void done(ParseException e) {
+//                    if (e == null) {
+//                        savePassengers(riders, ride);
+//                    } else {
+//                        alert(R.string.alert_network_error);
+//                    }
+//                }
+//            });
+//
+//        }
+
 
     }
+
+    private void alert(int msgResource) {
+        Toast.makeText(DriverStatusActivity.this, msgResource, Toast.LENGTH_LONG).show();
+    }
+
+    private void assignPassengers(List<User> passengers, List<User> removePassengers, Ride ride) {
+        for (User rider : passengers) {
+            rider.setRide(ride);
+        }
+
+        for (User rider : removePassengers) {
+            rider.setRide(null);
+        }
+    }
+
+//    private void savePassengers(List<User> passengers, List<User> removePassengers, Ride ride, final SaveCallback callback) {
+//
+//        ParseUtil.saveInBatch(users, callback);
+//    }
 
 }

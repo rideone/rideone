@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class RideListFragment extends Fragment {
 
-    private RideListAdapter aRides;
-    private List<Ride> rides;
+    public RideListAdapter aRides;
+    public List<Ride> rides;
     private ListView lvRides;
     ProgressBar progressBarFooter;
 

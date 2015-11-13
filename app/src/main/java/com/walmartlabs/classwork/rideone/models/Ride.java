@@ -7,33 +7,34 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by dmaskev on 11/8/15.
  */
 @ParseClassName("Ride")
-public class Ride extends ParseObject implements Serializable {
+public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public static final String COLUMN_AVAILABLE = "available";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_START_LOCATION = "start_loc";
     public static final String COLUMN_DESTINATION = "destination";
     public static final String COLUMN_SPOTS = "spots";
-    public static final String COLUMN_DRIVER = "driver";
+    public static final String COLUMN_DRIVER = "driver_id";
     public static final String COLUMN_RIDERS = "riders";
 
+    private User driver;
     private Map<String, Object> fields = new HashMap<>();
 
-
-    public Ride putAll(Map<String, Object> fields) {
-        for(Map.Entry<String, Object> entry : fields.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
-
-        return this;
+    @Override
+    public Map<String, Object> getFields() {
+        return this.fields;
     }
 
+
+    @Override
     public Ride flush() {
         for(String key : keySet()) {
             fields.put(key, get(key));
@@ -52,9 +53,17 @@ public class Ride extends ParseObject implements Serializable {
         return res;
     }
 
+    @Override
     public Ride rebuild() {
-        Ride ride = Ride.createWithoutData(Ride.class, fields.get("objectId").toString());
-        return ride.putAll(this.fields);
+        String objectId = fields.get("objectId").toString();
+        Ride model = Ride.createWithoutData(Ride.class, objectId);
+
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            Object value = entry.getValue();
+            model.put(entry.getKey(), value);
+        }
+
+        return model;
     }
 
 
@@ -105,13 +114,16 @@ public class Ride extends ParseObject implements Serializable {
         return getList(COLUMN_RIDERS);
     }
 
+    public void setDriverId(String driverId) {
+        put(COLUMN_DRIVER, driverId);
+    }
+
     public void setDriver(User driver) {
-        put(COLUMN_DRIVER, driver);
+        this.driver = driver;
     }
 
     public User getDriver() {
-        return (User) get(COLUMN_DRIVER);
-
+        return driver;
     }
 
 }

@@ -9,10 +9,15 @@ import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.parse.ParseObject;
+import com.walmartlabs.classwork.rideone.models.User;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -110,5 +115,25 @@ public class Utils {
     public static boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 6;
+    }
+
+    public static <T> List<T> joinLists(List<T>... lists) {
+
+        List<T> res = new ArrayList<>();
+        for(List<T> list : lists) {
+            res.addAll(list);
+        }
+
+        return res;
+    }
+
+    public static List<ParseObject> joinModelLists(List<? extends ParseObject>... lists) {
+
+        List<ParseObject> res = new ArrayList<>();
+        for(List<? extends ParseObject> list : lists) {
+            res.addAll(list);
+        }
+
+        return res;
     }
 }

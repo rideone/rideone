@@ -3,6 +3,7 @@
     <string name="action_driver_status">Status</string>
     <string name="menu_item_save">Save</string>
     <string name="title_activity_driver_status">Driver Status</string>
+    <string name="alert_network_error">Network Error</string>
 
     <string-array name="locations">
         <item>Berkley</item>
