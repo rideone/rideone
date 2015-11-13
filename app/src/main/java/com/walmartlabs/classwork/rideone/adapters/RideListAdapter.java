@@ -46,7 +46,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_driver, parent, false);
+            convertView = inflater.inflate(R.layout.ride_list_item, parent, false);
             viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
             viewHolder.tvFirstName = (TextView)convertView.findViewById(R.id.tvFirstName);
             viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
@@ -59,7 +59,8 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 
         // Populate data into the template view using the data object
         viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName()));
-        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots())));
+        //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+        if (ride != null) viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots()) + " spots"));
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

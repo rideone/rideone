@@ -1,5 +1,6 @@
 package com.walmartlabs.classwork.rideone.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,9 +16,7 @@ import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
@@ -25,10 +24,9 @@ import static com.walmartlabs.classwork.rideone.models.User.Status.WAIT_LIST;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
+
     private User user;
-//    private ParseProxyObject proxyUser;
-//    private ParseProxyObject proxyRide;
-//    private List<ParseProxyObject> proxyRiders;
     private Ride ride = null;
 
 
@@ -39,19 +37,6 @@ public class HomeActivity extends AppCompatActivity {
 
         user = ((User) getIntent().getSerializableExtra("user")).rebuild();
         //TODO: fetch ride from db based on user id
-        ride = user.getRide();
-//        proxyRide = new ParseProxyObject(ride);
-
-        if(ride == null) {
-            ride = new Ride();
-            ride.setAvailable(true);
-            ride.setDate(new Date());
-            ride.setRiders(new ArrayList<User>());
-            ride.setSpots(2);
-            //TODO: preset ride values from driver's profile
-        }
-        //TODO: fetch riders associated with this ride from db
-       // List<User> riders = ride.getRiders();
 
         RideListFragment rideListFragment = RideListFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -81,18 +66,51 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         } else if (id == R.id.miStatus) {
             Intent intent = new Intent(this, DriverStatusActivity.class);
-//            intent.putExtra("driver", proxyUser);
-
-            ride.flush();
-            intent.putExtra("ride", ride);
+            //TODO: pass ride
+//            ride.flush();
+//            intent.putExtra("ride", ride);
 //            intent.putExtra("riders", User.flushArray(ride.getRiders()));
 
-            startActivity(intent);
+            user.flush();
+            intent.putExtra("user", user);
 
-            //TODO: startActivityForResult - get updated Ride
+            if(ride != null) {
+                ride.flush();
+                intent.putExtra("ride", ride);
+            }
+
+            startActivityForResult(intent, INTENT_REQUEST_DRIVER_STATUS);
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(INTENT_REQUEST_DRIVER_STATUS == requestCode && resultCode == Activity.RESULT_OK) {
+            ride = (Ride) data.getSerializableExtra("ride");
+            if(ride != null) {
+                ride = ride.rebuild();
+                //Has to do this because Serialization doesn't happen for relationships
+                user.setRide(ride);
+                ride.setDriver(user);
+
+                RideListFragment rideListFragment = (RideListFragment) getSupportFragmentManager().findFragmentById(R.id.flContainer);
+
+                Ride topRide = rideListFragment.aRides.getItem(0);
+                if(!ride.getObjectId().equals(topRide.getObjectId())) {
+                    rideListFragment.aRides.insert(ride, 0);
+                } else {
+                    rideListFragment.rides.set(0, ride);
+                    rideListFragment.aRides.notifyDataSetChanged();
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
     }
 
     public void onProfileView(MenuItem item) {
