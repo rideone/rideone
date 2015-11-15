@@ -8,12 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.fragments.RideListFragment;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.util.ParseUtil;
+import com.walmartlabs.classwork.rideone.util.Utils;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -126,13 +132,22 @@ public class HomeActivity extends AppCompatActivity {
     public void addUserToWaitList(Ride ride) {
         String userId = user.getObjectId();
         user.setStatus(User.Status.WAIT_LIST);
-        user.flush();
-        user.saveInBackground();
-        List<User> riders = ride.getRiders();
-        riders.add(user);
-        ride.setRiders(riders);
-        ride.flush();
-        ride.saveInBackground();
+//        user.flush();
+//        user.saveInBackground();
+        List<User> waitList = ride.getWaitList();
+        waitList.add(user);
+        ride.setWaitList(waitList);
+//        ride.flush();
+//        ride.saveInBackground();
+
+        SaveCallback callback = new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+            }
+        };
+        List<ParseObject> models = Utils.joinModelLists(Arrays.asList(user), Arrays.asList(ride));
+        ParseUtil.saveInBatch(models, callback);
     }
 
 //    private Ride createDummyRide() {

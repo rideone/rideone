@@ -135,7 +135,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                         return;
                     }
 
-                    if(rideDb == null) {
+                    if (rideDb == null) {
                         ride = createDefaultRide(driver);
                     } else {
                         ride = rideDb;
@@ -168,6 +168,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setRiders(new ArrayList<User>());
         ride.setSpots(DEFAULT_SPOTS);
         ride.setDriverId(driver.getObjectId());
+        ride.setWaitList(new ArrayList<User>());
         return ride;
     }
 
