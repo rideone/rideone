@@ -105,6 +105,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             user.setEmail(email);
             user.setFirstName(firstName);
             user.setLastName(lastName);
+            user.setStatus(User.Status.NO_RIDE);
             if (update) {
                 try {
                     user.save();

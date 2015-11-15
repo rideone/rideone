@@ -26,7 +26,6 @@ import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
-import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

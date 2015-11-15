@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
 
 import java.text.ParseException;
@@ -30,10 +32,14 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         public TextView tvSpotsAvailable;
         public TextView tvStartLoc;
         public TextView tvDestination;
+        public Button btnReserve;
     }
+
+    private HomeActivity context;
 
     public RideListAdapter(Context context, List<Ride> rides) {
         super(context, 0, rides);
+        this.context = (HomeActivity) context;
     }
 
     // Translates a particular `Image` given a position
@@ -54,6 +60,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.tvTime = (TextView)convertView.findViewById(R.id.tvTime);
             viewHolder.tvDestination = (TextView)convertView.findViewById(R.id.tvDestination);
             viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
+            viewHolder.btnReserve = (Button)convertView.findViewById(R.id.btnReserve);
 
             convertView.setTag(viewHolder);
         } else {
@@ -63,7 +70,6 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         // Populate data into the template view using the data object
         viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
         viewHolder.tvDestination.setText("to: " + ride.getDestination());
-
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
@@ -75,6 +81,12 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             }
         });
 
+        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.addUserToWaitList(ride);
+            }
+        });
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         String startTime = df.format(ride.getDate());
         viewHolder.tvTime.setText(startTime);
