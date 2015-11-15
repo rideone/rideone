@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -136,7 +135,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                         return;
                     }
 
-                    if(rideDb == null) {
+                    if (rideDb == null) {
                         ride = createDefaultRide(driver);
                     } else {
                         ride = rideDb;
@@ -169,6 +168,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setRiders(new ArrayList<User>());
         ride.setSpots(DEFAULT_SPOTS);
         ride.setDriverId(driver.getObjectId());
+        ride.setWaitList(new ArrayList<User>());
         return ride;
     }
 

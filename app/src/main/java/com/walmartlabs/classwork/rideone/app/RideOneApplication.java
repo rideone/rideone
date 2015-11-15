@@ -28,6 +28,8 @@ public class RideOneApplication extends Application {
         ParseObject.registerSubclass(Ride.class);
         Parse.initialize(this, YOUR_APPLICATION_ID, YOUR_CLIENT_KEY);
         ParseUser.enableRevocableSessionInBackground();
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("test",true);
+        installation.saveInBackground();
     }
 }
