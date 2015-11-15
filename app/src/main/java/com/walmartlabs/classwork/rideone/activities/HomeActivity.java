@@ -132,12 +132,12 @@ public class HomeActivity extends AppCompatActivity {
     public void addUserToWaitList(Ride ride) {
         String userId = user.getObjectId();
         user.setStatus(User.Status.WAIT_LIST);
-//        user.flush();
+        user.flush();
 //        user.saveInBackground();
         List<User> waitList = ride.getWaitList();
         waitList.add(user);
         ride.setWaitList(waitList);
-//        ride.flush();
+        ride.flush();
 //        ride.saveInBackground();
 
         SaveCallback callback = new SaveCallback() {
