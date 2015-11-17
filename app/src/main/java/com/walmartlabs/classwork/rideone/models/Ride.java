@@ -21,7 +21,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public static final String COLUMN_SPOTS = "spots";
     public static final String COLUMN_DRIVER = "driver_id";
     public static final String COLUMN_RIDERS = "riders";
-    private static final String COLUMN_WAIT_LIST = "waitlist";
+    private static final String COLUMN_SPOTS_OCCUPIED = "spotsOccupied";
 
     private User driver;
     private Map<String, Object> fields = new HashMap<>();
@@ -127,11 +127,12 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
         return driver;
     }
 
-    public void setWaitList(List<User> waitList) {
-        put(COLUMN_WAIT_LIST, waitList);
+    public int getSpotsOccupied() {
+        return getInt(COLUMN_SPOTS_OCCUPIED);
     }
 
-    public List<User> getWaitList() {
-        return getList(COLUMN_WAIT_LIST);
+    public void setSpotsOccupied(int spotsOccupied) {
+        put(COLUMN_SPOTS_OCCUPIED, spotsOccupied);
     }
+
 }
