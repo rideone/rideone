@@ -167,8 +167,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setDate(new Date());
         ride.setRiders(new ArrayList<User>());
         ride.setSpots(DEFAULT_SPOTS);
+        ride.setSpotsOccupied(0);
         ride.setDriverId(driver.getObjectId());
-        ride.setWaitList(new ArrayList<User>());
         return ride;
     }
 

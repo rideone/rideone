@@ -133,12 +133,10 @@ public class HomeActivity extends AppCompatActivity {
         String userId = user.getObjectId();
         user.setStatus(User.Status.WAIT_LIST);
         user.flush();
-//        user.saveInBackground();
-        List<User> waitList = ride.getWaitList();
-        waitList.add(user);
-        ride.setWaitList(waitList);
+        List<User> riders = ride.getRiders();
+        riders.add(user);
+        ride.setRiders(riders);
         ride.flush();
-//        ride.saveInBackground();
 
         SaveCallback callback = new SaveCallback() {
             @Override
