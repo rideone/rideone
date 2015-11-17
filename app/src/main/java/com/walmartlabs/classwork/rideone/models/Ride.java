@@ -21,7 +21,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public static final String COLUMN_SPOTS = "spots";
     public static final String COLUMN_DRIVER = "driver_id";
     public static final String COLUMN_RIDERS = "riders";
-    private static final String COLUMN_SPOTS_OCCUPIED = "spotsOccupied";
+    public static final String COLUMN_SPOTS_OCCUPIED = "spotsOccupied";
 
     private User driver;
     private Map<String, Object> fields = new HashMap<>();

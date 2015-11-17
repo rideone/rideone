@@ -84,7 +84,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.addUserToWaitList(ride);
+                context.openReserveRideDialog(ride);
             }
         });
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");

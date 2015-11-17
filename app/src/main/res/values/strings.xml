@@ -77,4 +77,5 @@
     <string name="title_activity_filter">FilterActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="reserve_ride_label">Are you sure you want to reserve this ride?</string>
 </resources>

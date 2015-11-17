@@ -3,16 +3,19 @@ package com.walmartlabs.classwork.rideone.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.fragments.ReserveRideDialog;
 import com.walmartlabs.classwork.rideone.fragments.RideListFragment;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
@@ -22,7 +25,7 @@ import com.walmartlabs.classwork.rideone.util.Utils;
 import java.util.Arrays;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ReserveRideDialog.ReserveRideListener {
 
     private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
 
@@ -98,7 +101,6 @@ public class HomeActivity extends AppCompatActivity {
                 //Has to do this because Serialization doesn't happen for relationships
                 user.setRide(ride);
                 ride.setDriver(user);
-
                 RideListFragment rideListFragment = (RideListFragment) getSupportFragmentManager().findFragmentById(R.id.flContainer);
 
                 //TODO: Fix inefficient way of finding the existing ride
@@ -129,8 +131,19 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addUserToWaitList(Ride ride) {
-        String userId = user.getObjectId();
+    public void openReserveRideDialog(Ride ride) {
+        boolean inWaitList = false;
+        if(user.getStatus().equals(User.Status.WAIT_LIST)) inWaitList = true;
+        FragmentManager fm = getSupportFragmentManager();
+        ReserveRideDialog reserveRideDialog= ReserveRideDialog.newInstance(ride, inWaitList);
+        reserveRideDialog.show(fm, "fragment_reserve_ride");
+    }
+
+    @Override
+    public void sendReserveRideRequest(Ride ride) {
+        if(user.getStatus().equals(User.Status.WAIT_LIST)) {
+           //TODO: logic to remove passenger from old ride and add it to new ride
+        }
         user.setStatus(User.Status.WAIT_LIST);
         user.flush();
         List<User> riders = ride.getRiders();
@@ -141,6 +154,7 @@ public class HomeActivity extends AppCompatActivity {
         SaveCallback callback = new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                Toast.makeText(HomeActivity.this, "Request sent to driver", Toast.LENGTH_SHORT).show();
 
             }
         };

@@ -39,7 +39,6 @@ import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FO
  * Created by abalak5 on 11/8/15.
  */
 public class RideListFragment extends Fragment {
-
     public RideListAdapter aRides;
     public List<Ride> rides;
     private ListView lvRides;
@@ -131,6 +130,7 @@ public class RideListFragment extends Fragment {
     private void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
+
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
             public void done(final List<Ride> rideList, ParseException e) {
