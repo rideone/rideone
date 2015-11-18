@@ -80,9 +80,15 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     PassengerListAdapter.PassengerListListener passengerListListener = new PassengerListAdapter.PassengerListListener() {
         @Override
         public void onAccept(User user, PassengerListAdapter.ViewHolder vh) {
-            vh.ivAccept.setVisibility(View.INVISIBLE);
-            vh.tvAccept.setVisibility(View.INVISIBLE);
-            user.setStatus(PASSENGER);
+            int spotsLeft = ride.getSpotsLeft();
+
+            if (spotsLeft > 0) {
+                vh.ivAccept.setVisibility(View.INVISIBLE);
+                vh.tvAccept.setVisibility(View.INVISIBLE);
+                user.setStatus(PASSENGER);
+                ride.setSpotsLeft(--spotsLeft);
+                etSpots.setText(Integer.toString(spotsLeft));
+            }
         }
 
         @Override
@@ -91,6 +97,11 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             aPassengers.remove(user);
             user.setStatus(NO_RIDE);
             removePassengers.add(user);
+            int spotsLeft = ride.getSpotsLeft();
+            if(spotsLeft < ride.getSpots()) {
+                ride.setSpotsLeft(++spotsLeft);
+                etSpots.setText(Integer.toString(ride.getSpotsLeft()));
+            }
         }
 
         @Override
@@ -168,7 +179,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setDate(new Date());
         ride.setRiders(new ArrayList<String>());
         ride.setSpots(DEFAULT_SPOTS);
-        ride.setSpotsOccupied(0);
+        ride.setSpotsLeft(DEFAULT_SPOTS);
         ride.setDriverId(driver.getObjectId());
         return ride;
     }
@@ -180,7 +191,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         setupSpinners();
 
         etSpots = (EditText) findViewById(R.id.etSpots);
-        etSpots.setText(String.valueOf(ride.getSpots()));
+        etSpots.setText(String.valueOf(ride.getSpotsLeft()));
     }
 
     private void setupPassengerList() {
@@ -314,12 +325,11 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
     public void onSave(final SaveCallback callback) {
         ride = populateRideInfo(ride);
+        if(validate()) return;
 
         //If ride already exists: update ride in parallel with updating passengers
         if (!isNullOrEmpty(ride.getObjectId())) {
-
             assignPassengers(riders, removePassengers, ride);
-
             //Combine riders, removePassengers and ride into one list
             List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride));
             ParseUtil.saveInBatch(models, callback);
@@ -329,7 +339,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             ride.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    if(e != null) {
+                    if (e != null) {
                         Log.e(ParseUtil.class.getSimpleName(), "Failed to create ride ", e);
                         alert(R.string.alert_network_error);
                         return;
@@ -340,9 +350,18 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                     ParseUtil.saveInBatch(passengers, callback);
                 }
             });
-
-
         }
+
+
+    }
+
+    private boolean validate() {
+        if(ride.getStartLocation().equalsIgnoreCase(ride.getDestination())) {
+            Toast.makeText(DriverStatusActivity.this, "Start location and destination cannot be the same", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return false;
     }
 
 //    @NonNull
@@ -363,7 +382,9 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setAvailable(swAvailable.isChecked());
         ride.setDestination(spDestination.getSelectedItem().toString());
         ride.setDate(parseHourAndMinute(etStartTime.getText().toString()));
-        ride.setSpots(Integer.parseInt(etSpots.getText().toString()));
+        //set total spots available only once during ride creation
+        if(ride.getObjectId() == null) ride.setSpots(Integer.parseInt(etSpots.getText().toString()));
+        ride.setSpotsLeft(Integer.parseInt(etSpots.getText().toString()));
         ride.setStartLocation(spStartLoc.getSelectedItem().toString());
 
         return ride;

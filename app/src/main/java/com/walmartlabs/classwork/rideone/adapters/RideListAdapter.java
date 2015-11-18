@@ -62,6 +62,24 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
             viewHolder.btnReserve = (Button)convertView.findViewById(R.id.btnReserve);
 
+            String userId = context.getUserInfo().getObjectId();
+            if(ride.getDriverId().equalsIgnoreCase(userId)) {
+                viewHolder.btnReserve.setVisibility(View.INVISIBLE);
+            }
+
+            viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.openReserveRideDialog(ride);
+                }
+            });
+
+            viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -74,19 +92,8 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
         viewHolder.tvDestination.setText(ride.getDestination());
-        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpots()) + " spots"));
-        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpotsLeft()) + " spots"));
 
-        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.openReserveRideDialog(ride);
-            }
-        });
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         String startTime = df.format(ride.getDate());
         viewHolder.tvTime.setText(startTime);
