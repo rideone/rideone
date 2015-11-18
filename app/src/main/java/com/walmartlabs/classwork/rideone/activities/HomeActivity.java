@@ -32,7 +32,6 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
     private User user;
     private Ride ride = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,5 +191,8 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 //        return u;
 //    }
 
+    public User getUserInfo() {
+        return user;
+    }
 
 }
