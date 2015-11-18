@@ -382,6 +382,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setAvailable(swAvailable.isChecked());
         ride.setDestination(spDestination.getSelectedItem().toString());
         ride.setDate(parseHourAndMinute(etStartTime.getText().toString()));
+        //set total spots available only once during ride creation
         if(ride.getObjectId() == null) ride.setSpots(Integer.parseInt(etSpots.getText().toString()));
         ride.setSpotsLeft(Integer.parseInt(etSpots.getText().toString()));
         ride.setStartLocation(spStartLoc.getSelectedItem().toString());
