@@ -325,7 +325,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
     public void onSave(final SaveCallback callback) {
         ride = populateRideInfo(ride);
-        if(validateErrors()) return;
+        if(validate()) return;
 
         //If ride already exists: update ride in parallel with updating passengers
         if (!isNullOrEmpty(ride.getObjectId())) {
@@ -355,7 +355,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
     }
 
-    private boolean validateErrors() {
+    private boolean validate() {
         if(ride.getStartLocation().equalsIgnoreCase(ride.getDestination())) {
             Toast.makeText(DriverStatusActivity.this, "Start location and destination cannot be the same", Toast.LENGTH_SHORT).show();
             return true;
