@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -13,12 +14,13 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * Created by mkrish4 on 11/7/15.
  */
-@ParseClassName("_User")
-public class User extends ParseUser implements CustomSerializable<User> {
+@ParseClassName("app_user")
+public class User extends ParseObject implements CustomSerializable<User> {
 
     public static final String COLUMN_RIDE = "ride";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_ID = "objectId";
+    public static final String COLUMN_LOGIN_USER_ID = "loginUserId";
 
 
     public enum Status {
@@ -70,12 +72,16 @@ public class User extends ParseUser implements CustomSerializable<User> {
 
 
 
-    public String getUserId() {
-        return getString("userId");
-    }
-
     public String getFirstName() {
         return getString("firstName");
+    }
+
+    public void setLoginUserId(String parseUserId) {
+        put(COLUMN_LOGIN_USER_ID, parseUserId);
+    }
+
+    public String getLoginUserId() {
+        return getString(COLUMN_LOGIN_USER_ID);
     }
 
     public String getLastName() {

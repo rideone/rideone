@@ -186,19 +186,19 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         riders.clear();
         removePassengers.clear();
 
-        boolean isDbCallNeeded = true;
-        if (ride.getRiders() != null) {
-            riders.addAll(ride.getRiders());
-            isDbCallNeeded = false;
-        }
+//        boolean isDbCallNeeded = true;
+//        if (ride.getRiders() != null && ride.) {
+//            riders.addAll(ride.getRiders());
+//            isDbCallNeeded = false;
+//        }
 
         ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
         aPassengers = new PassengerListAdapter(this, riders, passengerListListener);
         lvPassengers.setAdapter(aPassengers);
 
-        if (!isDbCallNeeded) {
-            return;
-        }
+//        if (!isDbCallNeeded) {
+//            return;
+//        }
 
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         query.whereEqualTo(User.COLUMN_RIDE, ride);

@@ -3,16 +3,25 @@ package com.walmartlabs.classwork.rideone.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.util.ParseUtil;
 
+import java.util.Arrays;
+
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 import static com.walmartlabs.classwork.rideone.util.Utils.isPasswordValid;
 
 public class RegisterUserActivity extends AppCompatActivity {
@@ -26,6 +35,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean update = false;
     private User currentUser = null;
+    private ParseUser currentLoginUser = null;
 
 
     @Override
@@ -43,14 +53,25 @@ public class RegisterUserActivity extends AppCompatActivity {
         Button btn = (Button) findViewById(R.id.btnRegister);
         if (update) {
             btn.setText("Update");
-            currentUser = (User) ParseUser.getCurrentUser();
-            edUserName.setText(currentUser.getUsername());
-            edEmail.setText(currentUser.getEmail());
-            edFirstName.setText(currentUser.getFirstName());
-            edLastName.setText(currentUser.getLastName());
-            edPassword.setText(PASSWORD_TEXT);
-            edPasswordConfirm.setText(PASSWORD_TEXT);
-            edUserName.setEnabled(false);
+            ParseUser loginUser = ParseUser.getCurrentUser();
+            edUserName.setText(loginUser.getUsername());
+            edEmail.setText(loginUser.getEmail());
+            currentLoginUser = loginUser;
+
+            ParseQuery<User> query = ParseQuery.getQuery(User.class);
+            final String loginUserId = loginUser.getObjectId();
+            query.whereEqualTo(COLUMN_LOGIN_USER_ID, loginUserId);
+            query.getFirstInBackground(new GetCallback<User>() {
+                @Override
+                public void done(User user, ParseException e) {
+                    currentUser = user;
+                    edFirstName.setText(currentUser.getFirstName());
+                    edLastName.setText(currentUser.getLastName());
+                    edPassword.setText(PASSWORD_TEXT);
+                    edPasswordConfirm.setText(PASSWORD_TEXT);
+                    edUserName.setEnabled(false);
+                }
+            });
         } else {
             btn.setText(R.string.register);
             edUserName.setEnabled(true);
@@ -94,34 +115,58 @@ public class RegisterUserActivity extends AppCompatActivity {
         if (!cancel) {
             // Create the ParseUser
             User user = null;
-            if (currentUser == null)
+            ParseUser loginUser = null;
+            if (currentUser == null) {
                 user = new User();
-            else
+                loginUser = new ParseUser();
+            } else {
                 user = currentUser;
+                loginUser = currentLoginUser;
+            }
+
             // Set core properties
-            user.setUsername(userName);
+            loginUser.setUsername(userName);
             if (!password.equals(PASSWORD_TEXT))
-                user.setPassword(password);
-            user.setEmail(email);
+                loginUser.setPassword(password);
+            loginUser.setEmail(email);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setStatus(User.Status.NO_RIDE);
             if (update) {
-                try {
-                    user.save();
-                    finish();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    edUserName.setError(e.getLocalizedMessage());
-                    edUserName.requestFocus();
-                }
+                ParseUtil.saveInBatch(Arrays.asList(user, loginUser), new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e != null) {
+                            Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to update user", e);
+                            Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        finish();
+                    }
+                });
             } else {
                 // Invoke signUpInBackground
-                user.signUpInBackground(new SignUpCallback() {
+                final User userForSave = user;
+                final ParseUser loginUserForSave = loginUser;
+                loginUserForSave.signUpInBackground(new SignUpCallback() {
                     public void done(ParseException e) {
                         if (e == null) {
                             // Hooray! Let them use the app now.
-                            finish();
+                            userForSave.setLoginUserId(loginUserForSave.getObjectId());
+                            userForSave.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e != null) {
+                                        Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to save user", e);
+                                        Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+
+                                    finish();
+                                }
+                            });
+
                         } else {
                             // Sign up didn't succeed. Look at the ParseException
                             // to figure out what went wrong
