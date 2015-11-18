@@ -187,44 +187,20 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         riders.clear();
         removePassengers.clear();
 
-        boolean isDbCallNeeded = true;
+        ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
+        aPassengers = new PassengerListAdapter(DriverStatusActivity.this, riders, passengerListListener);
+        lvPassengers.setAdapter(aPassengers);
+
         if (ride.getRiders() != null) {
             List<String> passengerIds = ride.getRiders();
             ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, passengerIds).findInBackground(new FindCallback<User>() {
                 @Override
                 public void done(List<User> objects, ParseException e) {
-                    riders.addAll(objects);
-                    ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
-                    aPassengers = new PassengerListAdapter(DriverStatusActivity.this, riders, passengerListListener);
-                    lvPassengers.setAdapter(aPassengers);
+                    aPassengers.addAll(objects);
                 }
             });
 
-            isDbCallNeeded = false;
         }
-
-        if (!isDbCallNeeded) {
-            return;
-        }
-
-        ParseQuery<User> query = ParseQuery.getQuery(User.class);
-        query.whereEqualTo(User.COLUMN_RIDE, ride);
-        query.findInBackground(new FindCallback<User>() {
-            public void done(List<User> list, ParseException e) {
-                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
-                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching riders for ride " + ride.getObjectId());
-                    alert(R.string.alert_network_error);
-                    return;
-                }
-
-
-                if (list != null && !list.isEmpty()) {
-                    Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + list.size() + " riders");
-                    aPassengers.addAll(list);
-                }
-
-            }
-        });
     }
 
     private void setupSpinners() {

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,11 +19,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.Utils;
+
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 
 /**
  * A login screen that offers login via email/password.
@@ -83,26 +88,44 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkLogin() {
-        User user = (User)ParseUser.getCurrentUser();
+        ParseUser user = ParseUser.getCurrentUser();
         if (user != null) { // start with existing user
             loginSuccess(user);
         }
     }
 
-    private void loginSuccess(User user) {
+    private void loginSuccess(ParseUser loginUser) {
         clearErrors();
-        Intent i = new Intent(this, HomeActivity.class);
-        user.flush();
-        i.putExtra("user", user);
-        startActivity(i);
+        ParseQuery<User> query = ParseQuery.getQuery(User.class);
+        final String loginUserId = loginUser.getObjectId();
+        query.whereEqualTo(COLUMN_LOGIN_USER_ID, loginUserId);
+        query.getFirstInBackground(new GetCallback<User>() {
+            @Override
+            public void done(User user, ParseException e) {
+                if(e != null) {
+                    Log.e(LoginActivity.class.getSimpleName(), "Failed to get user for loginUserId " + loginUserId, e);
+                    Toast.makeText(LoginActivity.this, "User credentials error", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                user.flush();
+                i.putExtra("user", user);
+
+                startActivity(i);
+
+            }
+        });
+
     }
 
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+                    /**
+                     * Attempts to sign in or register the account specified by the login form.
+                     * If there are form errors (invalid email, missing fields, etc.), the
+                     * errors are presented and no actual login attempt is made.
+                     */
+
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -195,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, User> {
+    public class UserLoginTask extends AsyncTask<Void, Void, ParseUser> {
 
         private final String userName;
         private final String password;
@@ -206,10 +229,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected User doInBackground(Void... params) {
-            User user = null;
+        protected ParseUser doInBackground(Void... params) {
+            ParseUser user = null;
             try {
-                user = (User)ParseUser.logIn(userName, password);
+                user = ParseUser.logIn(userName, password);
             } catch (ParseException e) {
                 e.printStackTrace();
                 user = null;
@@ -218,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(final User successUser) {
+        protected void onPostExecute(final ParseUser successUser) {
             mAuthTask = null;
             showProgress(false);
 
