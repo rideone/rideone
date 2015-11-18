@@ -105,10 +105,10 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
         put(COLUMN_DESTINATION, destination);
     }
 
-    public void setRiders(List<User> riders) {
+    public void setRiders(List<String> riders) {
         put(COLUMN_RIDERS, riders);
     }
-    public List<User> getRiders() {
+    public List<String> getRiders() {
         return getList(COLUMN_RIDERS);
     }
 

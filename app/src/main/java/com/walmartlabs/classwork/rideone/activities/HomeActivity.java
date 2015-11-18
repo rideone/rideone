@@ -146,8 +146,8 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         }
         user.setStatus(User.Status.WAIT_LIST);
         user.flush();
-        List<User> riders = ride.getRiders();
-        riders.add(user);
+        List<String> riders = ride.getRiders();
+        riders.add(user.getObjectId());
         ride.setRiders(riders);
         ride.flush();
 

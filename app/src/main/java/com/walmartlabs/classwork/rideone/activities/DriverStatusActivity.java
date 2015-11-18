@@ -42,6 +42,7 @@ import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
 import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FOUND;
@@ -165,7 +166,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         Ride ride = new Ride();
         ride.setAvailable(true);
         ride.setDate(new Date());
-        ride.setRiders(new ArrayList<User>());
+        ride.setRiders(new ArrayList<String>());
         ride.setSpots(DEFAULT_SPOTS);
         ride.setSpotsOccupied(0);
         ride.setDriverId(driver.getObjectId());
@@ -188,13 +189,19 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
         boolean isDbCallNeeded = true;
         if (ride.getRiders() != null) {
-            riders.addAll(ride.getRiders());
+            List<String> passengerIds = ride.getRiders();
+            ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, passengerIds).findInBackground(new FindCallback<User>() {
+                @Override
+                public void done(List<User> objects, ParseException e) {
+                    riders.addAll(objects);
+                    ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
+                    aPassengers = new PassengerListAdapter(DriverStatusActivity.this, riders, passengerListListener);
+                    lvPassengers.setAdapter(aPassengers);
+                }
+            });
+
             isDbCallNeeded = false;
         }
-
-        ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
-        aPassengers = new PassengerListAdapter(this, riders, passengerListListener);
-        lvPassengers.setAdapter(aPassengers);
 
         if (!isDbCallNeeded) {
             return;
