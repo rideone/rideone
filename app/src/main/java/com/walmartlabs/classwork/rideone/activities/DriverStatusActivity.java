@@ -42,6 +42,7 @@ import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
 import static com.walmartlabs.classwork.rideone.models.User.Status.NO_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.PASSENGER;
 import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FOUND;
@@ -165,7 +166,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         Ride ride = new Ride();
         ride.setAvailable(true);
         ride.setDate(new Date());
-        ride.setRiders(new ArrayList<User>());
+        ride.setRiders(new ArrayList<String>());
         ride.setSpots(DEFAULT_SPOTS);
         ride.setSpotsOccupied(0);
         ride.setDriverId(driver.getObjectId());
@@ -186,38 +187,20 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         riders.clear();
         removePassengers.clear();
 
-//        boolean isDbCallNeeded = true;
-//        if (ride.getRiders() != null && ride.) {
-//            riders.addAll(ride.getRiders());
-//            isDbCallNeeded = false;
-//        }
-
         ListView lvPassengers = (ListView) findViewById(R.id.lvPassengers);
-        aPassengers = new PassengerListAdapter(this, riders, passengerListListener);
+        aPassengers = new PassengerListAdapter(DriverStatusActivity.this, riders, passengerListListener);
         lvPassengers.setAdapter(aPassengers);
 
-//        if (!isDbCallNeeded) {
-//            return;
-//        }
-
-        ParseQuery<User> query = ParseQuery.getQuery(User.class);
-        query.whereEqualTo(User.COLUMN_RIDE, ride);
-        query.findInBackground(new FindCallback<User>() {
-            public void done(List<User> list, ParseException e) {
-                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
-                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching riders for ride " + ride.getObjectId());
-                    alert(R.string.alert_network_error);
-                    return;
+        if (ride.getRiders() != null) {
+            List<String> passengerIds = ride.getRiders();
+            ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, passengerIds).findInBackground(new FindCallback<User>() {
+                @Override
+                public void done(List<User> objects, ParseException e) {
+                    aPassengers.addAll(objects);
                 }
+            });
 
-
-                if (list != null && !list.isEmpty()) {
-                    Log.d(DriverStatusActivity.class.getSimpleName(), "Retrieved " + list.size() + " riders");
-                    aPassengers.addAll(list);
-                }
-
-            }
-        });
+        }
     }
 
     private void setupSpinners() {

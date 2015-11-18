@@ -143,6 +143,8 @@ public class RideListFragment extends Fragment {
                     return;
                 }
 
+
+
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
                     @Override
                     public String apply(Ride input) {
@@ -179,9 +181,12 @@ public class RideListFragment extends Fragment {
                         }
 
                         aRides.addAll(rideList);
-
                     }
+
+
                 });
+
+
 
             }
         });
