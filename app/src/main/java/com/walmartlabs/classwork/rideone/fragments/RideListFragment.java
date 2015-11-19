@@ -62,7 +62,7 @@ public class RideListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_driver_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_ride_list, container, false);
         lvRides = (ListView) view.findViewById(R.id.lvDrivers);
         lvRides.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -101,6 +101,15 @@ public class RideListFragment extends Fragment {
         lvTweets.addFooterView(footer);*/
         lvRides.setAdapter(aRides);
         fetchAndPopulateRideList();
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchAndPopulateRideList();
+                swipeContainer.setRefreshing(false);
+            }
+        });
 //        getDummyTimeline();
         return view;
     }
@@ -132,6 +141,12 @@ public class RideListFragment extends Fragment {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
 
+        if(Filter.isFilterOn()) {
+            query.whereGreaterThanOrEqualTo("spotsLeft", Filter.getSpots());
+            query.whereEqualTo("start_loc", Filter.getStart());
+            query.whereEqualTo("destination", Filter.getDestination());
+        }
+
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
             public void done(final List<Ride> rideList, ParseException e) {
@@ -141,20 +156,8 @@ public class RideListFragment extends Fragment {
                 }
 
                 if (rideList == null || rideList.isEmpty()) {
+                    aRides.clear();
                     return;
-                }
-
-                final List<Ride> filteredRides = new ArrayList<Ride>();
-
-                if(Filter.isFilterOn()) {
-                    for(Ride ride : rideList) {
-                        if (ride.getSpotsLeft() < Filter.getSpots()
-                                || ! ride.getStartLocation().equalsIgnoreCase(Filter.getStart())
-                                || ! ride.getDestination().equalsIgnoreCase(Filter.getDestination()))
-                            filteredRides.add(ride);
-                    }
-                } else {
-                    filteredRides.addAll(rideList);
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
@@ -163,8 +166,8 @@ public class RideListFragment extends Fragment {
                         return input.getDriverId();
                     }
                 };
-                final List<String> driverIds = Lists.transform(filteredRides, driverIdFromRide);
-                final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(filteredRides, driverIdFromRide);
+                final List<String> driverIds = Lists.transform(rideList, driverIdFromRide);
+                final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(rideList, driverIdFromRide);
 
                 ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, driverIds).findInBackground(new FindCallback<User>() {
                     @Override
@@ -193,10 +196,8 @@ public class RideListFragment extends Fragment {
                         }
 
                         aRides.clear();
-                        aRides.addAll(filteredRides);
+                        aRides.addAll(rideList);
                     }
-
-
                 });
 
 

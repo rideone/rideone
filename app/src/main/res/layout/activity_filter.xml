@@ -38,7 +38,8 @@
         android:layout_below="@id/swFilterOnOff"
         android:layout_toRightOf="@+id/tvSpots"
         android:layout_toEndOf="@+id/tvSpots"
-        android:layout_alignBottom="@+id/tvSpots"/>
+        android:layout_alignBottom="@+id/tvSpots"
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -117,6 +118,8 @@
         android:id="@+id/btnSave"
         android:onClick="onSave"
         android:layout_below="@+id/spTimeRange"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/swFilterOnOff"
+        android:layout_toEndOf="@+id/swFilterOnOff"
+        android:layout_marginTop="53dp" />
 
 </RelativeLayout>
