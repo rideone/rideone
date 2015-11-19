@@ -23,7 +23,7 @@ public class ReserveRideDialog extends DialogFragment {
 
     private static Ride currentRide;
     public interface ReserveRideListener {
-        void sendReserveRideRequest(Ride ride);
+        void reserveRideRequest(Ride ride);
     }
 
 
@@ -33,10 +33,10 @@ public class ReserveRideDialog extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static ReserveRideDialog newInstance(Ride ride, boolean inWaitList) {
+    public static ReserveRideDialog newInstance(Ride ride, boolean rideRequested) {
         ReserveRideDialog frag = new ReserveRideDialog();
         Bundle args = new Bundle();
-        args.putBoolean("inWaitList", inWaitList);
+        args.putBoolean("rideRequested", rideRequested);
         frag.setArguments(args);
         currentRide = ride;
         return frag;
@@ -60,7 +60,7 @@ public class ReserveRideDialog extends DialogFragment {
         final Button btnOk = (Button) view.findViewById(R.id.btnOK);
         TextView tvMessage = (TextView) view.findViewById(R.id.tvMessage);
 
-        if(getArguments().getBoolean("inWaitList")) {
+        if(getArguments().getBoolean("rideRequested")) {
             tvMessage.setText("You have already reserved a ride. Do you wish to cancel and re-book this ride?");
         }
 
@@ -68,7 +68,7 @@ public class ReserveRideDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 HomeActivity activity = (HomeActivity) getActivity();
-                activity.sendReserveRideRequest(currentRide);
+                activity.reserveRideRequest(currentRide);
                 dismiss();
             }
         });

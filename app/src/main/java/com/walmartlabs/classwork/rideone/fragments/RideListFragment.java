@@ -127,7 +127,7 @@ public class RideListFragment extends Fragment {
 //        aRides.add(ride);
 //    }
 
-    private void fetchAndPopulateRideList() {
+    public void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
 
@@ -142,8 +142,6 @@ public class RideListFragment extends Fragment {
                 if(rideList == null || rideList.isEmpty()) {
                     return;
                 }
-
-
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
                     @Override
@@ -180,6 +178,7 @@ public class RideListFragment extends Fragment {
                             ride.setDriver(driver);
                         }
 
+                        aRides.clear();
                         aRides.addAll(rideList);
                     }
 

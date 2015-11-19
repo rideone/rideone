@@ -2,7 +2,6 @@ package com.walmartlabs.classwork.rideone.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,6 +122,10 @@ public class User extends ParseObject implements CustomSerializable<User> {
     
     public void setRideId(String rideId) {
         put(COLUMN_RIDE, rideId);
+    }
+
+    public String getRideId() {
+        return getString(COLUMN_RIDE);
     }
 
     public boolean isDriver() {
