@@ -17,7 +17,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 @ParseClassName("app_user")
 public class User extends ParseObject implements CustomSerializable<User> {
 
-    public static final String COLUMN_RIDE = "ride";
+    public static final String COLUMN_RIDE = "rideId";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_ID = "objectId";
     public static final String COLUMN_LOGIN_USER_ID = "loginUserId";
@@ -121,8 +121,8 @@ public class User extends ParseObject implements CustomSerializable<User> {
         return (isNullOrEmpty(statusStr) ? Status.NO_RIDE : Status.valueOf(statusStr));
     }
     
-    public void setRide(Ride ride) {
-        put(COLUMN_RIDE, ride);
+    public void setRideId(String rideId) {
+        put(COLUMN_RIDE, rideId);
     }
 
     public boolean isDriver() {
