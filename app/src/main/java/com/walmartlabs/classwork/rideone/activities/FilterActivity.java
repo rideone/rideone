@@ -29,6 +29,7 @@ public class FilterActivity extends AppCompatActivity {
         Spinner spDestination = createSpinnerFromResource(R.id.spDestination, R.array.locations, Filter.getDestination());
         Spinner spTimeRange = createSpinnerFromResource(R.id.spTimeRange, R.array.timerange, Filter.getTimeRange());
         Switch swFilterOnOff = (Switch) findViewById(R.id.swFilterOnOff);
+        swFilterOnOff.setChecked(Filter.isFilterOn());
 
         swFilterOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
