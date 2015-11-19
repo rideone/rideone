@@ -31,6 +31,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements ReserveRideDialog.ReserveRideListener {
 
     private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
+    private static final int INTENT_SET_FILTER = 888;
 
     private User user;
     private Ride ride = null;
@@ -89,7 +90,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
         } else if (id == R.id.miFilter) {
             Intent intent = new Intent(this, FilterActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, INTENT_SET_FILTER);
         }
 
         return super.onOptionsItemSelected(item);
@@ -130,6 +131,8 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
                 rideListFragment.aRides.notifyDataSetChanged();
             }
+        } else if(INTENT_SET_FILTER == requestCode && resultCode == Activity.RESULT_OK) {
+            rideListFragment.fetchAndPopulateRideList();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -169,6 +172,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                     List<String> riderIds = prevRide.getRiderIds();
                     riderIds.remove(user.getObjectId());
                     prevRide.setRiderIds(riderIds);
+                    prevRide.setSpotsLeft(prevRide.getSpotsLeft() + 1);
                     prevRide.flush();
                     prevRide.saveInBackground();
                     sendRequest(ride);
