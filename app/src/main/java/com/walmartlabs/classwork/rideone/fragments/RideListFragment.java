@@ -23,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
+import com.walmartlabs.classwork.rideone.models.Filter;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
@@ -134,13 +135,26 @@ public class RideListFragment extends Fragment {
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
             public void done(final List<Ride> rideList, ParseException e) {
-                if(e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
+                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                     Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve rideList ", e);
                     //TODO: show Toast alert for network error
                 }
 
-                if(rideList == null || rideList.isEmpty()) {
+                if (rideList == null || rideList.isEmpty()) {
                     return;
+                }
+
+                final List<Ride> filteredRides = new ArrayList<Ride>();
+
+                if(Filter.isFilterOn()) {
+                    for(Ride ride : rideList) {
+                        if (ride.getSpotsLeft() < Filter.getSpots()
+                                || ! ride.getStartLocation().equalsIgnoreCase(Filter.getStart())
+                                || ! ride.getDestination().equalsIgnoreCase(Filter.getDestination()))
+                            filteredRides.add(ride);
+                    }
+                } else {
+                    filteredRides.addAll(rideList);
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
@@ -149,8 +163,8 @@ public class RideListFragment extends Fragment {
                         return input.getDriverId();
                     }
                 };
-                final List<String> driverIds = Lists.transform(rideList, driverIdFromRide);
-                final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(rideList, driverIdFromRide);
+                final List<String> driverIds = Lists.transform(filteredRides, driverIdFromRide);
+                final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(filteredRides, driverIdFromRide);
 
                 ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, driverIds).findInBackground(new FindCallback<User>() {
                     @Override
@@ -179,7 +193,7 @@ public class RideListFragment extends Fragment {
                         }
 
                         aRides.clear();
-                        aRides.addAll(rideList);
+                        aRides.addAll(filteredRides);
                     }
 
 

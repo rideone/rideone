@@ -7,11 +7,24 @@
     android:paddingRight="16dp"
     tools:context="com.walmartlabs.classwork.rideone.activities.FilterActivity">
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:id="@+id/swFilterOnOff"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:switchMinWidth="80dp"
+        android:switchPadding="20dp"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Number of spots"
         android:id="@+id/tvSpots"
+        android:layout_below="@id/swFilterOnOff"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingRight="23dp"
@@ -22,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spSpots"
+        android:layout_below="@id/swFilterOnOff"
         android:layout_toRightOf="@+id/tvSpots"
         android:layout_toEndOf="@+id/tvSpots"
         android:layout_alignBottom="@+id/tvSpots"/>
@@ -95,5 +109,14 @@
         android:layout_alignLeft="@id/spStartLoc"
 
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/btnSave"
+        android:onClick="onSave"
+        android:layout_below="@+id/spTimeRange"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
