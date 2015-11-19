@@ -111,11 +111,17 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                     }
                 }
 
-                if (existingRidePos != -1 && ride.isAvailable()) {
-                    rideListFragment.rides.set(existingRidePos, ride);
-                } else if (existingRidePos != -1 && !ride.isAvailable()) {
+                //Not available and ride exists
+                if(!ride.isAvailable() && existingRidePos != -1) {
                     rideListFragment.rides.remove(existingRidePos);
-                } else {
+                }
+
+                //Available and ride exists
+                if(ride.isAvailable() && existingRidePos != -1) {
+                    rideListFragment.rides.set(existingRidePos, ride);
+                }
+                //Available and ride doesn't exist
+                else if(ride.isAvailable() && existingRidePos == -1) {
                     rideListFragment.aRides.insert(ride, 0);
                 }
 

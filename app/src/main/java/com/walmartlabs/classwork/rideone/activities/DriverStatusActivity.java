@@ -365,7 +365,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     }
 
     private boolean validate() {
-        if(ride.getStartLocation().equalsIgnoreCase(ride.getDestination())) {
+        if(ride.isAvailable() && ride.getStartLocation().equalsIgnoreCase(ride.getDestination())) {
             Toast.makeText(DriverStatusActivity.this, "Start location and destination cannot be the same", Toast.LENGTH_SHORT).show();
             return true;
         }
