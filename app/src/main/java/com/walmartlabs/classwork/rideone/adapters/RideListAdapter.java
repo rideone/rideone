@@ -20,6 +20,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 /**
  * Created by abalak5 on 10/21/15.
  */
@@ -27,7 +30,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
     // View lookup cache
     private static class ViewHolder {
         public ImageView ivProfile;
-        public TextView tvFirstName;
+        public TextView tvFullName;
         public TextView tvTime;
         public TextView tvSpotsAvailable;
         public TextView tvStartLoc;
@@ -55,17 +58,12 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.ride_list_item, parent, false);
             viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
-            viewHolder.tvFirstName = (TextView)convertView.findViewById(R.id.tvFirstName);
+            viewHolder.tvFullName = (TextView)convertView.findViewById(R.id.tvFullName);
             viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
             viewHolder.tvTime = (TextView)convertView.findViewById(R.id.tvTime);
             viewHolder.tvDestination = (TextView)convertView.findViewById(R.id.tvDestination);
             viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
             viewHolder.btnReserve = (Button)convertView.findViewById(R.id.btnReserve);
-
-            String userId = context.getUserInfo().getObjectId();
-            if(ride.getDriverId().equalsIgnoreCase(userId)) {
-                viewHolder.btnReserve.setVisibility(View.INVISIBLE);
-            }
 
             viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,8 +83,15 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        String userId = context.getUserInfo().getObjectId();
+        if(ride.getDriverId().equalsIgnoreCase(userId)) {
+            viewHolder.btnReserve.setVisibility(INVISIBLE);
+        } else {
+            viewHolder.btnReserve.setVisibility(VISIBLE);
+        }
+
         // Populate data into the template view using the data object
-        viewHolder.tvFirstName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
+        viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
         viewHolder.tvDestination.setText("to: " + ride.getDestination());
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals

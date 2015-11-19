@@ -20,7 +20,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public static final String COLUMN_DESTINATION = "destination";
     public static final String COLUMN_SPOTS = "spots";
     public static final String COLUMN_DRIVER = "driver_id";
-    public static final String COLUMN_RIDERS = "riders";
+    public static final String COLUMN_RIDERS = "riderIds";
     public static final String COLUMN_SPOTS_LEFT = "spotsLeft";
 
     private User driver;
@@ -105,10 +105,10 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
         put(COLUMN_DESTINATION, destination);
     }
 
-    public void setRiders(List<String> riders) {
+    public void setRiderIds(List<String> riders) {
         put(COLUMN_RIDERS, riders);
     }
-    public List<String> getRiders() {
+    public List<String> getRiderIds() {
         return getList(COLUMN_RIDERS);
     }
 
