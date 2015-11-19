@@ -22,7 +22,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="120dp"
         android:id="@+id/rightLayout"
         android:layout_marginLeft="70dp">
@@ -31,13 +31,16 @@
             android:layout_height="20dp"
             android:id="@+id/rightTop">
             <TextView
-                android:id="@+id/tvFirstName"
-                android:layout_width="100dp"
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="First"
+                />
+
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

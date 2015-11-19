@@ -22,6 +22,7 @@ import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             if(ride != null) {
                 ride = ride.rebuild();
                 //Has to do this because Serialization doesn't happen for relationships
-                user.setRide(ride);
+//                user.setRide(ride);
                 ride.setDriver(user);
                 RideListFragment rideListFragment = (RideListFragment) getSupportFragmentManager().findFragmentById(R.id.flContainer);
 
@@ -110,12 +111,21 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                     }
                 }
 
-                if(existingRidePos != -1) {
+                //Not available and ride exists
+                if(!ride.isAvailable() && existingRidePos != -1) {
+                    rideListFragment.rides.remove(existingRidePos);
+                }
+
+                //Available and ride exists
+                if(ride.isAvailable() && existingRidePos != -1) {
                     rideListFragment.rides.set(existingRidePos, ride);
-                    rideListFragment.aRides.notifyDataSetChanged();
-                } else {
+                }
+                //Available and ride doesn't exist
+                else if(ride.isAvailable() && existingRidePos == -1) {
                     rideListFragment.aRides.insert(ride, 0);
                 }
+
+                rideListFragment.aRides.notifyDataSetChanged();
             }
         }
 
@@ -144,10 +154,14 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
            //TODO: logic to remove passenger from old ride and add it to new ride
         }
         user.setStatus(User.Status.WAIT_LIST);
+        user.setRideId(ride.getObjectId());
         user.flush();
-        List<String> riders = ride.getRiders();
+        List<String> riders = ride.getRiderIds();
+        if(riders == null) {
+            riders = new ArrayList<>();
+        }
         riders.add(user.getObjectId());
-        ride.setRiders(riders);
+        ride.setRiderIds(riders);
         ride.flush();
 
         SaveCallback callback = new SaveCallback() {

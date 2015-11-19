@@ -5,20 +5,20 @@
     <item
         android:id="@+id/miStatus"
         android:title="@string/menu_status_label"
-        android:icon="@drawable/ic_status"
+        android:icon="@drawable/ic_wheel"
         app:showAsAction="ifRoom">
     </item>
 
     <item
         android:id="@+id/miFilter"
         android:title="@string/menu_filter_label"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/ic_filters"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/miProfile"
         android:title="@string/menu_profile_label"
-        android:icon="@mipmap/ic_profile"
+        android:icon="@drawable/ic_profile2"
         app:showAsAction="ifRoom"
         android:onClick="onProfileView">
     </item>
