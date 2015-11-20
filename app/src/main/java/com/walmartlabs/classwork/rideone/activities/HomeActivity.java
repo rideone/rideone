@@ -10,8 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
@@ -29,9 +31,11 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements ReserveRideDialog.ReserveRideListener {
 
     private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
+    private static final int INTENT_SET_FILTER = 888;
 
     private User user;
     private Ride ride = null;
+    private RideListFragment rideListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         user = ((User) getIntent().getSerializableExtra("user")).rebuild();
         //TODO: fetch ride from db based on user id
 
-        RideListFragment rideListFragment = RideListFragment.newInstance();
+        rideListFragment = RideListFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flContainer, rideListFragment);
         ft.commit();
@@ -86,7 +90,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
         } else if (id == R.id.miFilter) {
             Intent intent = new Intent(this, FilterActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, INTENT_SET_FILTER);
         }
 
         return super.onOptionsItemSelected(item);
@@ -127,11 +131,11 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
                 rideListFragment.aRides.notifyDataSetChanged();
             }
+        } else if(INTENT_SET_FILTER == requestCode && resultCode == Activity.RESULT_OK) {
+            rideListFragment.fetchAndPopulateRideList();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-
-
     }
 
     public void onProfileView(MenuItem item) {
@@ -141,18 +145,45 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
     }
 
     public void openReserveRideDialog(Ride ride) {
-        boolean inWaitList = false;
-        if(user.getStatus().equals(User.Status.WAIT_LIST)) inWaitList = true;
+        boolean rideRequested = false;
+        if(user.getStatus().equals(User.Status.WAIT_LIST) ||
+                user.getStatus().equals(User.Status.PASSENGER)) rideRequested = true;
         FragmentManager fm = getSupportFragmentManager();
-        ReserveRideDialog reserveRideDialog= ReserveRideDialog.newInstance(ride, inWaitList);
+        ReserveRideDialog reserveRideDialog= ReserveRideDialog.newInstance(ride, rideRequested);
         reserveRideDialog.show(fm, "fragment_reserve_ride");
     }
 
+    //TODO: refactor code to move logic to fragment layer
     @Override
-    public void sendReserveRideRequest(Ride ride) {
-        if(user.getStatus().equals(User.Status.WAIT_LIST)) {
-           //TODO: logic to remove passenger from old ride and add it to new ride
+    public void reserveRideRequest(final Ride ride) {
+        if(user.getStatus().equals(User.Status.WAIT_LIST)
+                || user.getStatus().equals(User.Status.PASSENGER)) {
+            String rideId = user.getRideId();
+            ParseQuery query = ParseQuery.getQuery(Ride.class);
+            query.whereEqualTo("objectId", rideId);
+            query.findInBackground(new FindCallback() {
+                @Override
+                public void done(List objects, ParseException e) {
+                }
+
+                @Override
+                public void done(Object o, Throwable throwable) {
+                    Ride prevRide = (Ride) ((ArrayList) o).get(0);
+                    List<String> riderIds = prevRide.getRiderIds();
+                    riderIds.remove(user.getObjectId());
+                    prevRide.setRiderIds(riderIds);
+                    prevRide.setSpotsLeft(prevRide.getSpotsLeft() + 1);
+                    prevRide.flush();
+                    prevRide.saveInBackground();
+                    sendRequest(ride);
+                }
+            });
+        } else {
+            sendRequest(ride);
         }
+    }
+
+    public void sendRequest(Ride ride) {
         user.setStatus(User.Status.WAIT_LIST);
         user.setRideId(ride.getObjectId());
         user.flush();
@@ -168,7 +199,8 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             @Override
             public void done(ParseException e) {
                 Toast.makeText(HomeActivity.this, "Request sent to driver", Toast.LENGTH_SHORT).show();
-
+                //TODO: instead of refreshing the entire list, just update prev ride and current ride(reserve button)
+                rideListFragment.fetchAndPopulateRideList();
             }
         };
         List<ParseObject> models = Utils.joinModelLists(Arrays.asList(user), Arrays.asList(ride));

@@ -23,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
+import com.walmartlabs.classwork.rideone.models.Filter;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
@@ -61,7 +62,7 @@ public class RideListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_driver_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_ride_list, container, false);
         lvRides = (ListView) view.findViewById(R.id.lvDrivers);
         lvRides.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -100,6 +101,15 @@ public class RideListFragment extends Fragment {
         lvTweets.addFooterView(footer);*/
         lvRides.setAdapter(aRides);
         fetchAndPopulateRideList();
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchAndPopulateRideList();
+                swipeContainer.setRefreshing(false);
+            }
+        });
 //        getDummyTimeline();
         return view;
     }
@@ -127,23 +137,28 @@ public class RideListFragment extends Fragment {
 //        aRides.add(ride);
 //    }
 
-    private void fetchAndPopulateRideList() {
+    public void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
+
+        if(Filter.isFilterOn()) {
+            query.whereGreaterThanOrEqualTo("spotsLeft", Filter.getSpots());
+            query.whereEqualTo("start_loc", Filter.getStart());
+            query.whereEqualTo("destination", Filter.getDestination());
+        }
 
         //query.include("ride");
         query.findInBackground(new FindCallback<Ride>() {
             public void done(final List<Ride> rideList, ParseException e) {
-                if(e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
+                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                     Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve rideList ", e);
                     //TODO: show Toast alert for network error
                 }
 
-                if(rideList == null || rideList.isEmpty()) {
+                if (rideList == null || rideList.isEmpty()) {
+                    aRides.clear();
                     return;
                 }
-
-
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
                     @Override
@@ -180,10 +195,9 @@ public class RideListFragment extends Fragment {
                             ride.setDriver(driver);
                         }
 
+                        aRides.clear();
                         aRides.addAll(rideList);
                     }
-
-
                 });
 
 

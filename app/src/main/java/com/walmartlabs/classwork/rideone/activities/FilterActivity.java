@@ -8,7 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Filter;
@@ -26,6 +28,15 @@ public class FilterActivity extends AppCompatActivity {
         Spinner spStartLoc = createSpinnerFromResource(R.id.spStartLoc, R.array.locations, Filter.getStart());
         Spinner spDestination = createSpinnerFromResource(R.id.spDestination, R.array.locations, Filter.getDestination());
         Spinner spTimeRange = createSpinnerFromResource(R.id.spTimeRange, R.array.timerange, Filter.getTimeRange());
+        Switch swFilterOnOff = (Switch) findViewById(R.id.swFilterOnOff);
+        swFilterOnOff.setChecked(Filter.isFilterOn());
+
+        swFilterOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Filter.setFilterOn(isChecked);
+            }
+        });
 
         spSpots.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

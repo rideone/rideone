@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
+import com.walmartlabs.classwork.rideone.models.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -83,11 +84,23 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        String userId = context.getUserInfo().getObjectId();
+        User userInfo = context.getUserInfo();
+        String userId = userInfo.getObjectId();
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.btnReserve.setVisibility(INVISIBLE);
         } else {
             viewHolder.btnReserve.setVisibility(VISIBLE);
+        }
+
+        //user has requested a ride or has been confirmed
+        String rideIdOfUser = userInfo.getRideId();
+        if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
+            String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
+            viewHolder.btnReserve.setText(status);
+            viewHolder.btnReserve.setEnabled(false);
+        } else {
+            viewHolder.btnReserve.setText("Reserve");
+            viewHolder.btnReserve.setEnabled(true);
         }
 
         // Populate data into the template view using the data object
