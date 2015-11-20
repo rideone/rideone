@@ -22,6 +22,8 @@
 
 ## Video Walkthrough 
 
+![Video Walkthrough](rideone_v1.gif)
+
 ## Notes
 
 ## Open-source libraries used
