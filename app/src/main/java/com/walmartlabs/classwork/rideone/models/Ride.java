@@ -117,7 +117,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
             return new ArrayList<>();
         }
 
-        return Arrays.asList(riderIds.split(","));
+        return new ArrayList<String>(Arrays.asList(riderIds.split(",")));
     }
 
     public void setDriverId(String driverId) {

@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<User>() {
             @Override
             public void done(User user, ParseException e) {
-                if(e != null) {
+                if (e != null) {
                     Log.e(LoginActivity.class.getSimpleName(), "Failed to get user for loginUserId " + loginUserId, e);
                     Toast.makeText(LoginActivity.this, "User credentials error", Toast.LENGTH_LONG).show();
                     return;
@@ -113,10 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                 i.putExtra("user", user);
 
                 startActivity(i);
-
             }
         });
-
     }
 
 

@@ -140,6 +140,7 @@ public class RideListFragment extends Fragment {
     public void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
+       // query.whereGreaterThan("spotsLeft", 0);
 
         if(Filter.isFilterOn()) {
             query.whereGreaterThanOrEqualTo("spotsLeft", Filter.getSpots());

@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -156,19 +156,15 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
     //TODO: refactor code to move logic to fragment layer
     @Override
     public void reserveRideRequest(final Ride ride) {
+        //if user already reserved/requested a ride, then remove ride
         if(user.getStatus().equals(User.Status.WAIT_LIST)
                 || user.getStatus().equals(User.Status.PASSENGER)) {
             String rideId = user.getRideId();
             ParseQuery query = ParseQuery.getQuery(Ride.class);
             query.whereEqualTo("objectId", rideId);
-            query.findInBackground(new FindCallback() {
+            query.getFirstInBackground(new GetCallback<Ride>() {
                 @Override
-                public void done(List objects, ParseException e) {
-                }
-
-                @Override
-                public void done(Object o, Throwable throwable) {
-                    Ride prevRide = (Ride) ((ArrayList) o).get(0);
+                public void done(Ride prevRide, ParseException e) {
                     List<String> riderIds = prevRide.getRiderIds();
                     riderIds.remove(user.getObjectId());
                     prevRide.setRiderIds(riderIds);
