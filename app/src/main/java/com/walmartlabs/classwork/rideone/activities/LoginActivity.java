@@ -19,15 +19,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.Utils;
-
-import java.util.List;
 
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 
@@ -101,10 +99,9 @@ public class LoginActivity extends AppCompatActivity {
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         final String loginUserId = loginUser.getObjectId();
         query.whereEqualTo(COLUMN_LOGIN_USER_ID, loginUserId);
-        query.findInBackground(new FindCallback<User>() {
+        query.getFirstInBackground(new GetCallback<User>() {
             @Override
-            public void done(List<User> users, ParseException e) {
-                User user = users.get(0);
+            public void done(User user, ParseException e) {
                 if (e != null) {
                     Log.e(LoginActivity.class.getSimpleName(), "Failed to get user for loginUserId " + loginUserId, e);
                     Toast.makeText(LoginActivity.this, "User credentials error", Toast.LENGTH_LONG).show();
