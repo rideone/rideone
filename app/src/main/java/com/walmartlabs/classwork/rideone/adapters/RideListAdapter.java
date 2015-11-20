@@ -66,19 +66,6 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
             viewHolder.btnReserve = (Button)convertView.findViewById(R.id.btnReserve);
 
-            viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.openReserveRideDialog(ride);
-                }
-            });
-
-            viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -102,6 +89,19 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
             viewHolder.btnReserve.setText("Reserve");
             viewHolder.btnReserve.setEnabled(true);
         }
+
+        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.openReserveRideDialog(ride);
+            }
+        });
+
+        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         // Populate data into the template view using the data object
         viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
