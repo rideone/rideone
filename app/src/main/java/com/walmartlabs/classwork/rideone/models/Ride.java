@@ -1,9 +1,12 @@
 package com.walmartlabs.classwork.rideone.models;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -106,10 +109,15 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     }
 
     public void setRiderIds(List<String> riders) {
-        put(COLUMN_RIDERS, riders);
+        put(COLUMN_RIDERS, Joiner.on(',').join(riders));
     }
     public List<String> getRiderIds() {
-        return getList(COLUMN_RIDERS);
+         String riderIds = getString(COLUMN_RIDERS);
+        if(Strings.isNullOrEmpty(riderIds)) {
+            return new ArrayList<>();
+        }
+
+        return Arrays.asList(riderIds.split(","));
     }
 
     public void setDriverId(String driverId) {

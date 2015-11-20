@@ -39,11 +39,13 @@ import com.walmartlabs.classwork.rideone.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
+import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_RIDERS;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
@@ -80,6 +82,14 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     private EditText etSpots;
     private List<User> riders = new ArrayList<>();
     private List<User> removePassengers = new ArrayList<>();
+
+    private Function<User, String> extractIdFunction = new Function<User, String>() {
+        @Override
+        public String apply(User input) {
+            return input.getObjectId();
+        }
+    };
+
 
     PassengerListAdapter.PassengerListListener passengerListListener = new PassengerListAdapter.PassengerListListener() {
         @Override
@@ -131,16 +141,21 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        //If Ride doesn't exist, create one with time set to next hour
-        //TODO: receive ride and driver from main activity
-
 
         driver = ((User) getIntent().getSerializableExtra("user")).rebuild();
+
+        //TODO: uncomment serialized Ride once Parse Push is implemented. For now we just pull latest ride from DB every time.
         Ride rideArg = ((Ride) getIntent().getSerializableExtra("ride"));
-        if(rideArg != null) {
-            ride = rideArg.rebuild();
-            setupRideInfo();
-        } else {
+//        if(rideArg != null) {
+//            ride = rideArg.rebuild();
+//
+//            setupRideInfo();
+//        } else {
+
+        ride = rideArg;
+
+        //TODO: Need work-around for Parse bug when it doesn't clear old operations. That prevents fetching fresh data from db.
+
             ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
             query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
             query.getFirstInBackground(new GetCallback<Ride>() {
@@ -153,15 +168,24 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
                     if (rideDb == null) {
                         ride = createDefaultRide(driver);
+                        ride.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to create new ride ");
+                                    alert(R.string.alert_network_error);
+                                    return;
+                                }
+                                setupRideInfo();
+                            }
+                        });
                     } else {
                         ride = rideDb;
+                        setupRideInfo();
                     }
-
-                    setupRideInfo();
-
                 }
             });
-        }
+//        }
 //        fetchedComment.getParseObject("post")
 //                .fetchIfNeededInBackground(new GetCallback<ParseObject>() {
 //                    public void done(ParseObject post, ParseException e) {
@@ -331,37 +355,33 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         populateRideInfo(ride, driver);
         if(validate()) return;
 
-        //If ride already exists: update ride in parallel with updating passengers
         if (!isNullOrEmpty(ride.getObjectId())) {
             assignPassengersAndDriver(riders, removePassengers, ride, driver);
+//            ride.remove(COLUMN_RIDERS);
             //Combine riders, removePassengers and ride into one list
             List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride), Arrays.asList(driver));
-            ParseUtil.saveInBatch(models, callback);
-        }
-        //If ride doesn't exist: create ride first, and then update the passengers
-        else {
-            ride.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.e(ParseUtil.class.getSimpleName(), "Failed to create ride ", e);
-                        alert(R.string.alert_network_error);
-                        return;
-                    }
-
-                    assignPassengersAndDriver(riders, removePassengers, ride, driver);
-                    List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride), Arrays.asList(driver));
-//                    if(passengers.isEmpty()) {
-//                        callback.done(e);
-//                    } else {
-                        ParseUtil.saveInBatch(models, callback);
+            ParseUtil.saveInBatch(models, callback); //new SaveCallback() {
+//                @Override
+//                public void done(ParseException e) {
+//                    if (e != null) {
+//                        Log.e(DriverStatusActivity.class.getSimpleName(), "Failed saving ride info", e);
+//                        alert(R.string.alert_network_error);
+//                        return;
 //                    }
-
-                }
-            });
+//
+                    //Have to separately save rideIds here as Parse doesn't allow adding and removing items from array in one shot.
+//                    if(!riders.isEmpty()) {
+//                        addRideIdsToRide(riders, ride);
+//                        ride.saveInBackground(callback);
+//                    } else {
+//                        callback.done(e);
+//                    }
+//                }
+//            });
+        } else {
+            Log.e(DriverStatusActivity.class.getSimpleName(), "IllegalState: ride doesn't exist", new IllegalStateException("Ride doesn't exist."));
+            Toast.makeText(this, "Internal Error", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     private boolean validate() {
@@ -435,18 +455,29 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         Toast.makeText(DriverStatusActivity.this, msgResource, Toast.LENGTH_LONG).show();
     }
 
+//    private void addRideIdsToRide(List<User> passengers, Ride ride) {
+//        List<String> passengerIds = Lists.transform(passengers, extractIdFunction);
+//        if(!passengerIds.isEmpty()) {
+//            ride.addAllUnique(COLUMN_RIDERS, passengerIds);
+//        }
+//    }
+
     private void assignPassengersAndDriver(List<User> passengers, List<User> removePassengers, Ride ride, User driver) {
 
-        Function<User, String> extractIdFunction = new Function<User, String>() {
-            @Override
-            public String apply(User input) {
-                return input.getObjectId();
-            }
-        };
-        List<String> passengerIds = Lists.transform(passengers, extractIdFunction);
 //        List<String> removePassengerIds = Lists.transform(removePassengers, extractIdFunction);
+//
+//        if(!removePassengerIds.isEmpty()) {
+//            ride.removeAll(COLUMN_RIDERS, removePassengerIds);
+//        }
 
-        ride.setRiderIds(new ArrayList<String>(passengerIds));
+        //Cannot add passengers in the same operation due to Parse limitations
+        List<String> passengerIds = Lists.transform(passengers, extractIdFunction);
+        if(!passengerIds.isEmpty()) {
+            ride.setRiderIds(passengerIds);
+        } else {
+            List<String> emptyArray = Collections.emptyList();
+            ride.setRiderIds(emptyArray);
+        }
 
         for(User u : passengers) {
             u.setRideId(ride.getObjectId());
