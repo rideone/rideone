@@ -64,12 +64,12 @@ public class RideListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ride_list, container, false);
         lvRides = (ListView) view.findViewById(R.id.lvDrivers);
-        lvRides.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int totalItemCount) {
-
-            }
-        });
+//        lvRides.setOnScrollListener(new EndlessScrollListener() {
+//            @Override
+//            public void onLoadMore(int totalItemCount) {
+//
+//            }
+//        });
 
         lvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,7 +107,6 @@ public class RideListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 fetchAndPopulateRideList();
-                swipeContainer.setRefreshing(false);
             }
         });
 //        getDummyTimeline();
@@ -153,11 +152,15 @@ public class RideListFragment extends Fragment {
             public void done(final List<Ride> rideList, ParseException e) {
                 if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                     Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve rideList ", e);
+                    swipeContainer.setRefreshing(false);
+
                     //TODO: show Toast alert for network error
                 }
 
                 if (rideList == null || rideList.isEmpty()) {
                     aRides.clear();
+                    swipeContainer.setRefreshing(false);
+
                     return;
                 }
 
@@ -176,12 +179,16 @@ public class RideListFragment extends Fragment {
                         if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
                             Log.e(RideListFragment.class.getSimpleName(), "Failed to retrieve driverList ", e);
                             //TODO: show Toast alert for network error
+                            swipeContainer.setRefreshing(false);
+
                             return;
                         }
 
                         if (driverList == null || driverList.isEmpty()) {
                             String msg = "No drivers found for " + driverIds;
                             Log.e(RideListFragment.class.getSimpleName(), msg, new IllegalStateException(msg));
+                            swipeContainer.setRefreshing(false);
+
                             return;
                         }
 
@@ -198,6 +205,7 @@ public class RideListFragment extends Fragment {
 
                         aRides.clear();
                         aRides.addAll(rideList);
+                        swipeContainer.setRefreshing(false);
                     }
                 });
 
