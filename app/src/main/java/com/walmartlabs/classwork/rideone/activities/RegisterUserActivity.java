@@ -52,7 +52,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         update = getIntent().getBooleanExtra("update", false);
         Button btn = (Button) findViewById(R.id.btnRegister);
         if (update) {
-            btn.setText("Update");
+            btn.setText(R.string.register_update);
             ParseUser loginUser = ParseUser.getCurrentUser();
             edUserName.setText(loginUser.getUsername());
             edEmail.setText(loginUser.getEmail());
@@ -73,7 +73,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }
             });
         } else {
-            btn.setText(R.string.register);
+            btn.setText(R.string.register_save);
             edUserName.setEnabled(true);
         }
     }

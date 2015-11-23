@@ -70,7 +70,9 @@
     <string name="confirmPassword">Confirm Password</string>
     <string name="email">Email</string>
     <string name="register">Register</string>
-    <string name="signup_register">Sign up/Register</string>
+    <string name="register_save">Next</string>
+    <string name="register_update">Save</string>
+    <string name="signup_register">Register</string>
     <string name="logout">Logout</string>
     <string name="firstName">First name</string>
     <string name="lastName">Last name</string>
@@ -78,4 +80,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="reserve_ride_label">Are you sure you want to reserve this ride?</string>
+
+    <color name="app_red">#D80000</color>
 </resources>
