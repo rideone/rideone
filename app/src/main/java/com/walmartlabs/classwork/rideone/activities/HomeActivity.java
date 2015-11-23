@@ -234,14 +234,6 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 //    }
 
     public User getUserInfo() {
-
-        try {
-            //get latest updated user info
-            user = ParseQuery.getQuery(User.class).get(user.getObjectId());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         return user;
     }
 
