@@ -22,7 +22,7 @@ public class RideOneApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Parse.enableLocalDatastore(this);
+//        Parse.enableLocalDatastore(this);
         // Register your parse models here
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Ride.class);

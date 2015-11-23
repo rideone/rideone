@@ -1,25 +1,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:gravity="center_horizontal"
-    android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.walmartlabs.classwork.rideone.activities.LoginActivity">
+    tools:context="com.walmartlabs.classwork.rideone.activities.LoginActivity"
+    android:background="@drawable/carpool_bg2"
+    android:alpha="0.7">
 
     <!-- Login progress -->
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RIDE ONE - don't leave your colleagues behind"
+        android:textStyle="bold|italic"
+        android:textColor="#000000"
+
+        />
+
     <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        >
 
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColorHint="#000000"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                >
 
                 <EditText
                     android:layout_width="match_parent"
@@ -28,12 +48,17 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:hint="User Name"
-                    android:textSize="@dimen/fieldSize" />
+                    android:textSize="@dimen/fieldSize"
+                    android:textColor="#000000"
+                    />
             </android.support.design.widget.TextInputLayout>
 
 
             <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:textColorHint="#000000"
+                >
 
                 <EditText android:id="@+id/password" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:hint="@string/prompt_password"
@@ -41,27 +66,50 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified" android:inputType="textPassword"
                     android:maxLines="1" android:singleLine="true"
-                    android:textSize="@dimen/fieldSize" />
+                    android:textSize="@dimen/fieldSize"
+                    android:textColor="#000000"
+
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
+            <Button android:id="@+id/email_sign_in_button"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
+                android:layout_marginTop="55dp" android:text="@string/action_sign_in_short"
                 android:textStyle="bold"
-                android:textSize="@dimen/fieldSize" />
+                android:textSize="@dimen/fieldSize"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/button_black_round"
+                android:textColor="#FFFFFF"
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signup_register"
-                android:id="@+id/textView"
-                android:clickable="true"
-                android:onClick="registerUser"
+                />
+            <Button android:id="@+id/register"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="25dp" android:text="@string/signup_register"
+                android:textStyle="bold"
+                android:textSize="@dimen/fieldSize"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/button_red_round"
+                android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal"
-                android:textColor="#0a29dd"
-                android:textColorLink="#091973"
-                android:textSize="@dimen/linkTextSize" />
+                android:onClick="registerUser"
+
+                />
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/signup_register"-->
+                <!--android:id="@+id/textView"-->
+                <!--android:clickable="true"-->
+                <!--android:onClick="registerUser"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:textColor="#0a29dd"-->
+                <!--android:textColorLink="#091973"-->
+                <!--android:textSize="@dimen/linkTextSize"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:textStyle="bold"-->
+                <!--/>-->
 
         </LinearLayout>
     </ScrollView>
