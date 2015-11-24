@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.RoundedTransformationBuilder;
+import com.parse.ParseFile;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
@@ -118,18 +123,21 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 /*            Date tweetDate = getTimeStamp(user.getCreatedAt());
             String timeStamp = getRelativeTimeStamp(currDate, tweetDate);
             viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
-/*            Transformation transformation = new RoundedTransformationBuilder()
+
+        ParseFile profileImage = ride.getDriver().getProfileImage();
+        if(profileImage != null) {
+            Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(Color.BLACK)
-                    //.borderWidthDp(0)
+                            //.borderWidthDp(0)
                     .cornerRadiusDp(10)
                     .oval(false)
                     .build();
 
             Picasso.with(getContext())
-                    .load(Uri.parse(getUser().getProfileImageUrl()))
-                *//*.placeholder(R.drawable.ic_nocover)*//*
+                    .load(profileImage.getUrl())
                     .transform(transformation)
-                    .into(viewHolder.ivProfile);*/
+                    .into(viewHolder.ivProfile);
+        }
 
         // Return the completed view to render on screen
         return convertView;
