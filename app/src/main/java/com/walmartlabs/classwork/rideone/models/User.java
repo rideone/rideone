@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -130,6 +131,14 @@ public class User extends ParseObject implements CustomSerializable<User> {
 
     public boolean isDriver() {
         return getStatus() == Status.DRIVER;
+    }
+
+    public void setProfileImage(ParseFile file) {
+        put("profileImage", file);
+    }
+
+    public ParseFile getProfileImage() {
+        return getParseFile("profileImage");
     }
 
 }
