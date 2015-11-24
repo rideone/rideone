@@ -51,8 +51,8 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     private ParseUser currentLoginUser = null;
 
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    public String photoFileName = "profilephoto.jpg";
-    public final String APP_TAG = "MyCustomApp";
+    public String photoFileName = "profilephoto.png";
+    public final String APP_TAG = "RideOne";
 
     public ImageView ivProfile;
     ProfilePhotoOptionsDialog dialog;
@@ -92,11 +92,11 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                     edUserName.setEnabled(false);
 
                     if(currentUser.getProfileImage() != null) {
-                        ParseFile imageFile = currentUser.getProfileImage();
+                        ParseFile profileImage = currentUser.getProfileImage();
 
                         byte[] bitmapData = new byte[0];
                         try {
-                            bitmapData = imageFile.getData();
+                            bitmapData = profileImage.getData();
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
