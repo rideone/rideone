@@ -22,6 +22,7 @@ public class ProfilePhotoOptionsDialog extends DialogFragment {
 
     public interface ProfilePhotoUploadListener {
         void onLaunchCamera();
+        void selectImageFromGallery();
     }
 
     public ProfilePhotoOptionsDialog() {
@@ -59,6 +60,14 @@ public class ProfilePhotoOptionsDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 activity.onLaunchCamera();
+                dismiss();
+            }
+        });
+
+        btnFromLib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.selectImageFromGallery();
                 dismiss();
             }
         });

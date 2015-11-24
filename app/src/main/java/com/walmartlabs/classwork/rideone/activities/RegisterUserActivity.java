@@ -32,6 +32,7 @@ import com.walmartlabs.classwork.rideone.util.ParseUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
@@ -51,6 +52,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     private ParseUser currentLoginUser = null;
 
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 1035;
     public String photoFileName = "profilephoto.png";
     public final String APP_TAG = "RideOne";
 
@@ -240,6 +242,13 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     }
 
     @Override
+    public void selectImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -251,6 +260,17 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
 
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        } else if(requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                Uri selectedPhotoUri = data.getData();
+                Bitmap selectedImage = null;
+                try {
+                    selectedImage = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedPhotoUri));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ivProfile.setImageBitmap(selectedImage);
             }
         }
     }
