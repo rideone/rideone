@@ -93,7 +93,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                     edPasswordConfirm.setText(PASSWORD_TEXT);
                     edUserName.setEnabled(false);
 
-                    if(currentUser.getProfileImage() != null) {
+                    if (currentUser.getProfileImage() != null) {
                         ParseFile profileImage = currentUser.getProfileImage();
 
                         byte[] bitmapData = new byte[0];
@@ -250,19 +250,15 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
                 // Load the taken image into a preview
                 ivProfile.setImageBitmap(takenImage);
-
-            } else { // Result was a failure
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
-        } else if(requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if(resultCode == RESULT_OK) {
+            else if(requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
                 Uri selectedPhotoUri = data.getData();
                 Bitmap selectedImage = null;
                 try {
@@ -272,6 +268,8 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                 }
                 ivProfile.setImageBitmap(selectedImage);
             }
+        } else {
+            Toast.makeText(this, "Error uploading picture", Toast.LENGTH_SHORT).show();
         }
     }
 
