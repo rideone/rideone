@@ -3,6 +3,7 @@ package com.walmartlabs.classwork.rideone.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         }
 
         //user has requested a ride or has been confirmed
-        String rideIdOfUser = userInfo.getRideId();
+        String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
         if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
             String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
             viewHolder.btnReserve.setText(status);
@@ -123,12 +124,11 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 /*            Date tweetDate = getTimeStamp(user.getCreatedAt());
             String timeStamp = getRelativeTimeStamp(currDate, tweetDate);
             viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
-
         ParseFile profileImage = ride.getDriver().getProfileImage();
-        if(profileImage != null) {
+        viewHolder.ivProfile.setImageResource(0);
+        if (profileImage != null) {
             Transformation transformation = new RoundedTransformationBuilder()
                     .borderColor(Color.BLACK)
-                            //.borderWidthDp(0)
                     .cornerRadiusDp(10)
                     .oval(false)
                     .build();
@@ -137,6 +137,12 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
                     .load(profileImage.getUrl())
                     .transform(transformation)
                     .into(viewHolder.ivProfile);
+            Log.d("position", Integer.toString(position));
+        } else {
+            //this is to solve stale image because of recycling views. when we scroll down the already inflated list item is re-used
+            //so we see the same image that we see at position 0 for postiion 4.
+            viewHolder.ivProfile.setImageResource(R.mipmap.ic_launcher);
+            Log.d("position1", Integer.toString(position));
         }
 
         // Return the completed view to render on screen
