@@ -276,7 +276,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
             }
         } else {
             imageUploaded = false;
-            Toast.makeText(this, "Error uploading picture", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Error uploading picture", Toast.LENGTH_SHORT).show();
         }
     }
 
