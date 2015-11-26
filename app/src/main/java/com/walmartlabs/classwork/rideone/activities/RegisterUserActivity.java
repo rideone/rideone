@@ -55,6 +55,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     public final static int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 1035;
     public String photoFileName = "profilephoto.png";
     public final String APP_TAG = "RideOne";
+    private boolean imageUploaded = false;
 
     public ImageView ivProfile;
     ProfilePhotoOptionsDialog dialog;
@@ -70,6 +71,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
         edFirstName = (EditText) findViewById(R.id.edFirstName);
         edLastName = (EditText) findViewById(R.id.edLastName);
         ivProfile = (ImageView) findViewById(R.id.ivProfile);
+        imageUploaded = false;
 
         update = getIntent().getBooleanExtra("update", false);
         Button btn = (Button) findViewById(R.id.btnRegister);
@@ -120,13 +122,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
         String email = edEmail.getText().toString();
         String firstName = edFirstName.getText().toString();
         String lastName = edLastName.getText().toString();
-        Bitmap bitmap = ((BitmapDrawable)ivProfile.getDrawable()).getBitmap();
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
-        byte[] image = stream.toByteArray();
-
-        ParseFile profileImage = new ParseFile(userName + ".png", image);
 
         edUserName.setError(null);
         edPassword.setError(null);
@@ -174,7 +170,16 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setStatus(User.Status.NO_RIDE);
-            user.setProfileImage(profileImage);
+            if(imageUploaded) {
+                Bitmap bitmap = ((BitmapDrawable)ivProfile.getDrawable()).getBitmap();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+                byte[] image = stream.toByteArray();
+
+                ParseFile profileImage = new ParseFile(userName + ".png", image);
+                user.setProfileImage(profileImage);
+            }
 
             if (update) {
                 ParseUtil.saveInBatch(Arrays.asList(user, loginUser), new SaveCallback() {
@@ -251,6 +256,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            imageUploaded = true;
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
                 // by this point we have the camera photo on disk
@@ -269,7 +275,8 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                 ivProfile.setImageBitmap(selectedImage);
             }
         } else {
-            Toast.makeText(this, "Error uploading picture", Toast.LENGTH_SHORT).show();
+            imageUploaded = false;
+            //Toast.makeText(this, "Error uploading picture", Toast.LENGTH_SHORT).show();
         }
     }
 
