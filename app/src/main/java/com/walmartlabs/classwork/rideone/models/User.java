@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -20,6 +21,10 @@ public class User extends ParseObject implements CustomSerializable<User> {
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_ID = "objectId";
     public static final String COLUMN_LOGIN_USER_ID = "loginUserId";
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
 
 
     public enum Status {
@@ -125,7 +130,12 @@ public class User extends ParseObject implements CustomSerializable<User> {
     }
 
     public String getRideId() {
-        return getString(COLUMN_RIDE);
+        try {
+            return fetchIfNeeded().getString(COLUMN_RIDE);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean isDriver() {

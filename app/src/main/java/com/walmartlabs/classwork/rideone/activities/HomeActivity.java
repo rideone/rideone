@@ -1,10 +1,16 @@
 package com.walmartlabs.classwork.rideone.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +27,8 @@ import com.walmartlabs.classwork.rideone.fragments.ReserveRideDialog;
 import com.walmartlabs.classwork.rideone.fragments.RideListFragment;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.service.StatusAlarmReceiver;
+import com.walmartlabs.classwork.rideone.service.StatusCheckService;
 import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
@@ -32,10 +40,13 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
     private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
     private static final int INTENT_SET_FILTER = 888;
+    private static final int INTERVAL_MILLIS = 10*1000;
 
     private User user;
     private Ride ride = null;
     private RideListFragment rideListFragment;
+    // Define the callback for what to do when data is received
+    private BroadcastReceiver broadcastReceiver = new StatusBroadcastReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +60,41 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flContainer, rideListFragment);
         ft.commit();
+        scheduleAlarm();
+    }
+
+    // Setup a recurring alarm every half hour
+    public void scheduleAlarm() {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), StatusAlarmReceiver.class);
+        user.flush();
+        intent.putExtra("user", user);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, StatusAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                INTERVAL_MILLIS, pIntent);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register for the particular broadcast based on ACTION string
+        IntentFilter filter = new IntentFilter(StatusCheckService.class.getName());
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
+        // or `registerReceiver(testReceiver, filter)` for a normal broadcast
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener when the application is paused
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        // or `unregisterReceiver(testReceiver)` for a normal broadcast
     }
 
     @Override
@@ -146,10 +192,10 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
     public void openReserveRideDialog(Ride ride) {
         boolean rideRequested = false;
-        if(user.getStatus().equals(User.Status.WAIT_LIST) ||
+        if (user.getStatus().equals(User.Status.WAIT_LIST) ||
                 user.getStatus().equals(User.Status.PASSENGER)) rideRequested = true;
         FragmentManager fm = getSupportFragmentManager();
-        ReserveRideDialog reserveRideDialog= ReserveRideDialog.newInstance(ride, rideRequested);
+        ReserveRideDialog reserveRideDialog = ReserveRideDialog.newInstance(ride, rideRequested);
         reserveRideDialog.show(fm, "fragment_reserve_ride");
     }
 
@@ -237,4 +283,15 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         return user;
     }
 
+    private class StatusBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
+            if (resultCode == RESULT_OK) {
+                String message = intent.getStringExtra("message");
+                Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG).show();
+                rideListFragment.fetchAndPopulateRideList();
+            }
+        }
+    }
 }
