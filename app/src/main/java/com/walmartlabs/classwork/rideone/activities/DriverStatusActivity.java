@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static android.view.View.VISIBLE;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_RIDERS;
@@ -82,6 +85,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     private EditText etSpots;
     private List<User> riders = new ArrayList<>();
     private List<User> removePassengers = new ArrayList<>();
+    private TextView tvPassengers;
 
     private Function<User, String> extractIdFunction = new Function<User, String>() {
         @Override
@@ -137,10 +141,9 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_status);
-        //TODO: navigate back button
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         driver = ((User) getIntent().getSerializableExtra("user")).rebuild();
 
@@ -153,8 +156,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 //        } else {
 
         ride = rideArg;
-
-        //TODO: Need work-around for Parse bug when it doesn't clear old operations. That prevents fetching fresh data from db.
+        tvPassengers = (TextView) findViewById(R.id.tvPassengers);
 
             ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
             query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
@@ -231,6 +233,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         lvPassengers.setAdapter(aPassengers);
 
         if (ride.getRiderIds() != null && !ride.getRiderIds().isEmpty()) {
+            tvPassengers.setVisibility(VISIBLE);
             List<String> passengerIds = ride.getRiderIds();
             ParseQuery.getQuery(User.class).whereContainedIn(COLUMN_ID, passengerIds).findInBackground(new FindCallback<User>() {
                 @Override
@@ -322,7 +325,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             onSave(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    if(e != null) {
+                    if (e != null) {
                         Log.e(ParseUtil.class.getSimpleName(), "Failed to save ride info ", e);
                         alert(R.string.alert_network_error);
                     }
@@ -334,7 +337,14 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                 }
             });
             return true;
+        } else if (id == android.R.id.home) {
+//            NavUtils.navigateUpFromSameTask(this);
+            Intent upIntent = NavUtils.getParentActivityIntent(this);
+            upIntent.putExtra("user", driver.flush());
+            NavUtils.navigateUpTo(this, upIntent);
+            return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }

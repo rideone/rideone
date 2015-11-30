@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_driver_status">Status</string>
     <string name="menu_item_save">Save</string>
-    <string name="title_activity_driver_status">Driver Status</string>
+    <string name="title_activity_driver_status">Ride setup</string>
     <string name="alert_network_error">Network Error</string>
 
     <string-array name="locations">
@@ -72,14 +72,14 @@
     <string name="register">Register</string>
     <string name="register_save">Next</string>
     <string name="register_update">Save</string>
+    <string name="save">Save</string>
     <string name="signup_register">Register</string>
     <string name="logout">Logout</string>
     <string name="firstName">First name</string>
     <string name="lastName">Last name</string>
-    <string name="title_activity_filter">FilterActivity</string>
+    <string name="title_activity_filter">Filters</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="reserve_ride_label">Are you sure you want to reserve this ride?</string>
 
-    <color name="app_red">#D80000</color>
 </resources>
