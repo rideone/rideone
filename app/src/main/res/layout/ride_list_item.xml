@@ -6,11 +6,13 @@
     android:paddingTop="10dp"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/leftLayout"
-        android:padding="10dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/leftLayout"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!-->-->
         <ImageView
             android:id="@+id/ivProfile"
             android:layout_width="50dp"
@@ -18,88 +20,146 @@
             android:layout_alignParentLeft="true"
             android:onClick="onProfileView"
             android:src="@mipmap/ic_launcher"
-            android:clickable="true"/>
-    </RelativeLayout>
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="16dp"
 
-    <RelativeLayout
+            />
+    <!--</RelativeLayout>-->
+
+    <TextView
+        android:id="@+id/tvFullName"
         android:layout_width="wrap_content"
-        android:layout_height="120dp"
-        android:id="@+id/rightLayout"
-        android:layout_marginLeft="70dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:id="@+id/rightTop">
-            <TextView
-                android:id="@+id/tvFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:textStyle="bold"
-                android:text="First"
-                />
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:layout_alignParentTop="true"
+        android:text="First Last"
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:id="@+id/rightMiddle"
-            android:layout_below="@+id/rightTop">
+        android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvSpotsAvailable"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:text="0 " />
+    <TextView
+        android:id="@+id/tvSpotsAvailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFullName"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:text="0 " />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Santa Clara"
-                android:id="@+id/tvStartLoc"
-                android:layout_below="@+id/tvSpotsAvailable"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/tvStartLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSpotsAvailable"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:text="Santa Clara" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Santa Clara"
-                android:id="@+id/tvDestination"
-                android:layout_below="@+id/tvStartLoc"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/tvTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSpotsAvailable"
+        android:layout_toRightOf="@+id/tvStartLoc"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="To" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reserve"
-                android:id="@+id/btnReserve"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/button_red_round"
-                android:textColor="#FFFFFF"
-                style="?android:borderlessButtonStyle"
-                android:alpha="0.85"
-                />
+    <TextView
+        android:id="@+id/tvDestination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSpotsAvailable"
+        android:layout_toRightOf="@+id/tvTo"
+        android:text="Santa Clara" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5:00"
-                android:id="@+id/tvTime"
-                android:layout_below="@+id/tvDestination"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDestination"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:text="5:00" />
 
 
+    <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/rightLayout"-->
+        <!--android:layout_marginLeft="70dp">-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/rightTop">-->
+            <!--<TextView-->
+                <!--android:id="@+id/tvFullName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:textStyle="bold"-->
+                <!--android:text="First"-->
+                <!--/>-->
 
-        </RelativeLayout>
-    </RelativeLayout>
+        <!--</RelativeLayout>-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/rightMiddle"-->
+            <!--android:layout_below="@+id/rightTop">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/tvSpotsAvailable"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:text="0 " />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Santa Clara"-->
+                <!--android:id="@+id/tvStartLoc"-->
+                <!--android:layout_below="@+id/tvSpotsAvailable"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Santa Clara"-->
+                <!--android:id="@+id/tvDestination"-->
+                <!--android:layout_below="@+id/tvStartLoc"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="5:00"-->
+                <!--android:id="@+id/tvTime"-->
+                <!--android:layout_below="@+id/tvDestination"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true" />-->
+
+
+
+        <!--</RelativeLayout>-->
+    <!--</RelativeLayout>-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reserve"
+        android:id="@+id/btnReserve"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_red_round"
+        android:textColor="@color/buttonTextColor"
+        style="?android:borderlessButtonStyle"
+        android:alpha="0.85"
+        />
+
 
 </RelativeLayout>
