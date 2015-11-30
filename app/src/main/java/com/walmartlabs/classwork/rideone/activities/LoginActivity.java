@@ -109,6 +109,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                //ParseFile not serializble. so remove profileimage and fetch it in the next activity
+                user.remove("profileImage");
                 user.flush();
                 i.putExtra("user", user);
 

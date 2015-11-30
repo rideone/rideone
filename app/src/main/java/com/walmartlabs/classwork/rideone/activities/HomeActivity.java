@@ -133,7 +133,6 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             }
 
             startActivityForResult(intent, INTENT_REQUEST_DRIVER_STATUS);
-
         } else if (id == R.id.miFilter) {
             Intent intent = new Intent(this, FilterActivity.class);
             startActivityForResult(intent, INTENT_SET_FILTER);
@@ -280,6 +279,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 //    }
 
     public User getUserInfo() {
+        //need to make sure this user object is up-to-date
         return user;
     }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose from library"
+        android:id="@+id/btnFromLib"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_red_round"
+        android:textColor="#FFFFFF"
+        style="?android:borderlessButtonStyle"
+        android:alpha="0.85"
+        android:layout_above="@+id/btnTakePhoto"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Take profile photo"
+        android:id="@+id/btnTakePhoto"
+        android:background="@drawable/button_red_round"
+        android:textColor="#FFFFFF"
+        style="?android:borderlessButtonStyle"
+        android:alpha="0.85"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"/>
+</RelativeLayout>
