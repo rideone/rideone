@@ -44,13 +44,13 @@ public class StatusCheckService extends IntentService {
                     ride = newRide;
                 }
             }
-            boolean userStatusChanged = hasUserStatusChanged(newUser);
-            boolean hasRiderRequest = hasNewRiderRequest(newRide);
-            if (userStatusChanged || hasRiderRequest) {
+            String userStatusChanged = getUserStatusChangeString(newUser);
+            boolean hasRiderChanged = hasRiderChanged(newRide);
+            if (userStatusChanged != null || hasRiderChanged) {
                 // Construct an Intent tying it to the ACTION (arbitrary event namespace)
                 String message = null;
-                if (userStatusChanged) {
-                    message = "Your ride request has been confirmed";
+                if (userStatusChanged != null) {
+                    message = "Your ride request has been " + userStatusChanged;
                 } else {
                     message = "You either have a new rider request or a rider has dropped out";
                 }
@@ -69,18 +69,27 @@ public class StatusCheckService extends IntentService {
 
     }
 
-    private boolean hasUserStatusChanged(User newUser) {
+    private String getUserStatusChangeString(User newUser) {
         Date currDate = user.getUpdatedAt();
         Date newDate = newUser.getUpdatedAt();
-        return (isAfter(currDate, newDate) && (user.getStatus() == User.Status.WAIT_LIST && newUser.getStatus() == User.Status.PASSENGER));
+        if (isAfter(currDate, newDate)) {
+            if (user.getStatus() == User.Status.WAIT_LIST) {
+                if (newUser.getStatus() == User.Status.PASSENGER) {
+                    return "confirmed";
+                } else if (newUser.getStatus() == User.Status.NO_RIDE) {
+                    return "denied";
+                }
+            }
+        }
+        return null;
     }
 
     private boolean isAfter(Date currDate, Date newDate) {
         return newDate == null || currDate == null || newDate.after(currDate);
     }
 
-    private boolean hasNewRiderRequest(Ride newRide) {
-        if (ride != null && ride != newRide) {
+    private boolean hasRiderChanged(Ride newRide) {
+        if (ride != null && isDriver(ride) && ride != newRide) {
             Date currDate = ride.getUpdatedAt();
             Date newDate = newRide.getUpdatedAt();
             if (isAfter(currDate, newDate) && !ride.getRiderIds().equals(newRide.getRiderIds())) {
@@ -88,6 +97,10 @@ public class StatusCheckService extends IntentService {
             }
         }
         return false;
+    }
+
+    private boolean isDriver(Ride ride) {
+        return user.getObjectId().equals(ride.getDriverId());
     }
 
     private User fetchUser(final String loginUserId) {
