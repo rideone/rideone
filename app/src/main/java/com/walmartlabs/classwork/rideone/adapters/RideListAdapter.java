@@ -99,7 +99,9 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.openReserveRideDialog(ride);
+//                context.openReserveRideDialog(ride);
+                context.reserveRideRequest(ride);
+
             }
         });
 
@@ -114,7 +116,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         viewHolder.tvDestination.setText("to: " + ride.getDestination());
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
-        viewHolder.tvStartLoc.setText(ride.getStartLocation() + " To ");
+        viewHolder.tvStartLoc.setText(ride.getStartLocation());
         viewHolder.tvDestination.setText(ride.getDestination());
         viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpotsLeft()) + " spots"));
 

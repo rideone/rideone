@@ -10,8 +10,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -53,8 +55,13 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        user = ((User) getIntent().getSerializableExtra("user")).rebuild();
-        //TODO: fetch ride from db based on user id
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        User userArg = (User) getIntent().getSerializableExtra("user");
+        if(userArg != null) {
+            this.user = userArg.rebuild();
+        }
 
         rideListFragment = RideListFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -135,6 +142,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             startActivityForResult(intent, INTENT_REQUEST_DRIVER_STATUS);
         } else if (id == R.id.miFilter) {
             Intent intent = new Intent(this, FilterActivity.class);
+            intent.putExtra("user", user.flush());
             startActivityForResult(intent, INTENT_SET_FILTER);
         }
 
@@ -189,14 +197,14 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         startActivity(intent);
     }
 
-    public void openReserveRideDialog(Ride ride) {
-        boolean rideRequested = false;
-        if (user.getStatus().equals(User.Status.WAIT_LIST) ||
-                user.getStatus().equals(User.Status.PASSENGER)) rideRequested = true;
-        FragmentManager fm = getSupportFragmentManager();
-        ReserveRideDialog reserveRideDialog = ReserveRideDialog.newInstance(ride, rideRequested);
-        reserveRideDialog.show(fm, "fragment_reserve_ride");
-    }
+//    public void openReserveRideDialog(Ride ride) {
+//        boolean rideRequested = false;
+//        if (user.getStatus().equals(User.Status.WAIT_LIST) ||
+//                user.getStatus().equals(User.Status.PASSENGER)) rideRequested = true;
+//        FragmentManager fm = getSupportFragmentManager();
+//        ReserveRideDialog reserveRideDialog = ReserveRideDialog.newInstance(ride, rideRequested);
+//        reserveRideDialog.show(fm, "fragment_reserve_ride");
+//    }
 
     //TODO: refactor code to move logic to fragment layer
     @Override

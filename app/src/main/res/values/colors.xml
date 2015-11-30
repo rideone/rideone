@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#f9f9f9</color>
+
+
+    <!-- RED with GREEN -->
+    <!--<color name="colorPrimaryDark">#E54A19</color>-->
+    <!--<color name="colorPrimary">#FF5722</color>-->
+    <!--<color name="colorPrimaryLight">#FFCCBC</color>-->
+    <!--<color name="colorAccent">#8BC34A</color>-->
+    <!--<color name="textColorPrimary">#212121</color>-->
+    <!--<color name="textColorSecondary">#727272</color>-->
+    <!--<color name="divider">#B6B6B6</color>-->
+    <!--<color name="buttonTextColor">#FFFFFF</color>-->
+
+    <!-- ORANGE WITH TEAL -->
+    <!--<color name="colorPrimaryDark">#F57C02</color>-->
+    <!--<color name="colorPrimary">#FF9802</color>-->
+    <!--<color name="colorPrimaryLight">#FFE0B2</color>-->
+    <!--<color name="colorAccent">#039588</color>-->
+    <!--<color name="textColorPrimary">#212121</color>-->
+    <!--<color name="textColorSecondary">#727272</color>-->
+    <!--<color name="divider">#B6B6B6</color>-->
+    <!--<color name="buttonTextColor">#FFFFFF</color>-->
+
+    <!-- PURPLE with GREEN -->
+    <!--<color name="colorPrimaryDark">#7B1FA2</color>-->
+    <!--<color name="colorPrimary">#9C26B0</color>-->
+    <!--<color name="colorPrimaryLight">#E1BEE7</color>-->
+    <!--<color name="colorAccent">#CDDC39</color>-->
+    <!--<color name="textColorPrimary">#212121</color>-->
+    <!--<color name="textColorSecondary">#727272</color>-->
+    <!--<color name="divider">#B6B6B6</color>-->
+    <!--<color name="buttonTextColor">#FFFFFF</color>-->
+
+    <!-- BLUE with GREEN -->
+    <color name="colorPrimaryDark">#0387D1</color>
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryLight">#B3E5FC</color>
+    <color name="colorAccent">#8BC34A</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#727272</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+
+    <!-- BLUE with PINK -->
+    <!--<color name="colorPrimaryDark">#1976D2</color>-->
+    <!--<color name="colorPrimary">#2096F3</color>-->
+    <!--<color name="colorPrimaryLight">#BBDEFB</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <!--<color name="textColorPrimary">#212121</color>-->
+    <!--<color name="textColorSecondary">#727272</color>-->
+    <!--<color name="divider">#B6B6B6</color>-->
+    <!--<color name="buttonTextColor">#FFFFFF</color>-->
+
+    <!-- BLUE with ORANGE -->
+    <!--<color name="colorPrimaryDark">#1976D2</color>-->
+    <!--<color name="colorPrimary">#2096F3</color>-->
+    <!--<color name="colorPrimaryLight">#BBDEFB</color>-->
+    <!--<color name="colorAccent">#FF9802</color>-->
+    <!--<color name="textColorPrimary">#212121</color>-->
+    <!--<color name="textColorSecondary">#727272</color>-->
+    <!--<color name="divider">#B6B6B6</color>-->
+    <!--<color name="buttonTextColor">#FFFFFF</color>-->
+
+
+
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <!--<color name="app_red">#D80000</color>-->
+
+</resources>

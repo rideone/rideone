@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".activities.DriverStatusActivity">
 
     <item android:id="@+id/mi_driver_status_save" android:title="@string/menu_item_save"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="ifRoom"
+        />
 
 </menu>

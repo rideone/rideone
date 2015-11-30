@@ -42,7 +42,9 @@
         </activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/title_activity_home" >
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
         </activity>
         <activity
             android:name=".activities.RegisterUserActivity"
@@ -52,11 +54,16 @@
         <activity
             android:name=".activities.DriverStatusActivity"
             android:label="@string/title_activity_driver_status"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".activities.HomeActivity"
+            >
         </activity>
         <activity
             android:name=".activities.FilterActivity"
-            android:label="@string/title_activity_filter" >
+            android:label="@string/title_activity_filter"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".activities.HomeActivity"
+            >
         </activity>
 
         <receiver

@@ -3,22 +3,30 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/background_dark</item>
-        <item name="colorAccent">#FFFFFF</item>
-
-        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textColorHint">#000000</item>
-        <!--<item name="android:textSize">14sp</item>-->
-        <item name="android:colorAccent">#FFFFFF</item>
-        <item name="android:colorControlNormal">#FFFFFF</item>
-        <item name="android:colorControlActivated">#FFFFFF</item>
-        <item name="android:colorControlHighlight">#FFFFFF</item>
+        <!--<item name="android:textColor">#FFFFFF</item>-->
+        <!--<item name="android:textColorHint">#000000</item>-->
+        <!--&lt;!&ndash;<item name="android:textSize">14sp</item>&ndash;&gt;-->
+        <!--<item name="android:colorAccent">#FFFFFF</item>-->
+        <!--<item name="android:colorControlNormal">#FFFFFF</item>-->
+        <!--<item name="android:colorControlActivated">#FFFFFF</item>-->
+        <!--<item name="android:colorControlHighlight">#FFFFFF</item>-->
 
 
     </style>
+
+    <!--<style name="AppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@android:color/background_dark</item>-->
+        <!--<item name="colorAccent">#FFFFFF</item>-->
+
+        <!--&lt;!&ndash;<item name="android:statusBarColor">@android:color/transparent</item>&ndash;&gt;-->
+    <!--</style>-->
+
 
 </resources>

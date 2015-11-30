@@ -141,7 +141,7 @@
         android:textStyle="bold"
         android:onClick="registerUser"
         android:background="@drawable/button_red_round"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/buttonTextColor"
         android:textSize="@dimen/fieldSize"
         />
 
