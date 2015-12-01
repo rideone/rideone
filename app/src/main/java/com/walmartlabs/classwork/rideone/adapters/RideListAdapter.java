@@ -122,8 +122,8 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mContext, RideDetailActivity.class);
+                ride.getDriver().flush();
                 i.putExtra("ride", ride.flush());
-                i.putExtra("driver", ride.getDriver().flush());
                 mContext.startActivity(i);
             }
         });
