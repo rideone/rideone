@@ -9,15 +9,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -35,17 +40,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 import static com.walmartlabs.classwork.rideone.util.Utils.isPasswordValid;
 
 public class RegisterUserActivity extends AppCompatActivity implements ProfilePhotoOptionsDialog.ProfilePhotoUploadListener {
     private static final String PASSWORD_TEXT = "PASSWORD_TEXT";
-    private EditText edUserName;
     private EditText edPassword;
     private EditText edPasswordConfirm;
     private EditText edEmail;
-    private EditText edFirstName;
-    private EditText edLastName;
+    private EditText edFullName;
+    private EditText edPhone;
 
     private boolean update = false;
     private User currentUser = null;
@@ -64,21 +69,26 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
-        edUserName = (EditText) findViewById(R.id.edUserName);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         edPassword = (EditText) findViewById(R.id.edPassword);
         edPasswordConfirm = (EditText) findViewById(R.id.edPasswordConfirm);
         edEmail = (EditText) findViewById(R.id.edEmail);
-        edFirstName = (EditText) findViewById(R.id.edFirstName);
-        edLastName = (EditText) findViewById(R.id.edLastName);
+        edFullName = (EditText) findViewById(R.id.edFullName);
+        edPhone = (EditText) findViewById(R.id.edPhone);
         ivProfile = (ImageView) findViewById(R.id.ivProfile);
         imageUploaded = false;
 
         update = getIntent().getBooleanExtra("update", false);
-        Button btn = (Button) findViewById(R.id.btnRegister);
+//        Button btn = (Button) findViewById(R.id.btnRegister);
+
         if (update) {
-            btn.setText(R.string.register_update);
+//            btn.setText(R.string.register_update);
             ParseUser loginUser = ParseUser.getCurrentUser();
-            edUserName.setText(loginUser.getUsername());
+            edEmail.setText(loginUser.getUsername());
             edEmail.setText(loginUser.getEmail());
             currentLoginUser = loginUser;
 
@@ -89,11 +99,11 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                 @Override
                 public void done(User user, ParseException e) {
                     currentUser = user;
-                    edFirstName.setText(currentUser.getFirstName());
-                    edLastName.setText(currentUser.getLastName());
+                    edFullName.setText(currentUser.getFullName());
+                    edPhone.setText(currentUser.getPhone());
                     edPassword.setText(PASSWORD_TEXT);
                     edPasswordConfirm.setText(PASSWORD_TEXT);
-                    edUserName.setEnabled(false);
+                    edEmail.setEnabled(false);
 
                     if (currentUser.getProfileImage() != null) {
                         ParseFile profileImage = currentUser.getProfileImage();
@@ -110,124 +120,137 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
                 }
             });
         } else {
-            btn.setText(R.string.register_save);
-            edUserName.setEnabled(true);
+//            btn.setText(R.string.register_save);
+            edEmail.setEnabled(true);
         }
     }
 
     public void registerUser(View view) {
-        String userName = edUserName.getText().toString();
         String password = edPassword.getText().toString();
         String confirmPwd = edPasswordConfirm.getText().toString();
         String email = edEmail.getText().toString();
-        String firstName = edFirstName.getText().toString();
-        String lastName = edLastName.getText().toString();
+        String fullName = edFullName.getText().toString();
+        String phone = edPhone.getText().toString();
 
 
-        edUserName.setError(null);
         edPassword.setError(null);
         edPasswordConfirm.setError(null);
         edEmail.setError(null);
         boolean cancel = false;
         View focusView = null;
 
-        if (userName == null || userName.length() < 5) {
-            edUserName.setError("User name is required and has to be 5 letters or more");
+        if (isNullOrEmpty(email) || email.length() < 5 || !email.contains("@")) {
+            edEmail.setError("Email is invalid");
             cancel = true;
-            focusView = edUserName;
+            focusView = edEmail;
+        }
+
+        if (isNullOrEmpty(fullName) || fullName.length() < 4) {
+            edFullName.setError("Full name is required");
+            cancel = true;
+            focusView = edFullName;
         }
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             edPassword.setError(getString(R.string.error_invalid_password));
             focusView = edPassword;
             cancel = true;
         }
 
-        if (!password.equals(confirmPwd)) {
+        if (!TextUtils.isEmpty(password) && !password.equals(confirmPwd)) {
             edPasswordConfirm.setError("Password does not match");
             focusView = edPasswordConfirm;
             cancel = true;
         }
 
-        if (!cancel) {
-            // Create the ParseUser
-            User user = null;
-            ParseUser loginUser = null;
-            if (currentUser == null) {
-                user = new User();
-                loginUser = new ParseUser();
-            } else {
-                user = currentUser;
-                loginUser = currentLoginUser;
-            }
+        if (isNullOrEmpty(phone) || phone.length() < 10) {
+            edPhone.setError("Phone is invalid");
+            cancel = true;
+            focusView = edPhone;
+        }
 
-            // Set core properties
-            loginUser.setUsername(userName);
-            if (!password.equals(PASSWORD_TEXT))
-                loginUser.setPassword(password);
-            loginUser.setEmail(email);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setStatus(User.Status.NO_RIDE);
-            if(imageUploaded) {
-                Bitmap bitmap = ((BitmapDrawable)ivProfile.getDrawable()).getBitmap();
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
-                byte[] image = stream.toByteArray();
-
-                ParseFile profileImage = new ParseFile(userName + ".png", image);
-                user.setProfileImage(profileImage);
-            }
-
-            if (update) {
-                ParseUtil.saveInBatch(Arrays.asList(user, loginUser), new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e != null) {
-                            Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to update user", e);
-                            Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-                        finish();
-                    }
-                });
-            } else {
-                // Invoke signUpInBackground
-                final User userForSave = user;
-                final ParseUser loginUserForSave = loginUser;
-                loginUserForSave.signUpInBackground(new SignUpCallback() {
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            // Hooray! Let them use the app now.
-                            userForSave.setLoginUserId(loginUserForSave.getObjectId());
-                            userForSave.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if(e != null) {
-                                        Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to save user", e);
-                                        Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-
-                                    finish();
-                                }
-                            });
-
-                        } else {
-                            // Sign up didn't succeed. Look at the ParseException
-                            // to figure out what went wrong
-                            e.printStackTrace();
-                            edUserName.setError(e.getLocalizedMessage());
-                            edUserName.requestFocus();
-                        }
-                    }
-                });
-            }
-        } else {
+        if(cancel) {
             focusView.requestFocus();
+            return;
+        }
+
+        // Create the ParseUser
+        User user = null;
+        ParseUser loginUser = null;
+        if (currentUser == null) {
+            user = new User();
+            loginUser = new ParseUser();
+        } else {
+            user = currentUser;
+            loginUser = currentLoginUser;
+        }
+
+        // Set core properties
+        loginUser.setUsername(email);
+        if (!password.equals(PASSWORD_TEXT))
+            loginUser.setPassword(password);
+        loginUser.setEmail(email);
+        user.setFullName(fullName);
+        user.setPhone(phone);
+        user.setStatus(User.Status.NO_RIDE);
+        if(imageUploaded) {
+            Bitmap bitmap = ((BitmapDrawable)ivProfile.getDrawable()).getBitmap();
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            byte[] image = stream.toByteArray();
+
+            ParseFile profileImage = new ParseFile(email.replace('@', '_') + ".png", image);
+            user.setProfileImage(profileImage);
+        }
+
+        if (update) {
+            ParseUtil.saveInBatch(Arrays.asList(user, loginUser), new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e != null) {
+                        Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to update user", e);
+                        Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    finish();
+                }
+            });
+        } else {
+            // Invoke signUpInBackground
+            final User userForSave = user;
+            final ParseUser loginUserForSave = loginUser;
+            loginUserForSave.signUpInBackground(new SignUpCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        // Hooray! Let them use the app now.
+                        userForSave.setLoginUserId(loginUserForSave.getObjectId());
+                        userForSave.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e != null) {
+                                    Log.e(RegisterUserActivity.class.getSimpleName(), "Failed to save user", e);
+                                    Toast.makeText(RegisterUserActivity.this, "Network error", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+
+                                Intent intent = new Intent(RegisterUserActivity.this, HomeActivity.class);
+                                intent.putExtra("user", userForSave.flush());
+                                startActivity(intent);
+                            }
+                        });
+
+                    } else {
+                        // Sign up didn't succeed. Look at the ParseException
+                        // to figure out what went wrong
+                        e.printStackTrace();
+                        edEmail.setError(e.getLocalizedMessage());
+                        edEmail.requestFocus();
+                    }
+                }
+            });
         }
     }
 
@@ -298,6 +321,40 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
         }
         return null;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_register, menu);
+
+        MenuItem miNext = menu.getItem(0);
+        if(update) {
+            miNext.setTitle(R.string.menu_item_save);
+        } else {
+//            miNext.setTitle(R.string.menu_item_next);
+            miNext.setTitle("next >");
+        }
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.mi_next) {
+            registerUser(null);
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private boolean isExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();

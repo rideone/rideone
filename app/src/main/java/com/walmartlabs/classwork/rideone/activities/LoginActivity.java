@@ -3,14 +3,20 @@ package com.walmartlabs.classwork.rideone.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -23,8 +29,10 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
@@ -54,6 +62,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Set up the login form.
         edUserName = (EditText) findViewById(R.id.edUserName);
 
@@ -62,40 +75,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptLogin(textView);
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        checkLogin();
     }
 
-    @Override
-    protected void onResume() {
-        checkLogin();
-        super.onResume();
-    }
-
-    private void checkLogin() {
-        ParseUser user = ParseUser.getCurrentUser();
-        if (user != null) { // start with existing user
-            loginSuccess(user);
-        }
-    }
 
     private void loginSuccess(ParseUser loginUser) {
         clearErrors();
+        LoginActivity.login(loginUser, this, null);
+    }
+
+    public static void login(ParseUser loginUser, final Context context, final GetCallback<User> callback) {
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         final String loginUserId = loginUser.getObjectId();
         query.whereEqualTo(COLUMN_LOGIN_USER_ID, loginUserId);
@@ -104,29 +101,32 @@ public class LoginActivity extends AppCompatActivity {
             public void done(User user, ParseException e) {
                 if (e != null) {
                     Log.e(LoginActivity.class.getSimpleName(), "Failed to get user for loginUserId " + loginUserId, e);
-                    Toast.makeText(LoginActivity.this, "User credentials error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "User credentials error", Toast.LENGTH_SHORT).show();
+                    if(callback != null) {
+                        callback.done(user, e);
+                    }
                     return;
                 }
 
-                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-                //ParseFile not serializble. so remove profileimage and fetch it in the next activity
-                user.remove("profileImage");
+                Intent i = new Intent(context, HomeActivity.class);
                 user.flush();
                 i.putExtra("user", user);
 
-                startActivity(i);
+                if(callback != null) {
+                    callback.done(user, e);
+                }
+
+                context.startActivity(i);
             }
         });
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-
-    private void attemptLogin() {
+    public void attemptLogin(View view) {
         if (mAuthTask != null) {
             return;
         }
@@ -182,10 +182,10 @@ public class LoginActivity extends AppCompatActivity {
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            mLoginFormView.animate().setDuration(duration).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
             });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            mProgressView.animate().setDuration(duration).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -209,10 +209,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void registerUser(View view) {
-        Intent intent = new Intent(this, RegisterUserActivity.class);
-        startActivity(intent);
-    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -243,12 +239,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final ParseUser successUser) {
             mAuthTask = null;
-            showProgress(false);
 
             if (successUser != null) {
-                Toast.makeText(LoginActivity.this, "Login succesful : " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "Login succesful : " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
                 loginSuccess(successUser);
             } else {
+                showProgress(false);
                 edUserName.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 edUserName.requestFocus();
@@ -260,6 +256,32 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+//            Intent upIntent = NavUtils.getParentActivityIntent(this);
+//            upIntent.putExtra("user", driver.flush());
+//            NavUtils.navigateUpTo(this, upIntent);
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

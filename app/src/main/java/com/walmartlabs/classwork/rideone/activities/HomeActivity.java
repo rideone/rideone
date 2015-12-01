@@ -123,7 +123,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             return true;
         } else if (id == R.id.action_logout) {
             ParseUser.logOut();
-            finish();
+            startActivity(new Intent(this, WelcomeActivity.class));
         } else if (id == R.id.miStatus) {
             Intent intent = new Intent(this, DriverStatusActivity.class);
             //TODO: pass ride

@@ -2,12 +2,15 @@ package com.walmartlabs.classwork.rideone.service;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 
@@ -54,12 +57,7 @@ public class StatusCheckService extends IntentService {
                 } else {
                     message = "You either have a new rider request or a rider has dropped out";
                 }
-                Intent in = new Intent(getClass().getName());
-                // Put extras into the intent as usual
-                in.putExtra("resultCode", Activity.RESULT_OK);
-                in.putExtra("message", message);
-                // Fire the broadcast with intent packaged
-                LocalBroadcastManager.getInstance(this).sendBroadcast(in);
+                broadcast(message);
             }
             user = newUser;
             if (newRide != null) {
@@ -67,6 +65,32 @@ public class StatusCheckService extends IntentService {
             }
         }
 
+    }
+
+    private void broadcast(String message) {
+        Intent in = new Intent(getClass().getName());
+        // Put extras into the intent as usual
+        in.putExtra("resultCode", Activity.RESULT_OK);
+        in.putExtra("message", message);
+        // Fire the broadcast with intent packaged
+        LocalBroadcastManager.getInstance(this).sendBroadcast(in);
+        notification(message);
+
+    }
+
+    private void notification(String message) {
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_car)
+                        .setContentTitle("RideOne")
+                        .setContentText(message);
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     private String getUserStatusChangeString(User newUser) {

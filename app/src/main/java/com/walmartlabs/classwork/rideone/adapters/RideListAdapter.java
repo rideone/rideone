@@ -112,7 +112,7 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
         });
 
         // Populate data into the template view using the data object
-        viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFirstName() + " " + ride.getDriver().getLastName()));
+        viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFullName()));
         viewHolder.tvDestination.setText("to: " + ride.getDestination());
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
