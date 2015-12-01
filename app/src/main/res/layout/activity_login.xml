@@ -89,7 +89,7 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/fieldSize"
                 style="?android:attr/borderlessButtonStyle"
-                android:background="@drawable/button_red_round"
+                android:background="@drawable/button_accent_round"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal"
                 android:onClick="registerUser"

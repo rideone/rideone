@@ -155,7 +155,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/button_red_round"
+        android:background="@drawable/button_accent_round"
         android:textColor="@color/buttonTextColor"
         style="?android:borderlessButtonStyle"
         android:alpha="0.85"
