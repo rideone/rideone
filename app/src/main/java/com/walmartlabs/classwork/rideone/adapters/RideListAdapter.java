@@ -1,6 +1,7 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
+import com.walmartlabs.classwork.rideone.activities.RideDetailActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 
@@ -119,6 +121,10 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(mContext, RideDetailActivity.class);
+                i.putExtra("ride", ride.flush());
+                i.putExtra("driver", ride.getDriver().flush());
+                mContext.startActivity(i);
             }
         });
 
@@ -167,7 +173,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     }
 
     // Provide a reference to the views for each contact item
-    public final class VH extends RecyclerView.ViewHolder {
+    public final class VH extends RecyclerView.ViewHolder implements View.OnClickListener {
         final View rootView;
         public ImageView ivProfile;
         public TextView tvFullName;
@@ -176,6 +182,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvStartLoc;
         public TextView tvDestination;
         public Button btnReserve;
+        public Context mContext;
 
         public VH(View itemView, final Context context) {
             super(itemView);
@@ -187,6 +194,16 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             btnReserve = (Button)itemView.findViewById(R.id.btnReserve);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Ride ride = (Ride) rootView.getTag();
+            if (ride != null) {
+                Intent i = new Intent(mContext, RideDetailActivity.class);
+                i.putExtra("ride", ride);
+                mContext.startActivity(i);
+            }
         }
     }
 

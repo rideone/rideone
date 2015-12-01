@@ -25,7 +25,6 @@
         android:paddingRight="16dp"
         android:focusableInTouchMode="false"
         android:focusable="false"
-
         />
     <!--</RelativeLayout>-->
 
@@ -36,11 +35,9 @@
         android:layout_toRightOf="@+id/ivProfile"
         android:layout_alignParentTop="true"
         android:text="First Last"
-
         android:textStyle="bold"
         android:focusableInTouchMode="false"
         android:focusable="false"
-
         />
 
     <TextView
@@ -52,7 +49,6 @@
         android:text="0 "
         android:focusableInTouchMode="false"
         android:focusable="false"
-
         />
 
     <TextView
@@ -64,7 +60,6 @@
         android:text="Santa Clara"
         android:focusableInTouchMode="false"
         android:focusable="false"
-
         />
 
     <TextView
