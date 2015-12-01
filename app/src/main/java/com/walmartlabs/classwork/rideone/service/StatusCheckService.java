@@ -57,7 +57,7 @@ public class StatusCheckService extends IntentService {
                 } else {
                     message = "You either have a new rider request or a rider has dropped out";
                 }
-                broadcast(message);
+                broadcast(message, userStatusChanged);
             }
             user = newUser;
             if (newRide != null) {
@@ -67,11 +67,12 @@ public class StatusCheckService extends IntentService {
 
     }
 
-    private void broadcast(String message) {
+    private void broadcast(String message, String userStatus) {
         Intent in = new Intent(getClass().getName());
         // Put extras into the intent as usual
         in.putExtra("resultCode", Activity.RESULT_OK);
         in.putExtra("message", message);
+        in.putExtra("userStatus", userStatus);
         // Fire the broadcast with intent packaged
         LocalBroadcastManager.getInstance(this).sendBroadcast(in);
         notification(message);
