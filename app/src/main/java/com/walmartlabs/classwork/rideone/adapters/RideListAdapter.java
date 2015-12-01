@@ -221,6 +221,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             }
         });
 
+        //why do this?
         viewHolder.rootView.setTag(ride);
         // Populate data into the template view using the data object
         viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFullName()));
@@ -272,7 +273,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvStartLoc;
         public TextView tvDestination;
         public Button btnReserve;
-       // final View vPalette;
 
         public VH(View itemView, final Context context) {
             super(itemView);
@@ -284,7 +284,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             btnReserve = (Button)itemView.findViewById(R.id.btnReserve);
-            //vPalette = itemView.findViewById(R.id.vPalette);
         }
     }
 
