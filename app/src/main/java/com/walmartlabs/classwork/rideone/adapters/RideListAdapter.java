@@ -156,7 +156,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         } else {
             //this is to solve stale image because of recycling views. when we scroll down the already inflated list item is re-used
             //so we see the same image that we see at position 0 for postiion 4.
-            viewHolder.ivProfile.setImageResource(R.mipmap.ic_launcher);
+            viewHolder.ivProfile.setImageResource(R.mipmap.ic_profile_image);
         }
     }
 

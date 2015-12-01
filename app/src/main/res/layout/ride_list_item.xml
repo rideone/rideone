@@ -19,7 +19,7 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:onClick="onProfileView"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_profile_image"
         android:clickable="true"
         android:layout_centerVertical="true"
         android:paddingRight="16dp"
