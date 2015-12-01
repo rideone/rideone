@@ -68,7 +68,7 @@ public class PassengerListAdapter extends ArrayAdapter<User> {
 
         final ViewHolder vh = (ViewHolder) convertView.getTag();
         final User user = getItem(position);
-        vh.tvUsername.setText(user.getFirstName() + " " + user.getLastName());
+        vh.tvUsername.setText(user.getFullName());
         vh.ivPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

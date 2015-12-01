@@ -22,9 +22,16 @@ public class User extends ParseObject implements CustomSerializable<User> {
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_ID = "objectId";
     public static final String COLUMN_LOGIN_USER_ID = "loginUserId";
+    public static final String COLUMN_PROFILE_IMAGE = "profileImage";
+    public static final String COLUMN_FULL_NAME = "fullName";
+    public static final String COLUMN_PHONE = "phone";
 
     public String getFullName() {
-        return getFirstName() + " " + getLastName();
+        String v = getString(COLUMN_FULL_NAME);
+        if(isNullOrEmpty(v)) {
+            v = "";
+        }
+        return v;
     }
 
 
@@ -42,7 +49,8 @@ public class User extends ParseObject implements CustomSerializable<User> {
     @Override
     public User flush() {
         for(String key : keySet()) {
-            if(!key.equals("sessionToken")) {
+            //ParseFile not serializble. so remove profileimage and fetch it in the next activity
+            if(!key.equals("sessionToken") && !key.equals(COLUMN_PROFILE_IMAGE)) {
                 fields.put(key, get(key));
             }
 
@@ -74,13 +82,6 @@ public class User extends ParseObject implements CustomSerializable<User> {
         return res;
     }
 
-
-
-
-    public String getFirstName() {
-        return getString("firstName");
-    }
-
     public void setLoginUserId(String parseUserId) {
         put(COLUMN_LOGIN_USER_ID, parseUserId);
     }
@@ -89,32 +90,24 @@ public class User extends ParseObject implements CustomSerializable<User> {
         return getString(COLUMN_LOGIN_USER_ID);
     }
 
-    public String getLastName() {
-        return getString("lastName");
+//    public int getTotalSeats() {
+//        return getInt("totalSeats");
+//    }
+
+    public void setFullName(String firstName) {
+        put(COLUMN_FULL_NAME, firstName);
     }
 
-    public int getTotalSeats() {
-        return getInt("totalSeats");
-    }
-
-    public void setFirstName(String firstName) {
-        put("firstName", firstName);
-    }
-
-    public void setLastName(String lastName) {
-        put("lastName", lastName);
-    }
-
-    public void setTotalSeats(int totalSeats) {
-        put("totalSeats", totalSeats);
-    }
+//    public void setTotalSeats(int totalSeats) {
+//        put("totalSeats", totalSeats);
+//    }
 
     public void setPhone(String phone) {
-        put("phone", phone);
+        put(COLUMN_PHONE, phone);
     }
 
     public String getPhone() {
-        return getString("phone");
+        return getString(COLUMN_PHONE);
     }
 
     public void setStatus(Status status) {
@@ -144,11 +137,11 @@ public class User extends ParseObject implements CustomSerializable<User> {
     }
 
     public void setProfileImage(ParseFile file) {
-        put("profileImage", file);
+        put(COLUMN_PROFILE_IMAGE, file);
     }
 
     public ParseFile getProfileImage() {
-        return getParseFile("profileImage");
+        return getParseFile(COLUMN_PROFILE_IMAGE);
     }
 
 }

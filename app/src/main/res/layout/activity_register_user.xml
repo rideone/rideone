@@ -1,149 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+
     tools:context="com.walmartlabs.classwork.rideone.activities.RegisterUserActivity"
-    android:background="@drawable/carpool_bg2"
-    android:alpha="0.7"
     >
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/ivProfile"
-        android:layout_gravity="center_horizontal"
-        android:src="@mipmap/ic_launcher"
-        android:onClick="showUploadOptions"/>
+    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
 
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edUserName"
-            android:hint="@string/hintUserName"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-            />
-    </android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edPassword"
-            android:hint="@string/hintPassword"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
-
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edPasswordConfirm"
-            android:hint="@string/confirmPassword"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-        />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edFirstName"
-            android:hint="@string/firstName"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edLastName"
-            android:hint="@string/lastName"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-        android:textColorHint="#000000"
-        >
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/edEmail"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:hint="@string/email"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/fieldSize"
-            android:textColor="#000000"
-            />
-    </android.support.design.widget.TextInputLayout>
-
-    <Button android:id="@+id/btnRegister" style="?android:borderlessButtonStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:text="@string/register_save"
-        android:textStyle="bold"
-        android:onClick="registerUser"
-        android:background="@drawable/button_accent_round"
-        android:textColor="@color/buttonTextColor"
-        android:textSize="@dimen/fieldSize"
-        />
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="20dp"
+
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="left"
+            android:paddingBottom="50dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Profile Picture"
+                android:id="@+id/textView"
+                android:layout_marginBottom="10dp"
+                />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/ivProfile"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/ic_launcher"
+                android:onClick="showUploadOptions"
+                />
+
+        </LinearLayout>
+
+        <!--<android.support.design.widget.TextInputLayout android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!-->-->
+
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/edUserName"-->
+                <!--android:hint="@string/hintUserName"-->
+                <!--android:maxLines="1"-->
+                <!--android:singleLine="true"-->
+                <!--android:textSize="@dimen/fieldSize"-->
+                <!--/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edFullName"
+                android:hint="@string/fullName"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/fieldSize"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/edEmail"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:hint="@string/email"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/fieldSize"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edPassword"
+                android:hint="@string/hintPassword"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/fieldSize"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edPasswordConfirm"
+                android:hint="@string/confirmPassword"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/fieldSize"
+            />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edPhone"
+                android:hint="@string/hintPhone"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="@dimen/fieldSize"
+            />
+        </android.support.design.widget.TextInputLayout>
 
 
-</LinearLayout>
+        <!--<android.support.design.widget.TextInputLayout android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!-->-->
+
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/edLastName"-->
+                <!--android:hint="@string/lastName"-->
+                <!--android:maxLines="1"-->
+                <!--android:singleLine="true"-->
+                <!--android:textSize="@dimen/fieldSize"-->
+                <!--/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+
+        <!--<Button android:id="@+id/btnRegister" style="?android:borderlessButtonStyle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="55dp"-->
+            <!--android:text="@string/register_save"-->
+            <!--android:textStyle="bold"-->
+            <!--android:onClick="registerUser"-->
+            <!--android:background="@drawable/button_accent_round"-->
+            <!--android:textColor="@color/buttonTextColor"-->
+            <!--android:textSize="@dimen/fieldSize"-->
+            <!--/>-->
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
