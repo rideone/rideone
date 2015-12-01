@@ -15,8 +15,8 @@
         android:layout_height="match_parent">
     <ImageView
         android:id="@+id/ivProfile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:onClick="onProfileView"
         android:src="@mipmap/ic_profile_image"
