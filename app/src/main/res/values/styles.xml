@@ -6,6 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/bg</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
 
     </style>
     <style name="AppTheme.NoActionBar">
@@ -21,6 +23,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
+
         <!--<item name="android:textColor">#FFFFFF</item>-->
         <!--<item name="android:textColorHint">#000000</item>-->
         <!--<item name="colorAccent">#FFFFFF</item>-->
@@ -28,9 +31,15 @@
         <!--<item name="colorControlActivated">#FFFFFF</item>-->
         <!--<item name="colorControlHighlight">#FFFFFF</item>-->
 
-
     </style>
 
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
 
     <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->

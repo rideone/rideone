@@ -1,36 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginLeft="@dimen/grid_margin"
+    android:layout_marginRight="@dimen/grid_margin"
+    android:layout_marginTop="@dimen/cell_margin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
-    android:orientation="vertical"
-    android:focusable="false"
-    android:focusableInTouchMode="false"
+    android:clickable="true"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    card_view:cardElevation="@dimen/card_elevation"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:onClick="onProfileView"
+        android:src="@mipmap/ic_launcher"
+        android:clickable="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="16dp"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/leftLayout"-->
-        <!--android:paddingRight="10dp"-->
-        <!--android:layout_centerVertical="true"-->
-        <!-->-->
-        <ImageView
-            android:id="@+id/ivProfile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:onClick="onProfileView"
-            android:src="@mipmap/ic_launcher"
-            android:clickable="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="16dp"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-
-            />
+        />
     <!--</RelativeLayout>-->
 
     <TextView
@@ -109,74 +105,6 @@
 
         />
 
-
-    <!--<RelativeLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/rightLayout"-->
-        <!--android:layout_marginLeft="70dp">-->
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/rightTop">-->
-            <!--<TextView-->
-                <!--android:id="@+id/tvFullName"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:textStyle="bold"-->
-                <!--android:text="First"-->
-                <!--/>-->
-
-        <!--</RelativeLayout>-->
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/rightMiddle"-->
-            <!--android:layout_below="@+id/rightTop">-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/tvSpotsAvailable"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:text="0 " />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Santa Clara"-->
-                <!--android:id="@+id/tvStartLoc"-->
-                <!--android:layout_below="@+id/tvSpotsAvailable"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Santa Clara"-->
-                <!--android:id="@+id/tvDestination"-->
-                <!--android:layout_below="@+id/tvStartLoc"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="5:00"-->
-                <!--android:id="@+id/tvTime"-->
-                <!--android:layout_below="@+id/tvDestination"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true" />-->
-
-
-
-        <!--</RelativeLayout>-->
-    <!--</RelativeLayout>-->
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -190,6 +118,5 @@
         style="?android:borderlessButtonStyle"
         android:alpha="0.85"
         />
-
-
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

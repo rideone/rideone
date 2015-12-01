@@ -5,4 +5,11 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fieldSize">20sp</dimen>
     <dimen name="linkTextSize">18sp</dimen>
+
+
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">8dp</dimen>
+    <dimen name="grid_margin">4dp</dimen>
+    <dimen name="cell_margin">16dp</dimen>
+    <dimen name="grid_profile_height">100dp</dimen>
 </resources>

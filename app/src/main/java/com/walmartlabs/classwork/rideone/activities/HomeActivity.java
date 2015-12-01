@@ -177,7 +177,8 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                 }
                 //Available and ride doesn't exist
                 else if(ride.isAvailable() && existingRidePos == -1) {
-                    rideListFragment.aRides.insert(ride, 0);
+                    rideListFragment.rides.add(0, ride);
+                    rideListFragment.aRides.notifyDataSetChanged();
                 }
 
                 rideListFragment.aRides.notifyDataSetChanged();

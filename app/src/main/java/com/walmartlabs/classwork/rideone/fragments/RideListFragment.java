@@ -6,12 +6,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.google.common.base.Function;
@@ -26,7 +26,6 @@ import com.walmartlabs.classwork.rideone.adapters.RideListAdapter;
 import com.walmartlabs.classwork.rideone.models.Filter;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
-import com.walmartlabs.classwork.rideone.util.EndlessScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ import static com.walmartlabs.classwork.rideone.util.ParseUtil.ERR_RECORD_NOT_FO
 public class RideListFragment extends Fragment {
     public RideListAdapter aRides;
     public List<Ride> rides;
-    private ListView lvRides;
+    private RecyclerView rvRides;
     ProgressBar progressBarFooter;
 
     private SwipeRefreshLayout swipeContainer;
@@ -63,7 +62,13 @@ public class RideListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ride_list, container, false);
-        lvRides = (ListView) view.findViewById(R.id.lvDrivers);
+        rvRides = (RecyclerView) view.findViewById(R.id.rvRides);
+        // allows for optimizations
+        rvRides.setHasFixedSize(true);
+        final GridLayoutManager layout = new GridLayoutManager(getActivity(), 1);
+        // Unlike ListView, you have to explicitly give a LayoutManager to the RecyclerView to position items on the screen.
+        // There are three LayoutManager provided at the moment: GridLayoutManager, StaggeredGridLayoutManager and LinearLayoutManager.
+        rvRides.setLayoutManager(layout);
 //        lvRides.setOnScrollListener(new EndlessScrollListener() {
 //            @Override
 //            public void onLoadMore(int totalItemCount) {
@@ -71,13 +76,13 @@ public class RideListFragment extends Fragment {
 //            }
 //        });
 
-        lvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //    Intent i = new Intent(getActivity(), DetailedViewActivity.class);
-                //    startActivity(i);
-            }
-        });
+//        rvRides.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                //    Intent i = new Intent(getActivity(), DetailedViewActivity.class);
+//                //    startActivity(i);
+//            }
+//        });
 
       //  swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 /*        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -99,7 +104,7 @@ public class RideListFragment extends Fragment {
                 footer.findViewById(R.id.pbFooterLoading);
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
-        lvRides.setAdapter(aRides);
+        rvRides.setAdapter(aRides);
         fetchAndPopulateRideList();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -121,7 +126,8 @@ public class RideListFragment extends Fragment {
     }
 
     public void clear() {
-        aRides.clear();
+        rides.clear();
+        aRides.notifyDataSetChanged();
     }
 
 //    public void getDummyTimeline() {
@@ -158,7 +164,7 @@ public class RideListFragment extends Fragment {
                 }
 
                 if (rideList == null || rideList.isEmpty()) {
-                    aRides.clear();
+                    clear();
                     swipeContainer.setRefreshing(false);
 
                     return;
@@ -203,8 +209,9 @@ public class RideListFragment extends Fragment {
                             ride.setDriver(driver);
                         }
 
-                        aRides.clear();
-                        aRides.addAll(rideList);
+                        clear();
+                        rides.addAll(rideList);
+                        aRides.notifyDataSetChanged();
                         swipeContainer.setRefreshing(false);
                     }
                 });

@@ -2,11 +2,11 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,120 +32,13 @@ import static android.view.View.VISIBLE;
 /**
  * Created by abalak5 on 10/21/15.
  */
-public class RideListAdapter extends ArrayAdapter<Ride> {
-    // View lookup cache
-    private static class ViewHolder {
-        public ImageView ivProfile;
-        public TextView tvFullName;
-        public TextView tvTime;
-        public TextView tvSpotsAvailable;
-        public TextView tvStartLoc;
-        public TextView tvDestination;
-        public Button btnReserve;
-    }
-
-    private HomeActivity context;
+public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
+    private HomeActivity mContext;
+    private List<Ride> mRides;
 
     public RideListAdapter(Context context, List<Ride> rides) {
-        super(context, 0, rides);
-        this.context = (HomeActivity) context;
-    }
-
-    // Translates a particular `Image` given a position
-    // into a relevant row within an AdapterView
-    @Override
-    public View getView(int position, View convertView, final ViewGroup parent) {
-        // Get the data item for this position
-        final Ride ride = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.ride_list_item, parent, false);
-            viewHolder.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
-            viewHolder.tvFullName = (TextView)convertView.findViewById(R.id.tvFullName);
-            viewHolder.tvSpotsAvailable = (TextView)convertView.findViewById(R.id.tvSpotsAvailable);
-            viewHolder.tvTime = (TextView)convertView.findViewById(R.id.tvTime);
-            viewHolder.tvDestination = (TextView)convertView.findViewById(R.id.tvDestination);
-            viewHolder.tvStartLoc = (TextView)convertView.findViewById(R.id.tvStartLoc);
-            viewHolder.btnReserve = (Button)convertView.findViewById(R.id.btnReserve);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        User userInfo = context.getUserInfo();
-        String userId = userInfo.getObjectId();
-        if(ride.getDriverId().equalsIgnoreCase(userId)) {
-            viewHolder.btnReserve.setVisibility(INVISIBLE);
-        } else {
-            viewHolder.btnReserve.setVisibility(VISIBLE);
-        }
-
-        //user has requested a ride or has been confirmed
-        String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
-        if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
-            String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
-            viewHolder.btnReserve.setText(status);
-            viewHolder.btnReserve.setEnabled(false);
-        } else {
-            viewHolder.btnReserve.setText("Reserve");
-            viewHolder.btnReserve.setEnabled(true);
-        }
-
-        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                context.openReserveRideDialog(ride);
-                context.reserveRideRequest(ride);
-
-            }
-        });
-
-        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
-        // Populate data into the template view using the data object
-        viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFullName()));
-        viewHolder.tvDestination.setText("to: " + ride.getDestination());
-
-        //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
-        viewHolder.tvStartLoc.setText(ride.getStartLocation());
-        viewHolder.tvDestination.setText(ride.getDestination());
-        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpotsLeft()) + " spots"));
-
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-        String startTime = df.format(ride.getDate());
-        viewHolder.tvTime.setText(startTime);
-/*            Date tweetDate = getTimeStamp(user.getCreatedAt());
-            String timeStamp = getRelativeTimeStamp(currDate, tweetDate);
-            viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
-        ParseFile profileImage = ride.getDriver().getProfileImage();
-        viewHolder.ivProfile.setImageResource(0);
-        if (profileImage != null) {
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .borderColor(Color.BLACK)
-                    .cornerRadiusDp(10)
-                    .oval(false)
-                    .build();
-
-            Picasso.with(getContext())
-                    .load(profileImage.getUrl())
-                    .transform(transformation)
-                    .into(viewHolder.ivProfile);
-        } else {
-            //this is to solve stale image because of recycling views. when we scroll down the already inflated list item is re-used
-            //so we see the same image that we see at position 0 for postiion 4.
-            viewHolder.ivProfile.setImageResource(R.mipmap.ic_launcher);
-        }
-
-        // Return the completed view to render on screen
-        return convertView;
+        mRides = rides;
+        mContext = (HomeActivity) context;
     }
 
     public static Date getTimeStamp(String date) throws ParseException {
@@ -183,4 +76,117 @@ public class RideListAdapter extends ArrayAdapter<Ride> {
 
         return timeStamp;
     }
+
+    // Inflate the view based on the viewType provided.
+    @Override
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ride_list_item, parent, false);
+        return new VH(itemView, mContext);
+    }
+
+    // Display data at the specified position
+    @Override
+    public void onBindViewHolder(VH viewHolder, int position) {
+        final Ride ride = mRides.get(position);
+
+        User userInfo = mContext.getUserInfo();
+        String userId = userInfo.getObjectId();
+        if(ride.getDriverId().equalsIgnoreCase(userId)) {
+            viewHolder.btnReserve.setVisibility(INVISIBLE);
+        } else {
+            viewHolder.btnReserve.setVisibility(VISIBLE);
+        }
+
+        //user has requested a ride or has been confirmed
+        String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
+        if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
+            String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
+            viewHolder.btnReserve.setText(status);
+            viewHolder.btnReserve.setEnabled(false);
+        } else {
+            viewHolder.btnReserve.setText("Reserve");
+            viewHolder.btnReserve.setEnabled(true);
+        }
+
+        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                context.openReserveRideDialog(ride);
+                mContext.reserveRideRequest(ride);
+
+            }
+        });
+
+        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        //why do this?
+        viewHolder.rootView.setTag(ride);
+        // Populate data into the template view using the data object
+        viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFullName()));
+        viewHolder.tvDestination.setText("to: " + ride.getDestination());
+
+        //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+        viewHolder.tvStartLoc.setText(ride.getStartLocation());
+        viewHolder.tvDestination.setText(ride.getDestination());
+        viewHolder.tvSpotsAvailable.setText(Html.fromHtml(String.valueOf(ride.getSpotsLeft()) + " spots"));
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String startTime = df.format(ride.getDate());
+        viewHolder.tvTime.setText(startTime);
+/*            Date tweetDate = getTimeStamp(user.getCreatedAt());
+            String timeStamp = getRelativeTimeStamp(currDate, tweetDate);
+            viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
+        ParseFile profileImage = ride.getDriver().getProfileImage();
+        viewHolder.ivProfile.setImageResource(0);
+        if (profileImage != null) {
+            Transformation transformation = new RoundedTransformationBuilder()
+                    .borderColor(Color.BLACK)
+                    .cornerRadiusDp(10)
+                    .oval(false)
+                    .build();
+
+            Picasso.with(mContext)
+                    .load(profileImage.getUrl())
+                    .transform(transformation)
+                    .into(viewHolder.ivProfile);
+        } else {
+            //this is to solve stale image because of recycling views. when we scroll down the already inflated list item is re-used
+            //so we see the same image that we see at position 0 for postiion 4.
+            viewHolder.ivProfile.setImageResource(R.mipmap.ic_launcher);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mRides.size();
+    }
+
+    // Provide a reference to the views for each contact item
+    public final class VH extends RecyclerView.ViewHolder {
+        final View rootView;
+        public ImageView ivProfile;
+        public TextView tvFullName;
+        public TextView tvTime;
+        public TextView tvSpotsAvailable;
+        public TextView tvStartLoc;
+        public TextView tvDestination;
+        public Button btnReserve;
+
+        public VH(View itemView, final Context context) {
+            super(itemView);
+            rootView = itemView;
+            ivProfile = (ImageView)itemView.findViewById(R.id.ivProfile);
+            tvFullName = (TextView)itemView.findViewById(R.id.tvFullName);
+            tvSpotsAvailable = (TextView)itemView.findViewById(R.id.tvSpotsAvailable);
+            tvTime = (TextView)itemView.findViewById(R.id.tvTime);
+            tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
+            tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
+            btnReserve = (Button)itemView.findViewById(R.id.btnReserve);
+        }
+    }
+
 }
