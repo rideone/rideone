@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -297,6 +295,18 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
             if (resultCode == RESULT_OK) {
                 String message = intent.getStringExtra("message");
+                String userStatus = intent.getStringExtra("userStatus");
+
+                if (userStatus != null) {
+                    if (userStatus.equalsIgnoreCase("confirmed")) {
+                        user.setStatus(User.Status.PASSENGER);
+                    } else if (userStatus.equalsIgnoreCase("denied")) {
+                        user.setStatus(User.Status.NO_RIDE);
+                        user.setRideId(null);
+                    }
+                }
+
+                user.flush();
                 Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG).show();
                 rideListFragment.fetchAndPopulateRideList();
             }

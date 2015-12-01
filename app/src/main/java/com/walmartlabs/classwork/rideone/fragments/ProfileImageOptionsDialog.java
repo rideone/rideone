@@ -20,21 +20,21 @@ import com.walmartlabs.classwork.rideone.activities.RegisterUserActivity;
  * Created by abalak5 on 11/24/15.
  */
 
-public class ProfilePhotoOptionsDialog extends DialogFragment {
+public class ProfileImageOptionsDialog extends DialogFragment {
 
     public interface ProfilePhotoUploadListener {
         void onLaunchCamera();
         void selectImageFromGallery();
     }
 
-    public ProfilePhotoOptionsDialog() {
+    public ProfileImageOptionsDialog() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
 
-    public static ProfilePhotoOptionsDialog newInstance() {
-        ProfilePhotoOptionsDialog frag = new ProfilePhotoOptionsDialog();
+    public static ProfileImageOptionsDialog newInstance() {
+        ProfileImageOptionsDialog frag = new ProfileImageOptionsDialog();
         Bundle args = new Bundle();
         //args.putBoolean("rideRequested", rideRequested);
        // frag.setArguments(args);

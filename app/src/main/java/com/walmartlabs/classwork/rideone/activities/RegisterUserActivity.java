@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -17,12 +16,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -31,7 +28,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.fragments.ProfilePhotoOptionsDialog;
+import com.walmartlabs.classwork.rideone.fragments.ProfileImageOptionsDialog;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.ParseUtil;
 
@@ -44,7 +41,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 import static com.walmartlabs.classwork.rideone.util.Utils.isPasswordValid;
 
-public class RegisterUserActivity extends AppCompatActivity implements ProfilePhotoOptionsDialog.ProfilePhotoUploadListener {
+public class RegisterUserActivity extends AppCompatActivity implements ProfileImageOptionsDialog.ProfilePhotoUploadListener {
     private static final String PASSWORD_TEXT = "PASSWORD_TEXT";
     private EditText edPassword;
     private EditText edPasswordConfirm;
@@ -63,7 +60,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
     private boolean imageUploaded = false;
 
     public ImageView ivProfile;
-    ProfilePhotoOptionsDialog dialog;
+    ProfileImageOptionsDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,7 +253,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfilePh
 
     public void showUploadOptions(View view) {
         FragmentManager fm = getSupportFragmentManager();
-        ProfilePhotoOptionsDialog dialog = ProfilePhotoOptionsDialog.newInstance();
+        ProfileImageOptionsDialog dialog = ProfileImageOptionsDialog.newInstance();
         dialog.show(fm, "fragment_upload_options");
     }
 
