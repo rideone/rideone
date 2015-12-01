@@ -1,7 +1,6 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -143,14 +142,16 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         ParseFile profileImage = ride.getDriver().getProfileImage();
         viewHolder.ivProfile.setImageResource(0);
         if (profileImage != null) {
+
             Transformation transformation = new RoundedTransformationBuilder()
-                    .borderColor(Color.BLACK)
-                    .cornerRadiusDp(10)
+                    .borderWidthDp(1)
+                    .cornerRadiusDp(50)
                     .oval(false)
                     .build();
 
             Picasso.with(mContext)
                     .load(profileImage.getUrl())
+                    .fit()
                     .transform(transformation)
                     .into(viewHolder.ivProfile);
         } else {
