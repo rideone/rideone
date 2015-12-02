@@ -62,6 +62,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.btnReserve.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
+            viewHolder.rootView.setBackgroundColor(Color.parseColor("#B3E5FC"));
         } else {
             viewHolder.btnReserve.setVisibility(VISIBLE);
             //user has requested a ride or has been confirmed
