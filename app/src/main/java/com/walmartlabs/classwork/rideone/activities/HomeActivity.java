@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             this.user = userArg.rebuild();
         }
 
-        rideListFragment = RideListFragment.newInstance();
+        rideListFragment = RideListFragment.newInstance(user);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flContainer, rideListFragment);
         ft.commit();
@@ -221,6 +221,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                     riderIds.remove(user.getObjectId());
                     prevRide.setRiderIds(riderIds);
                     prevRide.setSpotsLeft(prevRide.getSpotsLeft() + 1);
+                    prevRide.setLastUpdatedBy();
                     prevRide.flush();
                     prevRide.saveInBackground();
                     sendRequest(ride);
@@ -241,6 +242,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
         }
         riders.add(user.getObjectId());
         ride.setRiderIds(riders);
+        ride.setLastUpdatedBy();
         ride.flush();
 
         SaveCallback callback = new SaveCallback() {

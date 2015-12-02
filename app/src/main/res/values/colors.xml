@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bg">#f9f9f9</color>
+    <color name="error">#D80000</color>
+
 
 
     <!-- RED with GREEN -->

@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_phone"
+            android:src="@drawable/ic_phone_white"
             app:fabSize="normal" />
     </RelativeLayout>
 </RelativeLayout>

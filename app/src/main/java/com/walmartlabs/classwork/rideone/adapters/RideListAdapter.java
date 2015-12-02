@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
@@ -16,6 +17,7 @@ import com.parse.ParseFile;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.activities.DriverStatusActivity;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.activities.RideDetailActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
@@ -36,10 +38,12 @@ import static android.view.View.VISIBLE;
 public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     private HomeActivity mContext;
     private List<Ride> mRides;
+    private User mUser;
 
-    public RideListAdapter(Context context, List<Ride> rides) {
+    public RideListAdapter(Context context, List<Ride> rides, User currentUser) {
         mRides = rides;
         mContext = (HomeActivity) context;
+        mUser = currentUser;
     }
 
     public static Date getTimeStamp(String date) throws ParseException {
@@ -118,15 +122,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             }
         });
 
-        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(mContext, RideDetailActivity.class);
-                ride.getDriver().flush();
-                i.putExtra("ride", ride.flush());
-                mContext.startActivity(i);
-            }
-        });
+        addOnClickToDetailsActivity(ride, viewHolder.rlDetails);
 
         //why do this?
         viewHolder.rootView.setTag(ride);
@@ -167,6 +163,22 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         }
     }
 
+    private void navigateToDetailsActivity(Ride ride) {
+        Intent intent;
+        if(mUser.getObjectId().equals(ride.getDriver().getObjectId())) {
+            intent = new Intent(mContext, DriverStatusActivity.class);
+            intent.putExtra("user", ride.getDriver().flush());
+        }
+        else {
+            intent = new Intent(mContext, RideDetailActivity.class);
+            ride.getDriver().flush();
+            intent.putExtra("ride", ride.flush());
+        }
+
+
+        mContext.startActivity(intent);
+    }
+
     @Override
     public int getItemCount() {
         return mRides.size();
@@ -183,6 +195,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvDestination;
         public Button btnReserve;
         public Context mContext;
+        public RelativeLayout rlDetails;
 
         public VH(View itemView, final Context context) {
             super(itemView);
@@ -194,6 +207,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             btnReserve = (Button)itemView.findViewById(R.id.btnReserve);
+            rlDetails = (RelativeLayout) itemView.findViewById(R.id.rlDetails);
         }
 
         @Override
@@ -207,4 +221,15 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         }
     }
 
+    private void addOnClickToDetailsActivity(final Ride ride, View... views) {
+        for(View view : views) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    navigateToDetailsActivity(ride);
+                }
+            });
+
+        }
+    }
 }

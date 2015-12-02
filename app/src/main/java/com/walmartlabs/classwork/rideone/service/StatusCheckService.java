@@ -60,9 +60,7 @@ public class StatusCheckService extends IntentService {
                 broadcast(message, userStatusChanged);
             }
             user = newUser;
-            if (newRide != null) {
-                ride = newRide;
-            }
+            ride = newRide;
         }
 
     }
@@ -98,12 +96,10 @@ public class StatusCheckService extends IntentService {
         Date currDate = user.getUpdatedAt();
         Date newDate = newUser.getUpdatedAt();
         if (isAfter(currDate, newDate)) {
-            if (user.getStatus() == User.Status.WAIT_LIST) {
-                if (newUser.getStatus() == User.Status.PASSENGER) {
-                    return "confirmed";
-                } else if (newUser.getStatus() == User.Status.NO_RIDE) {
-                    return "denied";
-                }
+            if (user.getStatus() != User.Status.PASSENGER && newUser.getStatus() == User.Status.PASSENGER) {
+                return "confirmed";
+            } else if (user.getStatus() != User.Status.NO_RIDE && newUser.getStatus() == User.Status.NO_RIDE) {
+                return "denied";
             }
         }
         return null;
@@ -114,7 +110,7 @@ public class StatusCheckService extends IntentService {
     }
 
     private boolean hasRiderChanged(Ride newRide) {
-        if (ride != null && isDriver(ride) && ride != newRide) {
+        if (ride != null && isDriver(ride) && ride != newRide && isNotUpdatedByUser(newRide)) {
             Date currDate = ride.getUpdatedAt();
             Date newDate = newRide.getUpdatedAt();
             if (isAfter(currDate, newDate) && !ride.getRiderIds().equals(newRide.getRiderIds())) {
@@ -122,6 +118,10 @@ public class StatusCheckService extends IntentService {
             }
         }
         return false;
+    }
+
+    private boolean isNotUpdatedByUser(Ride newRide) {
+        return newRide == null || newRide.getLastUpdatedBy() == null || !newRide.getLastUpdatedBy().equals(user.getLoginUserId());
     }
 
     private boolean isDriver(Ride ride) {

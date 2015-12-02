@@ -21,7 +21,9 @@
 
 <RelativeLayout
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/rlMain"
+    >
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -114,6 +116,9 @@
             android:layout_alignParentStart="true"
             android:paddingRight="37dp"
             android:layout_marginTop="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
             />
 
         <Spinner
@@ -137,22 +142,31 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="20dp"
             android:paddingRight="18dp"
-            android:layout_alignBaseline="@+id/etSpots"
             />
 
-        <EditText
-            android:layout_width="40dp"
+        <Spinner
+            android:layout_width="83dp"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/etSpots"
-            android:layout_below="@+id/spDestination"
-            android:layout_toRightOf="@+id/tvSpots"
-            android:layout_toEndOf="@+id/tvSpots"
-            android:text="2"
+            android:id="@+id/spSpots"
+            android:entries="@array/spots"
             android:layout_marginTop="20dp"
-
+            android:layout_below="@+id/spDestination"
+            android:layout_toRightOf="@+id/tvDestination"
+            android:layout_toEndOf="@+id/tvDestination"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="( left)"
+            android:id="@+id/tvSpotsLeft"
+            android:layout_alignBaseline="@+id/spSpots"
+            android:layout_toRightOf="@+id/spSpots"
+            android:layout_toEndOf="@+id/spSpots"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            />
+
     </RelativeLayout>
 
 

@@ -120,7 +120,10 @@ public class User extends ParseObject implements CustomSerializable<User> {
     }
     
     public void setRideId(String rideId) {
-        put(COLUMN_RIDE, rideId);
+        if (rideId == null)
+            remove(COLUMN_RIDE);
+        else
+            put(COLUMN_RIDE, rideId);
     }
 
     public String getRideId() {
