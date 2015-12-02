@@ -34,6 +34,8 @@
             android:layout_alignParentStart="true"
             android:switchMinWidth="80dp"
             android:switchPadding="20dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="20dp"
             android:textColor="@android:color/primary_text_light"
             />
 
