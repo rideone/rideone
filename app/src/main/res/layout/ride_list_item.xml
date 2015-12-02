@@ -9,16 +9,13 @@
     android:clickable="true"
     card_view:cardCornerRadius="@dimen/card_corner_radius"
     card_view:cardElevation="@dimen/card_elevation"
-    android:foreground="?android:attr/selectableItemBackground"
-
-    >
+    card_view:cardBackgroundColor="#01A9DB"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-
-        >
+        android:padding="10dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -149,5 +146,15 @@
         android:textStyle="bold"
         android:alpha="0.85"
         />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivCancel"
+            android:layout_alignBottom="@+id/btnReserve"
+            android:layout_toLeftOf="@+id/btnReserve"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_cross"
+            android:visibility="gone"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

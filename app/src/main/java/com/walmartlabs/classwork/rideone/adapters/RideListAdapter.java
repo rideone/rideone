@@ -2,6 +2,7 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -53,26 +54,30 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
 
     // Display data at the specified position
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(final VH viewHolder, int position) {
         final Ride ride = mRides.get(position);
 
         User userInfo = mContext.getUserInfo();
         String userId = userInfo.getObjectId();
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.btnReserve.setVisibility(INVISIBLE);
+            viewHolder.ivCancel.setVisibility(INVISIBLE);
         } else {
             viewHolder.btnReserve.setVisibility(VISIBLE);
-        }
-
-        //user has requested a ride or has been confirmed
-        String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
-        if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
-            String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
-            viewHolder.btnReserve.setText(status);
-            viewHolder.btnReserve.setEnabled(false);
-        } else {
-            viewHolder.btnReserve.setText("Reserve");
-            viewHolder.btnReserve.setEnabled(true);
+            //user has requested a ride or has been confirmed
+            String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
+            if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
+                String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
+                viewHolder.btnReserve.setText(status);
+                viewHolder.btnReserve.setEnabled(false);
+                viewHolder.rootView.setBackgroundColor(Color.parseColor("#B3E5FC"));
+                viewHolder.ivCancel.setVisibility(VISIBLE);
+            } else {
+                viewHolder.btnReserve.setText("Reserve");
+                viewHolder.btnReserve.setEnabled(true);
+                viewHolder.rootView.setBackgroundColor(Color.parseColor("#01A9DB"));
+                viewHolder.ivCancel.setVisibility(INVISIBLE);
+            }
         }
 
         viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +86,14 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
 //                context.openReserveRideDialog(ride);
                 mContext.reserveRideRequest(ride);
 
+            }
+        });
+
+        viewHolder.ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.cancelRideAndSendRequest(null);
+                viewHolder.ivCancel.setVisibility(INVISIBLE);
             }
         });
 
@@ -161,11 +174,14 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public Button btnReserve;
         public Context mContext;
         public RelativeLayout rlDetails;
+        public ImageView ivCancel;
+
 
         public VH(View itemView, final Context context) {
             super(itemView);
             rootView = itemView;
             ivProfile = (ImageView)itemView.findViewById(R.id.ivProfile);
+            ivCancel = (ImageView)itemView.findViewById(R.id.ivCancel);
             tvFullName = (TextView)itemView.findViewById(R.id.tvFullName);
             tvSpotsAvailable = (TextView)itemView.findViewById(R.id.tvSpotsAvailable);
             tvTime = (TextView)itemView.findViewById(R.id.tvTime);

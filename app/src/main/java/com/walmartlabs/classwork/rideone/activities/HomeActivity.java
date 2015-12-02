@@ -205,28 +205,48 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 //        reserveRideDialog.show(fm, "fragment_reserve_ride");
 //    }
 
+    public void cancelRideAndSendRequest(final Ride ride) {
+        String rideId = user.getRideId();
+        ParseQuery query = ParseQuery.getQuery(Ride.class);
+        query.whereEqualTo("objectId", rideId);
+        query.getFirstInBackground(new GetCallback<Ride>() {
+            @Override
+            public void done(Ride prevRide, ParseException e) {
+                List<String> riderIds = prevRide.getRiderIds();
+                riderIds.remove(user.getObjectId());
+                prevRide.setRiderIds(riderIds);
+                prevRide.setSpotsLeft(prevRide.getSpotsLeft() + 1);
+                prevRide.setLastUpdatedBy();
+                prevRide.flush();
+                prevRide.saveInBackground();
+                //handle cancel ride case
+                if (ride == null) {
+                    user.setRideId(null);
+                    user.setStatus(User.Status.NO_RIDE);
+                    user.flush();
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            //TODO: instead of refreshing the entire list, just update current changes in efficient way
+                            rideListFragment.fetchAndPopulateRideList();
+                        }
+                    });
+
+                } else {
+                    //handles re-book ride case
+                    sendRequest(ride);
+                }
+            }
+        });
+    }
+
     //TODO: refactor code to move logic to fragment layer
     @Override
     public void reserveRideRequest(final Ride ride) {
         //if user already reserved/requested a ride, then remove ride
         if(user.getStatus().equals(User.Status.WAIT_LIST)
                 || user.getStatus().equals(User.Status.PASSENGER)) {
-            String rideId = user.getRideId();
-            ParseQuery query = ParseQuery.getQuery(Ride.class);
-            query.whereEqualTo("objectId", rideId);
-            query.getFirstInBackground(new GetCallback<Ride>() {
-                @Override
-                public void done(Ride prevRide, ParseException e) {
-                    List<String> riderIds = prevRide.getRiderIds();
-                    riderIds.remove(user.getObjectId());
-                    prevRide.setRiderIds(riderIds);
-                    prevRide.setSpotsLeft(prevRide.getSpotsLeft() + 1);
-                    prevRide.setLastUpdatedBy();
-                    prevRide.flush();
-                    prevRide.saveInBackground();
-                    sendRequest(ride);
-                }
-            });
+            cancelRideAndSendRequest(ride);
         } else {
             sendRequest(ride);
         }
@@ -311,7 +331,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
                 user.flush();
                 Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG).show();
-                rideListFragment.fetchAndPopulateRideList();
+                rideListFragment.fetchAndPopulateRideList(user);
             }
         }
     }

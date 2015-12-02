@@ -150,6 +150,11 @@ public class RideListFragment extends Fragment {
 //    }
 
     public void fetchAndPopulateRideList() {
+        fetchAndPopulateRideList(null);
+    }
+
+    public void fetchAndPopulateRideList(User updatedUser) {
+        if (updatedUser != null) currentUser = updatedUser;
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
 
