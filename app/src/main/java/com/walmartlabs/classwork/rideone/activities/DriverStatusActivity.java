@@ -48,7 +48,6 @@ import java.util.List;
 import static android.view.View.VISIBLE;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_RIDERS;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
@@ -119,6 +118,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             if(spotsLeft < ride.getSpots()) {
                 ride.setSpotsLeft(++spotsLeft);
                 etSpots.setText(Integer.toString(ride.getSpotsLeft()));
+                ride.setLastUpdatedBy();
             }
         }
 
@@ -211,6 +211,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setSpots(DEFAULT_SPOTS);
         ride.setSpotsLeft(DEFAULT_SPOTS);
         ride.setDriverId(driver.getObjectId());
+        ride.setLastUpdatedBy();
         return ride;
     }
 
@@ -435,7 +436,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 //        }
         //TODO: spotsLeft has to be calculated
         ride.setSpotsLeft(Integer.parseInt(etSpots.getText().toString()));
-
+        ride.setLastUpdatedBy();
 
 
 //        //If ride already exists then save passengers in parallel
@@ -499,6 +500,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
         driver.setRideId(ride.getObjectId());
         ride.setDriverId(driver.getObjectId());
+        ride.setLastUpdatedBy();
     }
 
 //    private void savePassengers(List<User> passengers, List<User> removePassengers, Ride ride, final SaveCallback callback) {
