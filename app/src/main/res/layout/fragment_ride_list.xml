@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/swipeContainer"
-    tools:context="com.walmartlabs.classwork.rideone.activities.HomeActivity">
+    tools:context="com.walmartlabs.classwork.rideone.activities.HomeActivity"
+    android:layout_marginTop="58dp"
+    >
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
@@ -12,5 +14,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:listSelector="@color/bg"
+
         />
 </android.support.v4.widget.SwipeRefreshLayout>

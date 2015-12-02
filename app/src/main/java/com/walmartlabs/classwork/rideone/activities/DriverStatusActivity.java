@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,6 +27,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -39,6 +43,8 @@ import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,7 +54,6 @@ import java.util.List;
 import static android.view.View.VISIBLE;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_DRIVER;
-import static com.walmartlabs.classwork.rideone.models.Ride.COLUMN_RIDERS;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_ID;
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_RIDE;
 import static com.walmartlabs.classwork.rideone.models.User.Status.DRIVER;
@@ -81,8 +86,11 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     private Switch swAvailable;
     private Spinner spDestination;
     private Spinner spStartLoc;
+    private TextView tvDestination;
+    private TextView tvStartLoc;
+    private Spinner spSpots;
+    private TextView tvSpotsLeft;
     private ArrayAdapter<User> aPassengers;
-    private EditText etSpots;
     private List<User> riders = new ArrayList<>();
     private List<User> removePassengers = new ArrayList<>();
     private TextView tvPassengers;
@@ -104,8 +112,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                 vh.ivAccept.setVisibility(View.INVISIBLE);
                 vh.tvAccept.setVisibility(View.INVISIBLE);
                 user.setStatus(PASSENGER);
-                ride.setSpotsLeft(--spotsLeft);
-                etSpots.setText(Integer.toString(spotsLeft));
+                populateSpotsLeftTextView();
             }
         }
 
@@ -115,11 +122,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             aPassengers.remove(user);
             user.setStatus(NO_RIDE);
             removePassengers.add(user);
-            int spotsLeft = ride.getSpotsLeft();
-            if(spotsLeft < ride.getSpots()) {
-                ride.setSpotsLeft(++spotsLeft);
-                etSpots.setText(Integer.toString(ride.getSpotsLeft()));
-            }
+            populateSpotsLeftTextView();
         }
 
         @Override
@@ -187,19 +190,6 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                     }
                 }
             });
-//        }
-//        fetchedComment.getParseObject("post")
-//                .fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-//                    public void done(ParseObject post, ParseException e) {
-//                        String title = post.getString("title");
-//                        // Do something with your new title variable
-//                    }
-//                });
-
-//        ride = ((Ride) getIntent().getSerializableExtra("ride")).rebuild();
-//        proxyRide = (ParseProxyObject) getIntent().getSerializableExtra("ride");
-//        List<ParseProxyObject> proxyRiders = (List<ParseProxyObject>) getIntent().getSerializableExtra("riders");
-
 
     }
 
@@ -220,9 +210,28 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         setupSwitchWidget();
         setupSpinners();
 
-        etSpots = (EditText) findViewById(R.id.etSpots);
-        etSpots.setText(String.valueOf(ride.getSpotsLeft()));
+        tvSpotsLeft = (TextView)findViewById(R.id.tvSpotsLeft);
+        populateSpotsLeftTextView();
+
+        tvDestination = (TextView)findViewById(R.id.tvDestination);
+        tvStartLoc = (TextView)findViewById(R.id.tvStartLoc);
     }
+
+    private void populateSpotsLeftTextView() {
+        populateSpotsLeftTextView(calculateSpotsLeft());
+    }
+    private void populateSpotsLeftTextView(int spots) {
+        tvSpotsLeft.setText(String.format("(%s left)", spots));
+    }
+
+    private int calculateSpotsLeft() {
+        int totalSpots = Integer.parseInt(spSpots.getSelectedItem().toString());
+        int spotsTaken = resolveAcceptedRiders(riders).size();
+        return totalSpots - spotsTaken;
+    }
+
+
+
 
     private void setupPassengerList() {
         riders.clear();
@@ -239,6 +248,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
                 @Override
                 public void done(List<User> objects, ParseException e) {
                     aPassengers.addAll(objects);
+                    populateSpotsLeftTextView();
                 }
             });
 
@@ -250,6 +260,50 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         populateSpinner(ride.getDestination(), spDestination);
         spStartLoc = (Spinner) findViewById(R.id.spStartLoc);
         populateSpinner(ride.getStartLocation(), spStartLoc);
+        spSpots = (Spinner) findViewById(R.id.spSpots);
+        int spots = ride.getSpots();
+        if(spots == 0) {
+            spots = 1;
+        }
+        populateSpinner(spots, spSpots);
+
+        spDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != spStartLoc.getSelectedItemPosition()) {
+                    clearErrors();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spStartLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position != spDestination.getSelectedItemPosition()) {
+                    clearErrors();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spSpots.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                populateSpotsLeftTextView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                populateSpotsLeftTextView();
+            }
+        });
+
     }
 
     private void setupSwitchWidget() {
@@ -275,36 +329,6 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         });
     }
 
-
-//    private Ride createDefaultRide(User driver) {
-//        Ride ride = new Ride();
-//        ride.setDate(Utils.getNextHour());
-//        ride.setAvailable(true);
-//
-//        //TODO: remove these dummy passengers
-//        ride.setRiders(createDummyRiders());
-//
-//        ride.setSpots(2);
-//        ride.setDriver(driver);
-//        return ride;
-//    }
-
-//    @NonNull
-//    private List<User> createDummyRiders() {
-//        return Arrays.asList(createDefaultUser("Pass", "One", "6506483030", PASSENGER),
-//                createDefaultUser("Pass", "Two", "6506483031", PASSENGER),
-//                createDefaultUser("Wait", "One", "6506483033", WAIT_LIST),
-//                createDefaultUser("Wait", "Two", "6506483034", WAIT_LIST));
-//    }
-
-//    private User createDefaultUser(String name, String lastName, String phone, User.Status status) {
-//        User u = new User();
-//        u.setFirstName(name);
-//        u.setLastName(lastName);
-//        u.setPhone(phone);
-//        u.setStatus(status);
-//        return u;
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -354,40 +378,24 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         etStartTime.setText(Utils.formatDuration(hourOfDay, minute));
     }
 
-    private void populateSpinner(String value, Spinner spinner) {
-        if (!isNullOrEmpty(value)) {
-            int colorPos = ((ArrayAdapter<String>) spinner.getAdapter()).getPosition(value);
+    private void populateSpinner(Object value, Spinner spinner) {
+        if (value != null && !isNullOrEmpty(value.toString())) {
+            int colorPos = ((ArrayAdapter<String>) spinner.getAdapter()).getPosition(value.toString());
             spinner.setSelection(colorPos);
         }
     }
 
     public void onSave(final SaveCallback callback) {
         populateRideInfo(ride, driver);
-        if(validate()) return;
+        if(!validate()) {
+            return;
+        }
 
         if (!isNullOrEmpty(ride.getObjectId())) {
             assignPassengersAndDriver(riders, removePassengers, ride, driver);
-//            ride.remove(COLUMN_RIDERS);
             //Combine riders, removePassengers and ride into one list
             List<ParseObject> models = Utils.joinModelLists(riders, removePassengers, Arrays.asList(ride), Arrays.asList(driver));
-            ParseUtil.saveInBatch(models, callback); //new SaveCallback() {
-//                @Override
-//                public void done(ParseException e) {
-//                    if (e != null) {
-//                        Log.e(DriverStatusActivity.class.getSimpleName(), "Failed saving ride info", e);
-//                        alert(R.string.alert_network_error);
-//                        return;
-//                    }
-//
-                    //Have to separately save rideIds here as Parse doesn't allow adding and removing items from array in one shot.
-//                    if(!riders.isEmpty()) {
-//                        addRideIdsToRide(riders, ride);
-//                        ride.saveInBackground(callback);
-//                    } else {
-//                        callback.done(e);
-//                    }
-//                }
-//            });
+            ParseUtil.saveInBatch(models, callback);
         } else {
             Log.e(DriverStatusActivity.class.getSimpleName(), "IllegalState: ride doesn't exist", new IllegalStateException("Ride doesn't exist."));
             Toast.makeText(this, "Internal Error", Toast.LENGTH_LONG).show();
@@ -395,27 +403,26 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     }
 
     private boolean validate() {
+        clearErrors();
+
         if(ride.isAvailable() && ride.getStartLocation().equalsIgnoreCase(ride.getDestination())) {
-            Toast.makeText(DriverStatusActivity.this, "Start location and destination cannot be the same", Toast.LENGTH_SHORT).show();
-            return true;
+            String error = "Start location and destination cannot be the same";
+            Toast toast = Toast.makeText(DriverStatusActivity.this, error, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 20);
+            toast.show();
+//            TextView spinner = (TextView) spDestination.getSelectedView();
+//            spinner.setError(error);
+            tvDestination.setTextColor(Color.RED);
+            tvStartLoc.setTextColor(Color.RED);
+//            spinner.setText(error);
+//            tvStartLoc.setError(error);
+//            tvDestination.setError(error);
+//            spDestination.requestFocus();
+            return false;
         }
 
-        return false;
+        return true;
     }
-
-//    @NonNull
-//    private SaveCallback createSaveCallback() {
-//        return new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                Log.d(DriverStatusActivity.class.getSimpleName(), "Saved ride");
-//                if (e != null) {
-//                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to save ride", e);
-//                    Toast.makeText(DriverStatusActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        };
-//    }
 
     private void populateRideInfo(Ride ride, User driver) {
         ride.setAvailable(swAvailable.isChecked());
@@ -429,35 +436,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             driver.setStatus(NO_RIDE);
         }
 
-        //set total spots available only once during ride creation
-//        if(ride.getObjectId() == null) {
-            ride.setSpots(Integer.parseInt(etSpots.getText().toString()));
-//        }
-        //TODO: spotsLeft has to be calculated
-        ride.setSpotsLeft(Integer.parseInt(etSpots.getText().toString()));
-
-
-
-//        //If ride already exists then save passengers in parallel
-//        if(!isNullOrEmpty(ride.getObjectId())) {
-//            ride.saveInBackground();
-//            savePassengers(riders, ride);
-//        }
-//        //If ride doesn't exist yet, first save ride, and then its passengers
-//        else {
-//            ride.saveInBackground(new SaveCallback() {
-//                @Override
-//                public void done(ParseException e) {
-//                    if (e == null) {
-//                        savePassengers(riders, ride);
-//                    } else {
-//                        alert(R.string.alert_network_error);
-//                    }
-//                }
-//            });
-//
-//        }
-
+        ride.setSpots(Integer.parseInt(spSpots.getSelectedItem().toString()));
+        ride.setSpotsLeft(calculateSpotsLeft());
 
     }
 
@@ -465,20 +445,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         Toast.makeText(DriverStatusActivity.this, msgResource, Toast.LENGTH_LONG).show();
     }
 
-//    private void addRideIdsToRide(List<User> passengers, Ride ride) {
-//        List<String> passengerIds = Lists.transform(passengers, extractIdFunction);
-//        if(!passengerIds.isEmpty()) {
-//            ride.addAllUnique(COLUMN_RIDERS, passengerIds);
-//        }
-//    }
-
     private void assignPassengersAndDriver(List<User> passengers, List<User> removePassengers, Ride ride, User driver) {
-
-//        List<String> removePassengerIds = Lists.transform(removePassengers, extractIdFunction);
-//
-//        if(!removePassengerIds.isEmpty()) {
-//            ride.removeAll(COLUMN_RIDERS, removePassengerIds);
-//        }
 
         //Cannot add passengers in the same operation due to Parse limitations
         List<String> passengerIds = Lists.transform(passengers, extractIdFunction);
@@ -501,9 +468,22 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setDriverId(driver.getObjectId());
     }
 
-//    private void savePassengers(List<User> passengers, List<User> removePassengers, Ride ride, final SaveCallback callback) {
-//
-//        ParseUtil.saveInBatch(users, callback);
-//    }
+    private List<User> resolveAcceptedRiders(List<User> riders) {
+        return Utils.filterList(riders, new Predicate<User>() {
+            @Override
+            public boolean apply(User input) {
+                return input.getStatus() == PASSENGER;
+            }
+        });
+    }
+
+    private void clearErrors() {
+        // Reset errors.
+
+        int color = getResources().getColor(R.color.textColorPrimary);
+        tvDestination.setTextColor(color);
+        tvStartLoc.setTextColor(color);
+    }
+
 
 }

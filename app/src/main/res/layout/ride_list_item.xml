@@ -8,97 +8,106 @@
     android:clickable="true"
     card_view:cardCornerRadius="@dimen/card_corner_radius"
     card_view:cardElevation="@dimen/card_elevation"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/ivProfile"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:onClick="onProfileView"
-        android:src="@mipmap/ic_profile_image"
-        android:clickable="true"
-        android:layout_centerVertical="true"
-        android:paddingRight="16dp"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        />
-    <!--</RelativeLayout>-->
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        >
 
-    <TextView
-        android:id="@+id/tvFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:layout_alignParentTop="true"
-        android:text="First Last"
-        android:textStyle="bold"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlDetails">
+            <ImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
+                android:src="@mipmap/ic_profile_image"
+                android:layout_centerVertical="true"
+                android:paddingRight="16dp"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
+            <!--</RelativeLayout>-->
 
-    <TextView
-        android:id="@+id/tvSpotsAvailable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvFullName"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:text="0 "
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        />
+            <TextView
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ivProfile"
+                android:layout_alignParentTop="true"
+                android:text="First Last"
+                android:textStyle="bold"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
-    <TextView
-        android:id="@+id/tvStartLoc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSpotsAvailable"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:text="Santa Clara"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        />
+            <TextView
+                android:id="@+id/tvSpotsAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvFullName"
+                android:layout_toRightOf="@+id/ivProfile"
+                android:text="0 "
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
-    <TextView
-        android:id="@+id/tvTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSpotsAvailable"
-        android:layout_toRightOf="@+id/tvStartLoc"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="To"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
+            <TextView
+                android:id="@+id/tvStartLoc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSpotsAvailable"
+                android:layout_toRightOf="@+id/ivProfile"
+                android:text="Santa Clara"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
-        />
+            <TextView
+                android:id="@+id/tvTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSpotsAvailable"
+                android:layout_toRightOf="@+id/tvStartLoc"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="To"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
 
-    <TextView
-        android:id="@+id/tvDestination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSpotsAvailable"
-        android:layout_toRightOf="@+id/tvTo"
-        android:text="Santa Clara"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
+                />
 
-        />
+            <TextView
+                android:id="@+id/tvDestination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSpotsAvailable"
+                android:layout_toRightOf="@+id/tvTo"
+                android:text="Santa Clara"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
 
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDestination"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:text="5:00"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
+                />
 
-        />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDestination"
+                android:layout_toRightOf="@+id/ivProfile"
+                android:text="5:00"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+
+                />
+        </RelativeLayout>
+
 
     <Button
         android:layout_width="wrap_content"
@@ -111,6 +120,7 @@
         android:background="@drawable/button_accent_round"
         android:textColor="@color/buttonTextColor"
         style="?android:borderlessButtonStyle"
+        android:textStyle="bold"
         android:alpha="0.85"
         />
     </RelativeLayout>

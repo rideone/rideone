@@ -9,6 +9,9 @@ import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.parse.ParseObject;
 import com.walmartlabs.classwork.rideone.models.User;
 
@@ -135,5 +138,9 @@ public class Utils {
         }
 
         return res;
+    }
+
+    public static <T> List<T> filterList(Iterable<T> list, Predicate<T> predicate) {
+        return Lists.newArrayList(Iterables.filter(list, predicate));
     }
 }
