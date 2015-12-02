@@ -11,10 +11,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
+
+import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 
 public class RideDetailActivity extends AppCompatActivity {
 
@@ -40,12 +45,20 @@ public class RideDetailActivity extends AppCompatActivity {
         mRide = ((Ride)getIntent().getSerializableExtra(RIDE));
         mDriver = mRide.getDriver().rebuild();
         mRide = mRide.rebuild();
-//        ParseFile profileImage = mRide.getDriver().getProfileImage();
-        // Fill views with data
-        Picasso.with(this)
-                .load(R.mipmap.ic_profile_image)
-                .fit().centerCrop()
-                .into(ivProfile);
+
+        ParseQuery<User> query = ParseQuery.getQuery(User.class);
+        query.whereEqualTo(COLUMN_LOGIN_USER_ID, mDriver.getLoginUserId());
+        query.getFirstInBackground(new GetCallback<User>() {
+            @Override
+            public void done(User user, ParseException e) {
+                //        ParseFile profileImage = mRide.getDriver().getProfileImage();
+                // Fill views with data
+                Picasso.with(RideDetailActivity.this)
+                        .load(user.getProfileImage().getUrl())
+                        .fit().centerCrop()
+                        .into(ivProfile);
+            }
+        });
 
         tvFullName.setText(mDriver.getFullName());
         tvPhone.setText(mDriver.getPhone());

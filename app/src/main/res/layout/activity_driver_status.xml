@@ -50,6 +50,8 @@
             android:textColor="@android:color/primary_text_light"
             android:switchMinWidth="80dp"
             android:switchPadding="20dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="15sp"
             />
 
         <TextView
