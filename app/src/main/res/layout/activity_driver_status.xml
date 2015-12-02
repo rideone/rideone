@@ -51,7 +51,7 @@
             android:switchMinWidth="80dp"
             android:switchPadding="20dp"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="20dp"
+            android:textSize="15sp"
             />
 
         <TextView
