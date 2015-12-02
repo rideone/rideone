@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
     public static final String COLUMN_DRIVER = "driver_id";
     public static final String COLUMN_RIDERS = "riderIds";
     public static final String COLUMN_SPOTS_LEFT = "spotsLeft";
+    public static final String COLUMN_LAST_UPDATE_BY = "lastUpdatedBy";
 
     private User driver;
     private Map<String, Object> fields = new HashMap<>();
@@ -42,6 +44,7 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
         }
 
         fields.put("objectId", getObjectId());
+//        fields.put(COLUMN_LAST_UPDATE_BY, ParseUser.getCurrentUser().getObjectId());
         return this;
     }
 
@@ -141,6 +144,18 @@ public class Ride extends ParseObject implements CustomSerializable<Ride> {
 
     public void setSpotsLeft(int spotsLeft) {
         put(COLUMN_SPOTS_LEFT, spotsLeft);
+    }
+
+    public String getLastUpdatedBy() {
+        return getString(COLUMN_LAST_UPDATE_BY);
+    }
+
+    public void setLastUpdatedBy(String userId) {
+        put(COLUMN_LAST_UPDATE_BY, userId);
+    }
+
+    public void setLastUpdatedBy() {
+        setLastUpdatedBy(ParseUser.getCurrentUser().getObjectId());
     }
 
 }

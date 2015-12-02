@@ -178,6 +178,7 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfileIm
         if (currentUser == null) {
             user = new User();
             loginUser = new ParseUser();
+            user.setStatus(User.Status.NO_RIDE);
         } else {
             user = currentUser;
             loginUser = currentLoginUser;
@@ -190,7 +191,6 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfileIm
         loginUser.setEmail(email);
         user.setFullName(fullName);
         user.setPhone(phone);
-        user.setStatus(User.Status.NO_RIDE);
         if(imageUploaded) {
             Bitmap bitmap = ((BitmapDrawable)ivProfile.getDrawable()).getBitmap();
 

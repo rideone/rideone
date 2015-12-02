@@ -123,6 +123,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             user.setStatus(NO_RIDE);
             removePassengers.add(user);
             populateSpotsLeftTextView();
+            ride.setLastUpdatedBy();
         }
 
         @Override
@@ -201,6 +202,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         ride.setSpots(DEFAULT_SPOTS);
         ride.setSpotsLeft(DEFAULT_SPOTS);
         ride.setDriverId(driver.getObjectId());
+        ride.setLastUpdatedBy();
         return ride;
     }
 
@@ -436,6 +438,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
             driver.setStatus(NO_RIDE);
         }
 
+        ride.setLastUpdatedBy();
         ride.setSpots(Integer.parseInt(spSpots.getSelectedItem().toString()));
         ride.setSpotsLeft(calculateSpotsLeft());
 
@@ -466,6 +469,7 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
         driver.setRideId(ride.getObjectId());
         ride.setDriverId(driver.getObjectId());
+        ride.setLastUpdatedBy();
     }
 
     private List<User> resolveAcceptedRiders(List<User> riders) {
