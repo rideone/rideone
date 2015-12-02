@@ -4,17 +4,13 @@
     android:id="@+id/swipeContainer"
     tools:context="com.walmartlabs.classwork.rideone.activities.HomeActivity">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvDrivers"
+        android:id="@+id/rvRides"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:choiceMode="singleChoice"
         android:listSelector="@color/bg"
-
         />
 </android.support.v4.widget.SwipeRefreshLayout>

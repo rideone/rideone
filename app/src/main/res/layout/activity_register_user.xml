@@ -55,7 +55,7 @@
                 android:layout_height="50dp"
                 android:id="@+id/ivProfile"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/ic_launcher"
+                android:src="@mipmap/ic_profile_image"
                 android:onClick="showUploadOptions"
                 />
 
