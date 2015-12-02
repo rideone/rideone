@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             this.user = userArg.rebuild();
         }
 
-        rideListFragment = RideListFragment.newInstance();
+        rideListFragment = RideListFragment.newInstance(user);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flContainer, rideListFragment);
         ft.commit();

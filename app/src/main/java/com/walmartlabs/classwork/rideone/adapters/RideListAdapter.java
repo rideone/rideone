@@ -17,6 +17,7 @@ import com.parse.ParseFile;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
+import com.walmartlabs.classwork.rideone.activities.DriverStatusActivity;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.activities.RideDetailActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
@@ -37,10 +38,12 @@ import static android.view.View.VISIBLE;
 public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     private HomeActivity mContext;
     private List<Ride> mRides;
+    private User mUser;
 
-    public RideListAdapter(Context context, List<Ride> rides) {
+    public RideListAdapter(Context context, List<Ride> rides, User currentUser) {
         mRides = rides;
         mContext = (HomeActivity) context;
+        mUser = currentUser;
     }
 
     public static Date getTimeStamp(String date) throws ParseException {
@@ -161,10 +164,19 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     }
 
     private void navigateToDetailsActivity(Ride ride) {
-        Intent i = new Intent(mContext, RideDetailActivity.class);
-        ride.getDriver().flush();
-        i.putExtra("ride", ride.flush());
-        mContext.startActivity(i);
+        Intent intent;
+        if(mUser.getObjectId().equals(ride.getDriver().getObjectId())) {
+            intent = new Intent(mContext, DriverStatusActivity.class);
+            intent.putExtra("user", ride.getDriver().flush());
+        }
+        else {
+            intent = new Intent(mContext, RideDetailActivity.class);
+            ride.getDriver().flush();
+            intent.putExtra("ride", ride.flush());
+        }
+
+
+        mContext.startActivity(intent);
     }
 
     @Override

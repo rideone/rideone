@@ -89,6 +89,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="reserve_ride_label">Are you sure you want to reserve this ride?</string>
-    <string name="title_activity_ride_detail">RideDetailActivity</string>
+    <string name="title_activity_ride_detail">Driver</string>
 
 </resources>

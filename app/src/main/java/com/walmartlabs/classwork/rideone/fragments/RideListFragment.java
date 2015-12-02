@@ -43,20 +43,27 @@ public class RideListFragment extends Fragment {
     public List<Ride> rides;
     private RecyclerView rvRides;
     ProgressBar progressBarFooter;
+    private User currentUser;
 
     private SwipeRefreshLayout swipeContainer;
 
-    public static RideListFragment newInstance() {
+    public static RideListFragment newInstance(User currentUser) {
         RideListFragment fragment = new RideListFragment();
-       // fragment.setArguments(args);
+        Bundle b = new Bundle();
+        b.putSerializable("user", currentUser.flush());
+        fragment.setArguments(b);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentUser = (User) getArguments().getSerializable("user");
+        currentUser = currentUser.rebuild();
+
         rides = new ArrayList<Ride>();
-        aRides = new RideListAdapter(getActivity(), rides);
+        aRides = new RideListAdapter(getActivity(), rides, currentUser );
+
     }
 
     @Override

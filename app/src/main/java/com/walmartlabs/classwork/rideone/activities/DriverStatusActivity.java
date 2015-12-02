@@ -16,10 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -42,8 +45,6 @@ import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 import com.walmartlabs.classwork.rideone.util.ParseUtil;
 import com.walmartlabs.classwork.rideone.util.Utils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,6 +95,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     private List<User> riders = new ArrayList<>();
     private List<User> removePassengers = new ArrayList<>();
     private TextView tvPassengers;
+    private TextView tvStartTime;
+    private boolean readOnly;
 
     private Function<User, String> extractIdFunction = new Function<User, String>() {
         @Override
@@ -149,49 +152,58 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        driver = ((User) getIntent().getSerializableExtra("user")).rebuild();
+        tvStartTime = (TextView) findViewById(R.id.tvStartTime);
 
-        //TODO: uncomment serialized Ride once Parse Push is implemented. For now we just pull latest ride from DB every time.
-        Ride rideArg = ((Ride) getIntent().getSerializableExtra("ride"));
-//        if(rideArg != null) {
-//            ride = rideArg.rebuild();
-//
-//            setupRideInfo();
-//        } else {
+//        Ride rideArg = ((Ride) getIntent().getSerializableExtra("ride"));
+        User userArg = (User) getIntent().getSerializableExtra("user");
+        readOnly = getIntent().getBooleanExtra("readonly", false);
 
-        ride = rideArg;
         tvPassengers = (TextView) findViewById(R.id.tvPassengers);
 
-            ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
-            query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
-            query.getFirstInBackground(new GetCallback<Ride>() {
-                public void done(Ride rideDb, ParseException e) {
-                    if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
-                        Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching rides for driver " + driver.getObjectId());
-                        alert(R.string.alert_network_error);
-                        return;
-                    }
+//        if(rideArg != null) {
+//            driver = userArg.rebuild();
+//            ride = rideArg.rebuild();
+//            setupRideInfo();
+//        } else {
+            driver = userArg.rebuild();
+            getRideFromDb(driver);
 
-                    if (rideDb == null) {
-                        ride = createDefaultRide(driver);
-                        ride.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e != null) {
-                                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to create new ride ");
-                                    alert(R.string.alert_network_error);
-                                    return;
-                                }
-                                setupRideInfo();
-                            }
-                        });
-                    } else {
-                        ride = rideDb;
-                        setupRideInfo();
-                    }
+//        }
+
+
+
+    }
+
+    private void getRideFromDb(final User driver) {
+        ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
+        query.whereEqualTo(COLUMN_DRIVER, driver.getObjectId());
+        query.getFirstInBackground(new GetCallback<Ride>() {
+            public void done(Ride rideDb, ParseException e) {
+                if (e != null && e.getCode() != ERR_RECORD_NOT_FOUND) {
+                    Log.e(DriverStatusActivity.class.getSimpleName(), "Failed fetching rides for driver " + driver.getObjectId());
+                    alert(R.string.alert_network_error);
+                    return;
                 }
-            });
 
+                if (rideDb == null) {
+                    ride = createDefaultRide(driver);
+                    ride.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.e(DriverStatusActivity.class.getSimpleName(), "Failed to create new ride ");
+                                alert(R.string.alert_network_error);
+                                return;
+                            }
+                            setupRideInfo();
+                        }
+                    });
+                } else {
+                    ride = rideDb;
+                    setupRideInfo();
+                }
+            }
+        });
     }
 
     private Ride createDefaultRide(User driver) {
@@ -217,7 +229,20 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
         tvDestination = (TextView)findViewById(R.id.tvDestination);
         tvStartLoc = (TextView)findViewById(R.id.tvStartLoc);
+
+        RelativeLayout rlMain = (RelativeLayout) findViewById(R.id.rlMain);
+
+        setEnabled(!readOnly, rlMain);
     }
+
+    private void setEnabled(boolean enabled, ViewGroup vg) {
+        for (int i = 0; i < vg.getChildCount(); i++){
+            View child = vg.getChildAt(i);
+            child.setEnabled(enabled);
+            if (child instanceof ViewGroup){
+                setEnabled(enabled, (ViewGroup) child);
+            }
+        }    }
 
     private void populateSpotsLeftTextView() {
         populateSpotsLeftTextView(calculateSpotsLeft());
@@ -309,7 +334,6 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
     }
 
     private void setupSwitchWidget() {
-        TextView tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         swAvailable = (Switch) findViewById(R.id.swAvailable);
         swAvailable.setChecked(ride.isAvailable());
         swAvailable.setTextColor(tvStartTime.getTextColors());
@@ -483,10 +507,8 @@ public class DriverStatusActivity extends AppCompatActivity implements TimePicke
 
     private void clearErrors() {
         // Reset errors.
-
-        int color = getResources().getColor(R.color.textColorPrimary);
-        tvDestination.setTextColor(color);
-        tvStartLoc.setTextColor(color);
+        tvDestination.setTextColor(tvStartTime.getTextColors());
+        tvStartLoc.setTextColor(tvStartTime.getTextColors());
     }
 
 
