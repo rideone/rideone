@@ -14,6 +14,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:listSelector="@color/bg"
-
+        android:scrollbars="vertical"
         />
+
 </android.support.v4.widget.SwipeRefreshLayout>

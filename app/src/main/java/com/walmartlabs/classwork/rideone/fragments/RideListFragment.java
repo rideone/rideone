@@ -152,7 +152,6 @@ public class RideListFragment extends Fragment {
     public void fetchAndPopulateRideList() {
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
-       // query.whereGreaterThan("spotsLeft", 0);
 
         if(Filter.isFilterOn()) {
             query.whereGreaterThanOrEqualTo("spotsLeft", Filter.getSpots());
@@ -173,8 +172,19 @@ public class RideListFragment extends Fragment {
                 if (rideList == null || rideList.isEmpty()) {
                     clear();
                     swipeContainer.setRefreshing(false);
-
                     return;
+                }
+
+                //always display associated ride at the top
+                if (currentUser.getRideId() != null) {
+                    for (int i = 0; i < rideList.size(); i++) {
+                        if(rideList.get(i).getObjectId().equalsIgnoreCase(currentUser.getRideId())) {
+                            Ride temp = rideList.get(0);
+                            rideList.set(0, rideList.get(i));
+                            rideList.set(i, temp);
+                            break;
+                        }
+                    }
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
@@ -183,6 +193,7 @@ public class RideListFragment extends Fragment {
                         return input.getDriverId();
                     }
                 };
+
                 final List<String> driverIds = Lists.transform(rideList, driverIdFromRide);
                 final Map<String, Ride> driverIdToRideMap = Maps.uniqueIndex(rideList, driverIdFromRide);
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.makeramen.RoundedTransformationBuilder;
 import com.parse.ParseFile;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.activities.DriverStatusActivity;
@@ -23,11 +24,8 @@ import com.walmartlabs.classwork.rideone.activities.RideDetailActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -44,42 +42,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         mRides = rides;
         mContext = (HomeActivity) context;
         mUser = currentUser;
-    }
-
-    public static Date getTimeStamp(String date) throws ParseException {
-        final String FORMAT_TIME="EEE MMM dd HH:mm:ss z yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(FORMAT_TIME);
-        sf.setTimeZone(TimeZone.getTimeZone("GMT-04:00"));
-        sf.setLenient(true);
-        return sf.parse(date);
-    }
-
-    public static String getRelativeTimeStamp(Date currDate, Date tweetDate) {
-
-        String timeStamp = "";
-        long difference = currDate.getTime() - tweetDate.getTime();
-
-        long seconds = 1000;
-        long minutes = seconds * 60;
-        long hours = minutes * 60;
-        long days = hours * 24;
-
-        long elapsedDays = difference / days ;
-        timeStamp += elapsedDays > 0 && timeStamp.equalsIgnoreCase("") ? Long.toString(elapsedDays) + "d" : "";
-        difference = difference % days;
-
-        long elapsedHours = difference / hours;
-        timeStamp += elapsedHours > 0 && timeStamp.equalsIgnoreCase("") ? Long.toString(elapsedHours) + "h" : "";
-        difference = difference % hours;
-
-        long elapsedMinutes = difference / minutes;
-        timeStamp += elapsedMinutes > 0 && timeStamp.equalsIgnoreCase("") ? Long.toString(elapsedMinutes) + "m" : "";
-        difference = difference % minutes;
-
-        long elapsedSeconds = difference / seconds;
-        timeStamp += elapsedSeconds > 0 && timeStamp.equalsIgnoreCase("") ? Long.toString(elapsedSeconds) + "s" : "";
-
-        return timeStamp;
     }
 
     // Inflate the view based on the viewType provided.
@@ -143,24 +105,27 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             viewHolder.tvRelativeTimeStamp.setText(timeStamp);*/
         ParseFile profileImage = ride.getDriver().getProfileImage();
         viewHolder.ivProfile.setImageResource(0);
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderWidthDp(1)
+                .cornerRadiusDp(50)
+                .oval(false)
+                .build();
+
+        RequestCreator requestCreator = null;
         if (profileImage != null) {
-
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .borderWidthDp(1)
-                    .cornerRadiusDp(50)
-                    .oval(false)
-                    .build();
-
-            Picasso.with(mContext)
-                    .load(profileImage.getUrl())
-                    .fit()
-                    .transform(transformation)
-                    .into(viewHolder.ivProfile);
+            requestCreator = Picasso.with(mContext)
+                    .load(profileImage.getUrl());
         } else {
             //this is to solve stale image because of recycling views. when we scroll down the already inflated list item is re-used
             //so we see the same image that we see at position 0 for postiion 4.
-            viewHolder.ivProfile.setImageResource(R.mipmap.ic_profile_image);
+            requestCreator = Picasso.with(mContext)
+                    .load(R.mipmap.ic_profile_image);
         }
+
+        requestCreator
+                .fit()
+                .transform(transformation)
+                .into(viewHolder.ivProfile);
     }
 
     private void navigateToDetailsActivity(Ride ride) {
