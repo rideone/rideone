@@ -85,7 +85,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             public void onClick(View v) {
 //                context.openReserveRideDialog(ride);
                 mContext.reserveRideRequest(ride);
-
             }
         });
 
