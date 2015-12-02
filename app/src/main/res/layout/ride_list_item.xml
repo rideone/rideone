@@ -131,30 +131,38 @@
                 />
         </RelativeLayout>
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reserve"
-        android:id="@+id/btnReserve"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/button_accent_round"
-        android:textColor="@color/buttonTextColor"
-        style="?android:borderlessButtonStyle"
-        android:textStyle="bold"
-        android:alpha="0.85"
-        />
-
-        <ImageView
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ivCancel"
-            android:layout_alignBottom="@+id/btnReserve"
-            android:layout_toLeftOf="@+id/btnReserve"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_cross"
-            android:visibility="gone"/>
+            android:id="@+id/rlButtons"
+            android:layout_toRightOf="@+id/rlDetails"
+            android:layout_marginTop="20dp">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reserve"
+                android:id="@+id/btnReserve"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/button_accent_round"
+                android:textColor="@color/buttonTextColor"
+                style="?android:borderlessButtonStyle"
+                android:textStyle="bold"
+                android:alpha="0.85"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivCancel"
+                android:layout_alignBottom="@+id/btnReserve"
+                android:layout_toLeftOf="@+id/btnReserve"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_cross"
+                android:paddingBottom="10dp"
+                />
+        </RelativeLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
