@@ -24,8 +24,8 @@
             android:id="@+id/rlDetails">
             <ImageView
                 android:id="@+id/ivProfile"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_alignParentLeft="true"
                 android:src="@mipmap/ic_profile_image"
                 android:layout_centerVertical="true"
@@ -69,19 +69,32 @@
                 android:focusable="false"
                 />
 
-            <TextView
+            <ImageView
                 android:id="@+id/tvTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvSpotsAvailable"
-                android:layout_toRightOf="@+id/tvStartLoc"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="To"
+                android:src="@drawable/ic_right_arrow"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
+                android:layout_marginTop="-5dp"
+                android:layout_below="@+id/tvSpotsAvailable"
+                android:layout_toRightOf="@+id/tvStartLoc"
+                android:layout_toEndOf="@+id/tvStartLoc" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvTo"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/tvSpotsAvailable"-->
+                <!--android:layout_toRightOf="@+id/tvStartLoc"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:text="To"-->
+                <!--android:focusableInTouchMode="false"-->
+                <!--android:focusable="false"-->
 
-                />
+                <!--/>-->
 
             <TextView
                 android:id="@+id/tvDestination"
@@ -96,11 +109,22 @@
                 />
 
             <TextView
-                android:id="@+id/tvTime"
+                android:id="@+id/tvLeavingAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvDestination"
                 android:layout_toRightOf="@+id/ivProfile"
+                android:text="Leaving at "
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+
+                />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDestination"
+                android:layout_toRightOf="@+id/tvLeavingAt"
                 android:text="5:00"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
