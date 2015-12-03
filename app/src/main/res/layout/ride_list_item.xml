@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rlButtons"
             android:layout_toRightOf="@+id/rlDetails"
-            android:layout_marginTop="9dp">
+            android:layout_marginTop="8dp">
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -159,13 +159,14 @@
                 />
 
             <ImageView
-                android:layout_width="66dp"
-                android:layout_height="66dp"
+                android:layout_width="67dp"
+                android:layout_height="67dp"
                 android:id="@+id/ivCancel"
                 android:layout_alignBaseline="@+id/ivReserve"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="-8dp"
+                android:layout_marginRight="-9dp"
+                android:layout_marginTop="-1dp"
                 android:src="@drawable/ic_cross_notround3"
 
 

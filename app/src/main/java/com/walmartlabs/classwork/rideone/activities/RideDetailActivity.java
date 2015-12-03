@@ -30,6 +30,7 @@ public class RideDetailActivity extends AppCompatActivity {
     public static final String DRIVER = "driver";
     private Ride mRide;
     private User mDriver;
+    private User mCurrentUser;
     private ImageView ivProfile;
     private TextView tvFullName;
     private TextView tvPhone;
@@ -51,6 +52,7 @@ public class RideDetailActivity extends AppCompatActivity {
         vPalette = findViewById(R.id.vPalette);
 
         mRide = ((Ride)getIntent().getSerializableExtra(RIDE));
+        mCurrentUser = ((User)getIntent().getSerializableExtra("user")).rebuild();
         mDriver = mRide.getDriver().rebuild();
         mRide = mRide.rebuild();
 
@@ -111,7 +113,7 @@ public class RideDetailActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             Intent upIntent = NavUtils.getParentActivityIntent(this);
-            upIntent.putExtra("user", mDriver.flush());
+            upIntent.putExtra("user", mCurrentUser.flush());
             NavUtils.navigateUpTo(this, upIntent);
             return true;
         }

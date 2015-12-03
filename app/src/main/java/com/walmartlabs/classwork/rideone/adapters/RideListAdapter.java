@@ -169,6 +169,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             intent = new Intent(mContext, RideDetailActivity.class);
             ride.getDriver().flush();
             intent.putExtra("ride", ride.flush());
+            intent.putExtra("user", mUser.flush());
         }
 
 
