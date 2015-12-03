@@ -152,11 +152,11 @@ public class RideListFragment extends Fragment {
 //    }
 
     public void fetchAndPopulateRideList() {
-        fetchAndPopulateRideList(null);
+        fetchAndPopulateRideList(null, true);
     }
 
 
-    public void fetchAndPopulateRideList(User updatedUser) {
+    public void fetchAndPopulateRideList(User updatedUser, final boolean moveToTop) {
         swipeContainer.setRefreshing(true);
         if (updatedUser != null) currentUser = updatedUser;
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
@@ -194,7 +194,7 @@ public class RideListFragment extends Fragment {
                         }
                     }
 
-                    if (curPos > -1) moveRideToTop(rideList, curPos);
+                    if (moveToTop) moveRideToTop(rideList, curPos);
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
@@ -265,7 +265,7 @@ public class RideListFragment extends Fragment {
     }
 
     public static void moveRideToTop(List<Ride> rides, int currentPos) {
-        if(currentPos != 0) {
+        if(currentPos > 0) {
             Ride top = rides.get(0);
             rides.set(0, rides.get(currentPos));
             rides.set(currentPos, top);

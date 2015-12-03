@@ -229,7 +229,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                         @Override
                         public void done(ParseException e) {
                             //TODO: instead of refreshing the entire list, just update current changes in efficient way
-                            rideListFragment.fetchAndPopulateRideList();
+                            rideListFragment.fetchAndPopulateRideList(null, false);
                         }
                     });
 
@@ -271,7 +271,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
             public void done(ParseException e) {
                 Toast.makeText(HomeActivity.this, "Request sent to driver", Toast.LENGTH_SHORT).show();
                 //TODO: instead of refreshing the entire list, just update prev ride and current ride(reserve button)
-                rideListFragment.fetchAndPopulateRideList();
+                rideListFragment.fetchAndPopulateRideList(null, false);
             }
         };
         List<ParseObject> models = Utils.joinModelLists(Arrays.asList(user), Arrays.asList(ride));
@@ -332,7 +332,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
                 user.flush();
                 Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG).show();
-                rideListFragment.fetchAndPopulateRideList(user);
+                rideListFragment.fetchAndPopulateRideList(user, true);
             }
         }
     }
