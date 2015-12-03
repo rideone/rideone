@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
     private static final int INTENT_REQUEST_DRIVER_STATUS = 999;
     private static final int INTENT_SET_FILTER = 888;
-    private static final int INTERVAL_MILLIS = 10*1000;
+    private static final int INTERVAL_MILLIS = 5*1000;
 
     private User user;
     private Ride ride = null;

@@ -2,7 +2,6 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -138,11 +137,11 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .transform(transformation)
                 .into(viewHolder.ivProfile);
 
-//        Picasso.with(mContext)
-//                .load(R.mipmap.ic_profile_image)
-//                .fit()
-//                .transform(transformation)
-//                .into(viewHolder.ivReserve);
+        Picasso.with(mContext)
+                .load(R.mipmap.ic_seat_belt)
+                .fit()
+                .transform(transformation)
+                .into(viewHolder.ivReserve);
     }
 
     private void navigateToDetailsActivity(Ride ride) {
