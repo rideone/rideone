@@ -106,8 +106,11 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         viewHolder.ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                viewHolder.ivReserve.setVisibility(VISIBLE);
+//                viewHolder.ivCancel.setVisibility(INVISIBLE);
+//                viewHolder.tvRibbon.setVisibility(INVISIBLE);
+
                 mContext.cancelRideAndSendRequest(null);
-                viewHolder.ivCancel.setVisibility(INVISIBLE);
             }
         });
 
