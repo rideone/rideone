@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rlButtons"
             android:layout_toRightOf="@+id/rlDetails"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="9dp">
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -148,15 +148,26 @@
                 />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivCancel"
-                android:layout_alignBottom="@+id/ivReserve"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/ivReserveDone"
+                android:layout_alignBaseline="@+id/ivReserve"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_cross"
-                android:paddingBottom="10dp"
+                android:src="@drawable/ic_belt_noarrows2"
+                />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/ivCancel"
+                android:layout_alignBaseline="@+id/ivReserve"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="-5dp"
+                android:src="@drawable/ic_cross_notround3"
+
 
                 />
         </RelativeLayout>
