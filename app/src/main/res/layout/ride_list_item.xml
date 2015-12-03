@@ -12,76 +12,103 @@
     android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvRibbon"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:text="Driving"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:background="@drawable/ribbon"
+            android:layout_marginTop="-3dp"
+            android:layout_marginRight="-3dp"
+
+            />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rlDetails">
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentLeft="true"
-                android:src="@mipmap/ic_profile_image"
-                android:layout_centerVertical="true"
-                android:paddingRight="16dp"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                />
-            <!--</RelativeLayout>-->
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-            <TextView
-                android:id="@+id/tvFullName"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/ivProfile"
-                android:layout_alignParentTop="true"
-                android:text="First Last"
-                android:textStyle="bold"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                />
+                android:id="@+id/rlDetails">
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@mipmap/ic_profile_image"
+                    android:layout_centerVertical="true"
+                    android:paddingRight="16dp"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+                <!--</RelativeLayout>-->
 
-            <TextView
-                android:id="@+id/tvSpotsAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvFullName"
-                android:layout_toRightOf="@+id/ivProfile"
-                android:text="0 "
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                />
+                <TextView
+                    android:id="@+id/tvFullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ivProfile"
+                    android:layout_alignParentTop="true"
+                    android:text="First Last"
+                    android:textStyle="bold"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
 
-            <TextView
-                android:id="@+id/tvStartLoc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvSpotsAvailable"
-                android:layout_toRightOf="@+id/ivProfile"
-                android:text="Santa Clara"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                />
+                <TextView
+                    android:id="@+id/tvSpotsAvailable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvFullName"
+                    android:layout_toRightOf="@+id/ivProfile"
+                    android:text="0 "
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
 
-            <ImageView
-                android:id="@+id/tvTo"
-                android:layout_width="35dp"
-                android:layout_height="15dp"
-                android:scaleType="fitXY"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:src="@drawable/ic_right_arrow"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                android:layout_marginTop="3dp"
-                android:layout_below="@+id/tvSpotsAvailable"
-                android:layout_toRightOf="@+id/tvStartLoc"
-                android:layout_toEndOf="@+id/tvStartLoc" />
-            <!--<TextView-->
+                <TextView
+                    android:id="@+id/tvStartLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvSpotsAvailable"
+                    android:layout_toRightOf="@+id/ivProfile"
+                    android:text="Santa Clara"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <ImageView
+                    android:id="@+id/tvTo"
+                    android:layout_width="35dp"
+                    android:layout_height="15dp"
+                    android:scaleType="fitXY"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:src="@drawable/ic_right_arrow"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:layout_marginTop="3dp"
+                    android:layout_below="@+id/tvSpotsAvailable"
+                    android:layout_toRightOf="@+id/tvStartLoc"
+                    android:layout_toEndOf="@+id/tvStartLoc" />
+                <!--<TextView-->
                 <!--android:id="@+id/tvTo"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
@@ -95,83 +122,104 @@
 
                 <!--/>-->
 
-            <TextView
-                android:id="@+id/tvDestination"
+                <TextView
+                    android:id="@+id/tvDestination"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvSpotsAvailable"
+                    android:layout_toRightOf="@+id/tvTo"
+                    android:text="Santa Clara"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tvLeavingAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDestination"
+                    android:layout_toRightOf="@+id/ivProfile"
+                    android:text="Leaving at "
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+
+                    />
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDestination"
+                    android:layout_toRightOf="@+id/tvLeavingAt"
+                    android:text="5:00"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+
+                    />
+                <!--<Button-->
+                <!--android:id="@+id/tvRibbon"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:text="Driving"-->
+                <!--style="?android:attr/borderlessButtonStyle"-->
+                <!--android:textStyle="bold"-->
+                <!--android:focusableInTouchMode="false"-->
+                <!--android:focusable="false"-->
+                <!--android:clickable="false"-->
+                <!--android:background="@drawable/ribbon"-->
+                <!--/>-->
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvSpotsAvailable"
-                android:layout_toRightOf="@+id/tvTo"
-                android:text="Santa Clara"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
+                android:id="@+id/rlButtons"
+                android:layout_toRightOf="@+id/rlDetails"
+                android:layout_marginTop="8dp">
 
-                />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/ivReserve"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_belt_blue_dark"
+                    />
 
-            <TextView
-                android:id="@+id/tvLeavingAt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvDestination"
-                android:layout_toRightOf="@+id/ivProfile"
-                android:text="Leaving at "
-                android:focusableInTouchMode="false"
-                android:focusable="false"
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/ivReserveDone"
+                    android:layout_alignBaseline="@+id/ivReserve"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_belt_noarrows2"
+                    />
 
-                />
-            <TextView
-                android:id="@+id/tvTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvDestination"
-                android:layout_toRightOf="@+id/tvLeavingAt"
-                android:text="5:00"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
+                <ImageView
+                    android:layout_width="67dp"
+                    android:layout_height="67dp"
+                    android:id="@+id/ivCancel"
+                    android:layout_alignBaseline="@+id/ivReserve"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="-9dp"
+                    android:layout_marginTop="-1dp"
+                    android:src="@drawable/ic_cross_notround3"
 
-                />
+
+                    />
+            </RelativeLayout>
+
         </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rlButtons"
-            android:layout_toRightOf="@+id/rlDetails"
-            android:layout_marginTop="8dp">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/ivReserve"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_belt_blue_dark"
-                />
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/ivReserveDone"
-                android:layout_alignBaseline="@+id/ivReserve"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_belt_noarrows2"
-                />
-
-            <ImageView
-                android:layout_width="67dp"
-                android:layout_height="67dp"
-                android:id="@+id/ivCancel"
-                android:layout_alignBaseline="@+id/ivReserve"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="-9dp"
-                android:layout_marginTop="-1dp"
-                android:src="@drawable/ic_cross_notround3"
-
-
-                />
-        </RelativeLayout>
-
     </RelativeLayout>
+
+
 </android.support.v7.widget.CardView>
