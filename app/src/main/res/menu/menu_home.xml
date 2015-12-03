@@ -35,6 +35,6 @@
         android:title="@string/logout"
         app:showAsAction="ifRoom"
         android:orderInCategory="10"
-        android:icon="@mipmap/ic_logout"
+        android:icon="@drawable/ic_logout2"
         />
 </menu>

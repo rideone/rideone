@@ -2,6 +2,8 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -36,11 +38,14 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     private HomeActivity mContext;
     private List<Ride> mRides;
     private User mUser;
+    private int bgColor;
 
     public RideListAdapter(Context context, List<Ride> rides, User currentUser) {
         mRides = rides;
         mContext = (HomeActivity) context;
         mUser = currentUser;
+
+        bgColor = ContextCompat.getColor(context, R.color.bgGray);
     }
 
     // Inflate the view based on the viewType provided.
@@ -112,6 +117,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         viewHolder.ivProfile.setImageResource(0);
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderWidthDp(1)
+                .borderColor(bgColor)
                 .cornerRadiusDp(50)
                 .oval(false)
                 .build();
