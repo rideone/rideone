@@ -119,6 +119,7 @@ public class RideDetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
+//            supportFinishAfterTransition();
             Intent upIntent = NavUtils.getParentActivityIntent(this);
             upIntent.putExtra("user", mCurrentUser.flush());
             NavUtils.navigateUpTo(this, upIntent);

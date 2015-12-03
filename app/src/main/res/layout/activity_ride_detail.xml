@@ -25,7 +25,8 @@
             android:transitionName="profile"
             android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="380dp" />
+            android:layout_height="380dp"
+            />
 
         <RelativeLayout
             android:id="@+id/rlInfo"
@@ -49,7 +50,9 @@
                 android:textColor="@android:color/black"
                 android:layout_alignTop="@+id/fab"
                 android:layout_toRightOf="@+id/fab"
-                android:layout_toEndOf="@+id/fab" />
+                android:layout_toEndOf="@+id/fab"
+                android:transitionName="fullname"
+                />
 
             <TextView
                 android:id="@+id/tvPhone"

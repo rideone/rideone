@@ -57,6 +57,7 @@
                     android:paddingRight="16dp"
                     android:focusableInTouchMode="false"
                     android:focusable="false"
+                    android:transitionName="profile"
                     />
                 <!--</RelativeLayout>-->
 
@@ -70,6 +71,7 @@
                     android:textStyle="bold"
                     android:focusableInTouchMode="false"
                     android:focusable="false"
+                    android:transitionName="fullname"
                     />
 
                 <TextView

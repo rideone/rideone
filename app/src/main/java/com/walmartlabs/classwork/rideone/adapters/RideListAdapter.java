@@ -1,9 +1,12 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -111,7 +114,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             }
         });
 
-        addOnClickToDetailsActivity(ride, viewHolder.rlDetails);
+        addOnClickToDetailsActivity(ride, viewHolder.rlDetails, viewHolder.ivProfile, viewHolder.tvFullName);
 
         //why do this?
         viewHolder.rootView.setTag(ride);
@@ -171,21 +174,23 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
 //                .into(viewHolder.ivReserveDone);
     }
 
-    private void navigateToDetailsActivity(Ride ride) {
+    private void navigateToDetailsActivity(Ride ride, View ivProfile, View tvFullName) {
         Intent intent;
-//        if(mUser.getObjectId().equals(ride.getDriver().getObjectId())) {
-//            intent = new Intent(mContext, DriverStatusActivity.class);
-//            intent.putExtra("user", ride.getDriver().flush());
-//        }
-//        else {
-            intent = new Intent(mContext, RideDetailActivity.class);
-            ride.getDriver().flush();
-            intent.putExtra("ride", ride.flush());
-            intent.putExtra("user", mUser.flush());
-//        }
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation(mContext, ivProfile, "profile");
+
+        Pair<View, String> p1 = Pair.create(ivProfile, "profile");
+        Pair<View, String> p2 = Pair.create(tvFullName, "fullname");
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(mContext, p1, p2);
+
+        intent = new Intent(mContext, RideDetailActivity.class);
+        ride.getDriver().flush();
+        intent.putExtra("ride", ride.flush());
+        intent.putExtra("user", mUser.flush());
 
 
-        mContext.startActivity(intent);
+        mContext.startActivity(intent, options.toBundle());
     }
 
     @Override
@@ -237,15 +242,12 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         }
     }
 
-    private void addOnClickToDetailsActivity(final Ride ride, View... views) {
-        for(View view : views) {
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    navigateToDetailsActivity(ride);
-                }
-            });
-
-        }
+    private void addOnClickToDetailsActivity(final Ride ride, View curView, final View ivProfile, final View tvFullName) {
+        curView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToDetailsActivity(ride, ivProfile, tvFullName);
+            }
+        });
     }
 }
