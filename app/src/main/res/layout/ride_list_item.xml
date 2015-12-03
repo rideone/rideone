@@ -138,13 +138,13 @@
             android:layout_toRightOf="@+id/rlDetails"
             android:layout_marginTop="20dp">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/ivReserve"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:src="@mipmap/ic_seat_belt"
+                android:src="@drawable/ic_belt_blue_dark"
                 />
 
             <ImageView
