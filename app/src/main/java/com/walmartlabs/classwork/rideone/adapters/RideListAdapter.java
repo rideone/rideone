@@ -2,6 +2,7 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -39,6 +40,8 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
     private List<Ride> mRides;
     private User mUser;
     private int bgColor;
+    private int colorDriving;
+    private int colorRequested;
 
     public RideListAdapter(Context context, List<Ride> rides, User currentUser) {
         mRides = rides;
@@ -46,6 +49,8 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         mUser = currentUser;
 
         bgColor = ContextCompat.getColor(context, R.color.bgGray);
+        colorDriving = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+        colorRequested = ContextCompat.getColor(context, R.color.colorRideRequested);
     }
 
     // Inflate the view based on the viewType provided.
@@ -66,11 +71,22 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             viewHolder.ivReserve.setVisibility(INVISIBLE);
             viewHolder.ivReserveDone.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
+            viewHolder.tvRibbon.setText("Driving");
+            viewHolder.tvRibbon.setBackgroundColor(colorDriving);
+            viewHolder.tvRibbon.setVisibility(VISIBLE);
+
         } else {
             //user has requested a ride or has been confirmed
             String rideIdOfUser = (userInfo.getRideId() != null ? userInfo.getRideId() : null);
             if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
-                String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
+                viewHolder.tvRibbon.setVisibility(VISIBLE);
+                viewHolder.tvRibbon.setText("Riding");
+                viewHolder.tvRibbon.setBackgroundColor(colorDriving);
+                if(userInfo.getStatus().equals(User.Status.WAIT_LIST)) {
+                    viewHolder.tvRibbon.setText("Requested");
+                    viewHolder.tvRibbon.setBackgroundColor(colorRequested);
+                }
+
                 viewHolder.ivReserve.setVisibility(INVISIBLE);
                 viewHolder.ivReserveDone.setVisibility(VISIBLE);
                 viewHolder.ivCancel.setVisibility(VISIBLE);
@@ -78,7 +94,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 viewHolder.ivReserve.setVisibility(VISIBLE);
                 viewHolder.ivReserveDone.setVisibility(INVISIBLE);
                 viewHolder.ivCancel.setVisibility(INVISIBLE);
-
+                viewHolder.tvRibbon.setVisibility(INVISIBLE);
             }
         }
 
@@ -104,7 +120,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         viewHolder.rootView.setTag(ride);
         // Populate data into the template view using the data object
         viewHolder.tvFullName.setText(Html.fromHtml(ride.getDriver().getFullName()));
-        viewHolder.tvDestination.setText("to: " + ride.getDestination());
 
         //TODO: should use resource plurals for 'spots' word http://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         viewHolder.tvStartLoc.setText(ride.getStartLocation());
@@ -190,6 +205,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvSpotsAvailable;
         public TextView tvStartLoc;
         public TextView tvDestination;
+        public TextView tvRibbon;
         public ImageView ivReserve;
         public ImageView ivReserveDone;
         public Context mContext;
@@ -206,6 +222,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvSpotsAvailable = (TextView)itemView.findViewById(R.id.tvSpotsAvailable);
             tvTime = (TextView)itemView.findViewById(R.id.tvTime);
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
+            tvRibbon = (TextView)itemView.findViewById(R.id.tvRibbon);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             ivReserve = (ImageView)itemView.findViewById(R.id.ivReserve);
             ivReserveDone = (ImageView)itemView.findViewById(R.id.ivReserveDone);
