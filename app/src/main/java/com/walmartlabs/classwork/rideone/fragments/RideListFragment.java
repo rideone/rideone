@@ -112,7 +112,6 @@ public class RideListFragment extends Fragment {
         // Add footer to ListView before setting adapter
         lvTweets.addFooterView(footer);*/
         rvRides.setAdapter(aRides);
-        fetchAndPopulateRideList();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -121,6 +120,9 @@ public class RideListFragment extends Fragment {
                 fetchAndPopulateRideList();
             }
         });
+
+        fetchAndPopulateRideList();
+
 //        getDummyTimeline();
         return view;
     }
@@ -153,7 +155,9 @@ public class RideListFragment extends Fragment {
         fetchAndPopulateRideList(null);
     }
 
+
     public void fetchAndPopulateRideList(User updatedUser) {
+        swipeContainer.setRefreshing(true);
         if (updatedUser != null) currentUser = updatedUser;
         ParseQuery<Ride> query = ParseQuery.getQuery(Ride.class);
         query.whereEqualTo(COLUMN_AVAILABLE, true);
@@ -182,14 +186,15 @@ public class RideListFragment extends Fragment {
 
                 //always display associated ride at the top
                 if (currentUser.getRideId() != null) {
+                    int curPos = -1;
                     for (int i = 0; i < rideList.size(); i++) {
-                        if(rideList.get(i).getObjectId().equalsIgnoreCase(currentUser.getRideId())) {
-                            Ride temp = rideList.get(0);
-                            rideList.set(0, rideList.get(i));
-                            rideList.set(i, temp);
+                        if (rideList.get(i).getObjectId().equalsIgnoreCase(currentUser.getRideId())) {
+                            curPos = i;
                             break;
                         }
                     }
+
+                    moveRideToTop(rideList, curPos);
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {
@@ -232,13 +237,13 @@ public class RideListFragment extends Fragment {
                             ride.setDriver(driver);
                         }
 
-                        clear();
+//                        clear();
+                        rides.clear();
                         rides.addAll(rideList);
                         aRides.notifyDataSetChanged();
                         swipeContainer.setRefreshing(false);
                     }
                 });
-
 
 
             }
@@ -258,4 +263,13 @@ public class RideListFragment extends Fragment {
     public void hideProgressBar() {
         progressBarFooter.setVisibility(View.GONE);
     }
+
+    public static void moveRideToTop(List<Ride> rides, int currentPos) {
+        if(currentPos != 0) {
+            Ride top = rides.get(0);
+            rides.set(0, rides.get(currentPos));
+            rides.set(currentPos, top);
+        }
+    }
+
 }

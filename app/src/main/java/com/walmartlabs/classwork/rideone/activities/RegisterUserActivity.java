@@ -136,8 +136,8 @@ public class RegisterUserActivity extends AppCompatActivity implements ProfileIm
         boolean cancel = false;
         View focusView = null;
 
-        if (isNullOrEmpty(email) || email.length() < 5 || !email.contains("@")) {
-            edEmail.setError("Email is invalid");
+        if (isNullOrEmpty(email) || email.length() < 5 || !email.contains("@walmartlabs.com")) {
+            edEmail.setError("Email has to be valid @walmartlabs.com");
             cancel = true;
             focusView = edEmail;
         }

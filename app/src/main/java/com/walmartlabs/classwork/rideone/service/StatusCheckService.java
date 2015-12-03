@@ -110,7 +110,7 @@ public class StatusCheckService extends IntentService {
     }
 
     private boolean hasRiderChanged(Ride newRide) {
-        if (ride != null && isDriver(ride) && ride != newRide && isNotUpdatedByUser(newRide)) {
+        if (newRide != null && ride != null && isDriver(ride) && ride != newRide && isNotUpdatedByUser(newRide)) {
             Date currDate = ride.getUpdatedAt();
             Date newDate = newRide.getUpdatedAt();
             if (isAfter(currDate, newDate) && !ride.getRiderIds().equals(newRide.getRiderIds())) {
