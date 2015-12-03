@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed"
+    android:background="@color/bgGray"
     android:id="@+id/swipeContainer"
     tools:context="com.walmartlabs.classwork.rideone.activities.HomeActivity">
 

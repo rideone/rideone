@@ -69,14 +69,15 @@
 
             <ImageView
                 android:id="@+id/tvTo"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:layout_width="35dp"
+                android:layout_height="15dp"
+                android:scaleType="fitXY"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
                 android:src="@drawable/ic_right_arrow"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
-                android:layout_marginTop="-5dp"
+                android:layout_marginTop="3dp"
                 android:layout_below="@+id/tvSpotsAvailable"
                 android:layout_toRightOf="@+id/tvStartLoc"
                 android:layout_toEndOf="@+id/tvStartLoc" />
