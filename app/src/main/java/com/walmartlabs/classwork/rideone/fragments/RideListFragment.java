@@ -194,7 +194,7 @@ public class RideListFragment extends Fragment {
                         }
                     }
 
-                    moveRideToTop(rideList, curPos);
+                    if (curPos > -1) moveRideToTop(rideList, curPos);
                 }
 
                 Function<Ride, String> driverIdFromRide = new Function<Ride, String>() {

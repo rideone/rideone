@@ -1,9 +1,7 @@
 package com.walmartlabs.classwork.rideone.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -22,7 +20,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 import com.walmartlabs.classwork.rideone.R;
-import com.walmartlabs.classwork.rideone.activities.DriverStatusActivity;
 import com.walmartlabs.classwork.rideone.activities.HomeActivity;
 import com.walmartlabs.classwork.rideone.activities.RideDetailActivity;
 import com.walmartlabs.classwork.rideone.models.Ride;
