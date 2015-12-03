@@ -138,7 +138,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .into(viewHolder.ivProfile);
 
         Picasso.with(mContext)
-                .load(R.mipmap.ic_seat_belt)
+                .load(R.drawable.ic_belt_blue_dark)
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.ivReserve);
