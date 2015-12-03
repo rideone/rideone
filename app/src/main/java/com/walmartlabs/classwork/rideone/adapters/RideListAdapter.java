@@ -34,6 +34,7 @@ import static android.view.View.VISIBLE;
  * Created by abalak5 on 10/21/15.
  */
 public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
+
     private HomeActivity mContext;
     private List<Ride> mRides;
     private User mUser;
@@ -63,17 +64,21 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         String userId = userInfo.getObjectId();
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.ivReserve.setVisibility(INVISIBLE);
+            viewHolder.ivReserveDone.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
         } else {
             //user has requested a ride or has been confirmed
-            String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
+            String rideIdOfUser = (userInfo.getRideId() != null ? userInfo.getRideId() : null);
             if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
                 String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
                 viewHolder.ivReserve.setVisibility(INVISIBLE);
+                viewHolder.ivReserveDone.setVisibility(VISIBLE);
                 viewHolder.ivCancel.setVisibility(VISIBLE);
             } else {
                 viewHolder.ivReserve.setVisibility(VISIBLE);
+                viewHolder.ivReserveDone.setVisibility(INVISIBLE);
                 viewHolder.ivCancel.setVisibility(INVISIBLE);
+
             }
         }
 
@@ -142,6 +147,16 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.ivReserve);
+        Picasso.with(mContext)
+                .load(R.drawable.ic_belt_noarrows2)
+                .fit()
+                .transform(transformation)
+                .into(viewHolder.ivReserveDone);
+//        Picasso.with(mContext)
+//                .load(R.drawable.ic_belt_noarrows2)
+//                .fit()
+//                .transform(transformation)
+//                .into(viewHolder.ivReserveDone);
     }
 
     private void navigateToDetailsActivity(Ride ride) {
@@ -154,6 +169,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             intent = new Intent(mContext, RideDetailActivity.class);
             ride.getDriver().flush();
             intent.putExtra("ride", ride.flush());
+            intent.putExtra("user", mUser.flush());
         }
 
 
@@ -175,6 +191,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvStartLoc;
         public TextView tvDestination;
         public ImageView ivReserve;
+        public ImageView ivReserveDone;
         public Context mContext;
         public RelativeLayout rlDetails;
         public ImageView ivCancel;
@@ -191,6 +208,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             ivReserve = (ImageView)itemView.findViewById(R.id.ivReserve);
+            ivReserveDone = (ImageView)itemView.findViewById(R.id.ivReserveDone);
             rlDetails = (RelativeLayout) itemView.findViewById(R.id.rlDetails);
         }
 
