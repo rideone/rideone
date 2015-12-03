@@ -2,7 +2,6 @@ package com.walmartlabs.classwork.rideone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -62,7 +61,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.btnReserve.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
-            viewHolder.rootView.setBackgroundColor(Color.parseColor("#B3E5FC"));
         } else {
             viewHolder.btnReserve.setVisibility(VISIBLE);
             //user has requested a ride or has been confirmed
@@ -71,12 +69,10 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
                 viewHolder.btnReserve.setText(status);
                 viewHolder.btnReserve.setEnabled(false);
-                viewHolder.rootView.setBackgroundColor(Color.parseColor("#B3E5FC"));
                 viewHolder.ivCancel.setVisibility(VISIBLE);
             } else {
                 viewHolder.btnReserve.setText("Reserve");
                 viewHolder.btnReserve.setEnabled(true);
-                viewHolder.rootView.setBackgroundColor(Color.parseColor("#01A9DB"));
                 viewHolder.ivCancel.setVisibility(INVISIBLE);
             }
         }

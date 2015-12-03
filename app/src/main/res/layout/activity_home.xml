@@ -26,6 +26,5 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/textColorPrimary"
         android:id="@+id/flContainer"></FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
