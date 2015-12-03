@@ -152,6 +152,11 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.ivReserveDone);
+//        Picasso.with(mContext)
+//                .load(R.drawable.ic_belt_noarrows2)
+//                .fit()
+//                .transform(transformation)
+//                .into(viewHolder.ivReserveDone);
     }
 
     private void navigateToDetailsActivity(Ride ride) {
