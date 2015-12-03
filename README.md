@@ -22,7 +22,7 @@
 
 ## Video Walkthrough 
 
-![Video Walkthrough](rideonrideone_finaldemo_v2.gif)
+![Video Walkthrough](rideone_finaldemo_v2.gif)
 
 ## Notes
 
