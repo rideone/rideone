@@ -40,32 +40,36 @@
                 android:layout_height="match_parent" />
 
             <TextView
-                android:layout_centerInParent="true"
                 android:id="@+id/tvFullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:textColor="@android:color/black"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignTop="@+id/fab"
+                android:layout_toRightOf="@+id/fab"
+                android:layout_toEndOf="@+id/fab" />
 
             <TextView
                 android:id="@+id/tvPhone"
-                android:layout_below="@+id/tvFullName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:text="200-200-2002"
                 android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fab"
+                android:layout_alignLeft="@+id/tvFullName"
+                android:layout_alignStart="@+id/tvFullName" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/ic_phone_white"
                 app:fabSize="normal" />
         </RelativeLayout>
