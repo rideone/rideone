@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,25 +58,22 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         User userInfo = mContext.getUserInfo();
         String userId = userInfo.getObjectId();
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
-            viewHolder.btnReserve.setVisibility(INVISIBLE);
+            viewHolder.ivReserve.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
         } else {
-            viewHolder.btnReserve.setVisibility(VISIBLE);
             //user has requested a ride or has been confirmed
             String rideIdOfUser = userInfo.getRideId() != null ? userInfo.getRideId() : null;
             if (rideIdOfUser != null && rideIdOfUser.equalsIgnoreCase(ride.getObjectId())) {
                 String status = (userInfo.getStatus().equals(User.Status.WAIT_LIST)) ? "Requested" : "Reserved";
-                viewHolder.btnReserve.setText(status);
-                viewHolder.btnReserve.setEnabled(false);
+                viewHolder.ivReserve.setVisibility(INVISIBLE);
                 viewHolder.ivCancel.setVisibility(VISIBLE);
             } else {
-                viewHolder.btnReserve.setText("Reserve");
-                viewHolder.btnReserve.setEnabled(true);
+                viewHolder.ivReserve.setVisibility(VISIBLE);
                 viewHolder.ivCancel.setVisibility(INVISIBLE);
             }
         }
 
-        viewHolder.btnReserve.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ivReserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                context.openReserveRideDialog(ride);
@@ -135,6 +131,12 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.ivProfile);
+
+//        Picasso.with(mContext)
+//                .load(R.mipmap.ic_profile_image)
+//                .fit()
+//                .transform(transformation)
+//                .into(viewHolder.ivReserve);
     }
 
     private void navigateToDetailsActivity(Ride ride) {
@@ -167,7 +169,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvSpotsAvailable;
         public TextView tvStartLoc;
         public TextView tvDestination;
-        public Button btnReserve;
+        public ImageView ivReserve;
         public Context mContext;
         public RelativeLayout rlDetails;
         public ImageView ivCancel;
@@ -183,7 +185,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvTime = (TextView)itemView.findViewById(R.id.tvTime);
             tvDestination = (TextView)itemView.findViewById(R.id.tvDestination);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
-            btnReserve = (Button)itemView.findViewById(R.id.btnReserve);
+            ivReserve = (ImageView)itemView.findViewById(R.id.ivReserve);
             rlDetails = (RelativeLayout) itemView.findViewById(R.id.rlDetails);
         }
 
