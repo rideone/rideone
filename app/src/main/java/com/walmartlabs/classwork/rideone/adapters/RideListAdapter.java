@@ -69,7 +69,6 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         String userId = userInfo.getObjectId();
         if(ride.getDriverId().equalsIgnoreCase(userId)) {
             viewHolder.ivReserve.setVisibility(INVISIBLE);
-            viewHolder.ivReserveDone.setVisibility(INVISIBLE);
             viewHolder.ivCancel.setVisibility(INVISIBLE);
             viewHolder.tvRibbon.setText("Driving");
             viewHolder.tvRibbon.setBackgroundColor(colorDriving);
@@ -88,11 +87,9 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 }
 
                 viewHolder.ivReserve.setVisibility(INVISIBLE);
-                viewHolder.ivReserveDone.setVisibility(VISIBLE);
                 viewHolder.ivCancel.setVisibility(VISIBLE);
             } else {
                 viewHolder.ivReserve.setVisibility(VISIBLE);
-                viewHolder.ivReserveDone.setVisibility(INVISIBLE);
                 viewHolder.ivCancel.setVisibility(INVISIBLE);
                 viewHolder.tvRibbon.setVisibility(INVISIBLE);
             }
@@ -163,10 +160,10 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
                 .transform(transformation)
                 .into(viewHolder.ivReserve);
         Picasso.with(mContext)
-                .load(R.drawable.ic_belt_noarrows2)
+                .load(R.drawable.ic_belt_unclick)
                 .fit()
                 .transform(transformation)
-                .into(viewHolder.ivReserveDone);
+                .into(viewHolder.ivCancel);
 //        Picasso.with(mContext)
 //                .load(R.drawable.ic_belt_noarrows2)
 //                .fit()
@@ -176,16 +173,16 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
 
     private void navigateToDetailsActivity(Ride ride) {
         Intent intent;
-        if(mUser.getObjectId().equals(ride.getDriver().getObjectId())) {
-            intent = new Intent(mContext, DriverStatusActivity.class);
-            intent.putExtra("user", ride.getDriver().flush());
-        }
-        else {
+//        if(mUser.getObjectId().equals(ride.getDriver().getObjectId())) {
+//            intent = new Intent(mContext, DriverStatusActivity.class);
+//            intent.putExtra("user", ride.getDriver().flush());
+//        }
+//        else {
             intent = new Intent(mContext, RideDetailActivity.class);
             ride.getDriver().flush();
             intent.putExtra("ride", ride.flush());
             intent.putExtra("user", mUser.flush());
-        }
+//        }
 
 
         mContext.startActivity(intent);
@@ -207,7 +204,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
         public TextView tvDestination;
         public TextView tvRibbon;
         public ImageView ivReserve;
-        public ImageView ivReserveDone;
+
         public Context mContext;
         public RelativeLayout rlDetails;
         public ImageView ivCancel;
@@ -225,7 +222,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.VH> {
             tvRibbon = (TextView)itemView.findViewById(R.id.tvRibbon);
             tvStartLoc = (TextView)itemView.findViewById(R.id.tvStartLoc);
             ivReserve = (ImageView)itemView.findViewById(R.id.ivReserve);
-            ivReserveDone = (ImageView)itemView.findViewById(R.id.ivReserveDone);
+
             rlDetails = (RelativeLayout) itemView.findViewById(R.id.rlDetails);
         }
 

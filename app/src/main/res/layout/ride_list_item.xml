@@ -180,39 +180,40 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rlButtons"
                 android:layout_toRightOf="@+id/rlDetails"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="20dp">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:id="@+id/ivReserve"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_belt_blue_dark"
+
                     />
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/ivReserveDone"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/ivCancel"
                     android:layout_alignBaseline="@+id/ivReserve"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_belt_noarrows2"
+                    android:src="@drawable/ic_belt_unclick"
                     />
 
-                <ImageView
-                    android:layout_width="67dp"
-                    android:layout_height="67dp"
-                    android:id="@+id/ivCancel"
-                    android:layout_alignBaseline="@+id/ivReserve"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="-9dp"
-                    android:layout_marginTop="-1dp"
-                    android:src="@drawable/ic_cross_notround3"
+                <!--<ImageView-->
+                    <!--android:layout_width="20dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:id="@+id/ivCancel"-->
+                    <!--android:layout_alignBaseline="@+id/ivReserve"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_marginRight="15dp"-->
+                    <!--android:layout_marginTop="23dp"-->
+                    <!--android:src="@drawable/ic_cross_notround3"-->
 
 
                     />

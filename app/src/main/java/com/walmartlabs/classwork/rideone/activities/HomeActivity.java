@@ -174,11 +174,11 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                 //Available and ride exists
                 if(ride.isAvailable() && existingRidePos != -1) {
                     rideListFragment.rides.set(existingRidePos, ride);
+                    RideListFragment.moveRideToTop(rideListFragment.rides, existingRidePos);
                 }
                 //Available and ride doesn't exist
                 else if(ride.isAvailable() && existingRidePos == -1) {
                     rideListFragment.rides.add(0, ride);
-                    rideListFragment.aRides.notifyDataSetChanged();
                 }
 
                 rideListFragment.aRides.notifyDataSetChanged();
@@ -189,6 +189,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
     public void onProfileView(MenuItem item) {
         Intent intent = new Intent(this, RegisterUserActivity.class);
