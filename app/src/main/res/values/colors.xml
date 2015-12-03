@@ -44,6 +44,7 @@
     <color name="divider">#B6B6B6</color>
     <color name="buttonTextColor">#FFFFFF</color>
     <color name="colorRideRequested">#f9af04</color>
+    <color name="colorRideDriving">#299bdf</color>
 
     <!-- BLUE with PINK -->
     <!--<color name="colorPrimaryDark">#1976D2</color>-->

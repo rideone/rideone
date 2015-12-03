@@ -4,20 +4,20 @@
 
 ## User Stories
 
-* [ ] User (driver or rider) should be able to login/register
-* [ ] User can edit the profile
-* [ ] Driver can set her availability 
-  * [ ] # of spots, destination, start point, time
-  * [ ] mark available/unavailable
-* [ ] Driver should be able to manage the list of riders going with him
-  * [ ] see the list of riders
-  * [ ] confirm or remove a rider at any time
-* [ ] Driver should be notified of a new rider request with confirm/deny option
-* [ ] Driver should be notified if a rider isn't going anymore
-* [ ] User can see the list of available rides
-* [ ] User can filter the list of rides by time, start point, destination, # of spots
-* [ ] User can reserve a ride
-* [ ] User should be notified when the ride reservation is confirmed
+* [X] User (driver or rider) should be able to login/register
+* [X] User can edit the profile
+* [X] Driver can set her availability 
+  * [X] # of spots, destination, start point, time
+  * [X] mark available/unavailable
+* [X] Driver should be able to manage the list of riders going with him
+  * [X] see the list of riders
+  * [X] confirm or remove a rider at any time
+* [X] Driver should be notified of a new rider request with confirm/deny option
+* [X] Driver should be notified if a rider isn't going anymore
+* [X] User can see the list of available rides
+* [X] User can filter the list of rides by time, start point, destination, # of spots
+* [X] User can reserve a ride
+* [X] User should be notified when the ride reservation is confirmed
 * [ ] The system should auto update availability based on ride reservations
 
 ## Video Walkthrough 

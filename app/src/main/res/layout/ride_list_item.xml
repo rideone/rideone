@@ -32,7 +32,7 @@
             android:textColor="@android:color/white"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:background="@drawable/ribbon"
+            android:background="@color/colorPrimaryDark"
             android:layout_marginTop="-3dp"
             android:layout_marginRight="-3dp"
 

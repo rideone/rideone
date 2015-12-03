@@ -1,5 +1,6 @@
 package com.walmartlabs.classwork.rideone.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -21,6 +23,7 @@ import com.squareup.picasso.RequestCreator;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
+import com.walmartlabs.classwork.rideone.util.Utils;
 
 import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID;
 
@@ -88,10 +91,14 @@ public class RideDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uri = "tel:" + mDriver.getPhone();
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse(uri));
-                startActivity(intent);
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + mDriver.getPhone()));
+                Context context = RideDetailActivity.this;
+                if (Utils.checkCallPermission(context)) {
+                    context.startActivity(callIntent);
+                } else {
+                    Toast.makeText(context, "Phone call is not permitted", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
