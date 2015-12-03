@@ -15,6 +15,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import com.walmartlabs.classwork.rideone.R;
 import com.walmartlabs.classwork.rideone.models.Ride;
 import com.walmartlabs.classwork.rideone.models.User;
@@ -53,8 +54,16 @@ public class RideDetailActivity extends AppCompatActivity {
             public void done(User user, ParseException e) {
                 //        ParseFile profileImage = mRide.getDriver().getProfileImage();
                 // Fill views with data
-                Picasso.with(RideDetailActivity.this)
-                        .load(user.getProfileImage().getUrl())
+                RequestCreator requestCreator;
+                if(user.getProfileImage() != null) {
+                    requestCreator = Picasso.with(RideDetailActivity.this)
+                            .load(user.getProfileImage().getUrl());
+                } else {
+                    requestCreator = Picasso.with(RideDetailActivity.this)
+                            .load(R.mipmap.ic_profile_image);
+                }
+
+                requestCreator
                         .fit().centerCrop()
                         .into(ivProfile);
             }
