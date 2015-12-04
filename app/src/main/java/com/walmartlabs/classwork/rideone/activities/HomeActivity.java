@@ -332,7 +332,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
 
                 user.flush();
                 Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG).show();
-                rideListFragment.fetchAndPopulateRideList(user, true);
+                rideListFragment.fetchAndPopulateRideList(user, false);
             }
         }
     }
