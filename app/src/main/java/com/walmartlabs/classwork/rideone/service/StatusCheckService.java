@@ -22,6 +22,7 @@ import static com.walmartlabs.classwork.rideone.models.User.COLUMN_LOGIN_USER_ID
  * Created by mkrish4 on 11/24/15.
  */
 public class StatusCheckService extends IntentService {
+    public static boolean currUserAction = false;
     private static User user;
     private static Ride ride;
 
@@ -48,14 +49,14 @@ public class StatusCheckService extends IntentService {
                 }
             }
             String userStatusChanged = getUserStatusChangeString(newUser);
-            boolean hasRiderChanged = hasRiderChanged(newRide);
-            if (userStatusChanged != null || hasRiderChanged) {
+            String userRiderChanged = getRiderChangedString(newRide);
+            if (userStatusChanged != null || userRiderChanged != null) {
                 // Construct an Intent tying it to the ACTION (arbitrary event namespace)
                 String message = null;
                 if (userStatusChanged != null) {
                     message = "Your ride request has been " + userStatusChanged;
                 } else {
-                    message = "You either have a new rider request or a rider has dropped out";
+                    message = userRiderChanged;
                 }
                 broadcast(message, userStatusChanged);
             }
@@ -93,6 +94,10 @@ public class StatusCheckService extends IntentService {
     }
 
     private String getUserStatusChangeString(User newUser) {
+        if (currUserAction) {
+            currUserAction = false;
+            return null;
+        }
         Date currDate = user.getUpdatedAt();
         Date newDate = newUser.getUpdatedAt();
         if (isAfter(currDate, newDate)) {
@@ -109,15 +114,18 @@ public class StatusCheckService extends IntentService {
         return newDate == null || currDate == null || newDate.after(currDate);
     }
 
-    private boolean hasRiderChanged(Ride newRide) {
+    private String getRiderChangedString(Ride newRide) {
         if (newRide != null && ride != null && isDriver(ride) && ride != newRide && isNotUpdatedByUser(newRide)) {
             Date currDate = ride.getUpdatedAt();
             Date newDate = newRide.getUpdatedAt();
             if (isAfter(currDate, newDate) && !ride.getRiderIds().equals(newRide.getRiderIds())) {
-                return true;
+                if (newRide.getRiderIds().size() > ride.getRiderIds().size())
+                    return "You have a new ride request";
+                else
+                    return "One of your riders has dropped out";
             }
         }
-        return false;
+        return null;
     }
 
     private boolean isNotUpdatedByUser(Ride newRide) {

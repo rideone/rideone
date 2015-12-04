@@ -232,7 +232,7 @@ public class HomeActivity extends AppCompatActivity implements ReserveRideDialog
                             rideListFragment.fetchAndPopulateRideList(null, false);
                         }
                     });
-
+                    StatusCheckService.currUserAction = true;
                 } else {
                     //handles re-book ride case
                     sendRequest(ride);
